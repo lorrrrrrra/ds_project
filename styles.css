@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Container für das Flexbox-Layout */
@@ -11,31 +12,80 @@
     height: 100vh; /* Vollbildhöhe */
 }
 
-/* Linke Seite (Sidebar) */
+
+
+/* Left side (Sidebar) */
 .sidebar {
-    background-color: #255847;
+    background-color: #255847; /* see Design.txt */
     color: white;
     width: 25%;
-    min-width: 250px; /* Mindestens 250px Breite */
+    min-width: 250px; /* min 250px width */
     padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
 }
 
-.sidebar h2 {
-    margin-bottom: 10px;
+/* Container für das Dashboard */
+.dashboard-filter {
+    display: flex; /* Flexbox-Layout für horizontale Aufteilung */
+    height: 100vh; /* Höhe des gesamten Viewports */
+    flex-direction: column;
+}
+
+/* Styling für den Header */
+.header {
+    flex: 1; 
+    display: flex;
+    /*align-items: center; /* Inhalt vertikal zentrieren */
+    padding-top: 10px; /* Abstand oben */
+    background-color: #000000; /* see Design.txt */
     font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
 }
 
-.sidebar p {
-    font-size: 1rem;
-    line-height: 1.5;
+/* Styling für Review-Filter */
+.review-filter {
+    flex: 6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F49069; /* Orange */
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
 }
 
-/* Rechte Seite (Platzhalter für die Karte) */
+/* Styling für den Button-Bereich */
+.button {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #153329; /* Dunkelgrün */
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Right side (placeholder for map) */
 .main-content {
-    flex: 1; /* Nimmt den restlichen Platz ein */
+    flex: 1; /* rest of space on dashboard apart from the sidebar */
     background-color: #f4f4f4;
     padding: 20px;
     overflow-y: auto;

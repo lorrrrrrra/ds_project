@@ -25,12 +25,14 @@
 .sidebar {
     background-color: #255847; /* see Design.txt */
     color: white;
-    width: 25%;
+    width: 20%;
     min-width: 250px; /* min 250px width */
     padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10; 
 }
 
 /* Container for the Dashboard */
@@ -86,9 +88,14 @@
     padding-top: 20px;
 }
 
+.filter:nth-child(6) {
+    padding-bottom: 20px;     /* padding for below Food Filter */
+}
+
+
 /* Styling für den Button-Bereich */
 .button {
-    flex: 2;
+    flex: 1.5;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -101,13 +108,12 @@
 #filter-button {
     background-color: #f88c53;
     color: white;
-    font-size: 16px;
+    font-size: 1.1rem;
     padding-top: 10px;
     padding-bottom: 10px;
     cursor: pointer;
     width: 100%;
     border-radius: 7px;
-    font-size: 1.5rem;
 }
 
 

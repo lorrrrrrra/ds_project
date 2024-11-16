@@ -14,7 +14,14 @@
 
 
 
-/* Left side (Sidebar) */
+
+
+
+
+
+
+
+/* -- Left side (Sidebar)  -- */
 .sidebar {
     background-color: #255847; /* see Design.txt */
     color: white;
@@ -39,7 +46,7 @@
     display: flex;
     /*align-items: center; /* Inhalt vertikal zentrieren */
     padding-top: 10px; /* Abstand oben */
-    background-color: #000000; /* see Design.txt */
+    padding-left: 5px;
     font-size: 1.5rem;
     font-weight: bold;
     color: white;
@@ -47,10 +54,12 @@
 
 /* Styling für Review-Filter */
 .review-filter {
-    flex: 6;
+    flex: 7;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    /*justify-content: center;
+    align-items: center; */
+    padding-top: 10px; /* Abstand oben */
+    padding-left: 5px;
     background-color: #F49069; /* Orange */
     font-size: 1.5rem;
     font-weight: bold;
@@ -59,18 +68,27 @@
 
 /* Styling für den Button-Bereich */
 .button {
-    flex: 1;
+    flex: 2;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #153329; /* Dunkelgrün */
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: bold;
     color: white;
 }
 
 
-
+#filter-button {
+    background-color: #f88c53;
+    color: white;
+    font-size: 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 7px;
+    font-size: 1.5rem;
+}
 
 
 

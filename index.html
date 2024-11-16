@@ -8,16 +8,55 @@
 </head>
 <body>
     <div class="container">
-        <!-- Linke Seite -->
+        <!-- Left side -->
         <aside class="sidebar">
             <div class="dashboard-filter">
-                <div class="header">Filters</div>
-                <div class="review-filter">Review-Filter</div>
-                <div class="button">Button</div>
+                <div class="header">Filters</div>     <!-- Heading -->
+
+                <div class="review-filter">
+
+                    <div class="filter-section">
+                        <label for="food-type">Food Type</label>
+                        <select id="food-type">
+                            <option value="all">All</option>
+                            <option value="german">German</option>
+                            <option value="italian">Italian</option>
+                            <option value="french">French</option>
+                        </select>
+
+                        <div class="filter">
+                            <label>Rating</label>
+                            <div class="stars"><span>⭐⭐⭐⭐⭐</span></div>
+                        </div>
+        
+                        <div class="filter">
+                            <label>Service</label>
+                            <div class="stars"><span>⭐⭐⭐⭐⭐</span></div>
+                        </div>
+        
+                        <div class="filter">
+                            <label>Ambience</label>
+                            <div class="stars"><span>⭐⭐⭐⭐⭐</span></div>
+                        </div>
+        
+                        <div class="filter">
+                            <label>Food</label>
+                            <div class="stars"><span>⭐⭐⭐⭐⭐</span></div>
+                        </div>
+
+                        
+                    </div>
+    
+                </div>
+
+                <!-- Last part: Button to filter -->
+                <div class="button">
+                    <button id="filter-button" onclick="filter()">Filter</button>
+                </div>
             </div>
         </aside>
 
-        <!-- Rechte Seite -->
+        <!-- Right side -->
         <main class="main-content">
             <h1>Kartenplatzhalter</h1>
             <p>Hier wird später eine Karte eingebunden.</p>

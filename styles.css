@@ -47,6 +47,8 @@
     flex: 1; 
     display: flex;
     /*align-items: center; /* Inhalt vertikal zentrieren */
+    justify-content: space-between; /* Platz zwischen Überschrift und Pfeil */
+    align-items: center; /* Zentriert vertikal */
     padding-top: 10px; /* Abstand oben */
     padding-left: 5px;
     font-size: 1.5rem;
@@ -55,7 +57,19 @@
     color: white;
 }
 
+.toggle-arrow {
+    cursor: pointer;
+    color: #DDDDDD; /* Color of arrow */
+    background-color: #255847;
+    font-size: 1.5rem;
+    margin-right: 10px; /* Abstand vom rechten Rand */
+    transition: transform 0.3s ease; /* Animation für Pfeilbewegung */
+    border: None;
+}
 
+.toggle-arrow:hover {
+    transform: scale(1.2); /* Pfeil vergrößert sich bei Hover */
+}
 
 /* Styling für Review-Filter */
 .review-filter {

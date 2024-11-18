@@ -212,3 +212,70 @@
     font-size: 1rem;
     line-height: 1.5;
 }
+
+
+.restaurant-button {
+    background-color: #f88c53;
+    color: white;
+    font-size: 2rem;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 100%;
+    border: none; 
+    margin: 10px;
+}
+
+.restaurant-button:hover {
+    background-color: #DF6149;
+}
+
+
+
+
+
+
+
+
+
+/* -- Right side (Details-Sidebar)  -- */
+.details-sidebar {
+    background-color: #255847; /* see Design.txt */
+    color: white;
+    width: 0;
+    min-width: 0px; /* min 250px width */
+    padding: 0; /* Keine Polsterung, damit nichts sichtbar bleibt */
+    visibility: hidden; /* Unsichtbar machen */
+    opacity: 0; /* Komplett transparent */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10; 
+    transition: width 0.3s ease; /* Weiche Animation beim Ein-/Ausklappen */
+    overflow: hidden; /* Inhalt wird abgeschnitten */
+    position: relative;
+}
+
+.details-sidebar.open {
+    width: 20%; /* Sidebar wird sichtbar */
+    min-width: 70px;
+    padding: 20px; /* Polsterung wieder hinzufügen */
+    visibility: visible; /* Sichtbarkeit aktivieren */
+    opacity: 1; /* Wieder sichtbar */
+}
+
+
+
+.close-details-sidebar {
+    cursor: pointer;
+    color: #7F7F7F; /* Color of arrow */
+    background-color: #255847;
+    font-size: 1.5rem;
+    margin-right: 10px; /* Abstand vom rechten Rand */
+    transition: transform 0.3s ease; /* Animation für Pfeilbewegung */
+    border: None;
+}
+
+.close_details_sidebar:hover {
+    color: #404040;
+}

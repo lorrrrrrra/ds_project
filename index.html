@@ -10,7 +10,7 @@
 <body>
     <div class="container">
          <!-- Burger Menu -->
-         <button id="burger-menu" onclick="toggleSidebar()">☰</button> <!-- only visible when sidebar is toggled-->
+         <button id="burger-menu" onclick="toggleSidebar('open')">☰</button> <!-- only visible when sidebar is toggled-->
 
         <!-- Left side aka sidebar -->
         <aside class="sidebar">
@@ -18,7 +18,7 @@
                 <!-- Heading -->
                 <div class="header">
                     Filters
-                    <button class="toggle-arrow" onclick="toggleSidebar()">←</button>
+                    <button class="toggle-arrow" onclick="toggleSidebar('close')">←</button>
                 </div>    
 
                 <!-- Different Filter options -->
@@ -69,7 +69,34 @@
         <main class="main-content">
             <h1>Kartenplatzhalter</h1>
             <p>Hier wird später eine Karte eingebunden.</p>
+
+            <!-- Test button to open detail side -->
+            <div class="button-container">
+                <button class="restaurant-button" value="1" onclick=open_details()></button>
+            </div>
+            <div class="button-container">
+                <button class="restaurant-button" value="2" onclick=open_details()></button>
+            </div>
+            <div class="button-container">
+                <button class="restaurant-button" value="3" onclick=open_details()></button>
+            </div>
+            <div class="button-container">
+                <button class="restaurant-button" value="4" onclick=open_details()></button>
+            </div>
+            <div class="button-container">
+                <button class="restaurant-button" value="5" onclick=open_details()></button>
+            </div>
         </main>
+
+        <!-- Right sidebar -->
+        <aside class="details-sidebar">
+            <div>
+                Rechte Sidebar Inhalt
+                <button class="close-details-sidebar" onclick=close_details()>x</button>
+            </div>
+            
+        </aside>
+    </div>
     </div>
 </body>
 </html>

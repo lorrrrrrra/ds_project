@@ -98,7 +98,7 @@
 
 .toggle-arrow {
     cursor: pointer;
-    color: #DDDDDD; /* Color of arrow */
+    color: #7F7F7F; /* Color of arrow */
     background-color: #255847;
     font-size: 1.5rem;
     margin-right: 10px; /* Abstand vom rechten Rand */
@@ -156,13 +156,10 @@
 
 /* Styling für den Button-Bereich */
 .button {
-    flex: 1.5;
+    flex: 1.2;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1rem;
-    font-weight: bold;
-    color: white;
 }
 
 
@@ -177,9 +174,19 @@
     border-radius: 7px;
 }
 
+#delete-filter-button {
+    background-color: #255847;;
+    color: #7F7F7F;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    align-items: end;
+}
 
-
-
+#delete-filter-button:hover {
+    transform: scale(1.05); /* Pfeil vergrößert sich bei Hover */
+}
 
 
 

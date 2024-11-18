@@ -8,13 +8,11 @@ function toggleSidebar() {
       // Expand the sidebar
       sidebar.style.width = '20%';
       content.classList.remove('hidden'); // Inhalt wieder anzeigen
-      arrow.textContent = '←'; // Pfeil zeigt nach links
       burgerMenu.style.display = 'none'; // Burger-Menü ausblenden
   } else {
       // Collapse the sidebar
       sidebar.style.width = '50px';
       content.classList.add('hidden'); // Inhalt verstecken
-      arrow.textContent = '→'; // Pfeil zeigt nach rechts
       burgerMenu.style.display = 'block'; // Burger-Menü anzeigen
   }
 }

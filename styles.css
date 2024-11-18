@@ -19,6 +19,26 @@
 
 
 
+/* Styling for Burger Menu */
+#burger-menu {
+    display: none; /* Versteckt standardmäßig */
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #ffffff;
+    cursor: pointer;
+    z-index: 20; /* Überlagert andere Elemente */
+    justify-content: center;
+}
+
+/* Zeige das Burger-Menü, wenn die Sidebar eingeklappt ist */
+.sidebar.collapsed + #burger-menu {
+    display: block;
+}
+
 
 
 /* -- Left side (Sidebar)  -- */
@@ -26,13 +46,32 @@
     background-color: #255847; /* see Design.txt */
     color: white;
     width: 20%;
-    min-width: 250px; /* min 250px width */
+    min-width: 70px; /* min 250px width */
     padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
     z-index: 10; 
+    transition: width 0.3s ease; /* Weiche Animation beim Ein-/Ausklappen */
+    overflow: hidden; /* Inhalt wird abgeschnitten */
+    position: relative;
+}
+
+/* Versteckte Inhalte */
+.sidebar .hidden {
+    visibility: hidden; /* Unsichtbar, aber belegt Platz */
+    opacity: 0; /* Verhindert, dass es angezeigt wird */
+    pointer-events: none; /* Interaktionen deaktivieren */
+    transition: visibility 0.3s ease, opacity 0.3s ease;
+}
+
+.sidebar.collapsed {
+    width: 50px; /* Eingeklappte Breite */
+}
+
+.sidebar.collapsed .dashboard-filter {
+    display: none; /* Versteckt Inhalte */
 }
 
 /* Container for the Dashboard */
@@ -70,6 +109,7 @@
 .toggle-arrow:hover {
     transform: scale(1.2); /* Pfeil vergrößert sich bei Hover */
 }
+
 
 /* Styling für Review-Filter */
 .review-filter {

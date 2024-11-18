@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Science Project Dashboard</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- Left side -->
+         <!-- Burger Menu -->
+         <button id="burger-menu" onclick="toggleSidebar()">☰</button> <!-- only visible when sidebar is toggled-->
+
+        <!-- Left side aka sidebar -->
         <aside class="sidebar">
             <div class="dashboard-filter">
                 <!-- Heading -->

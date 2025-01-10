@@ -30,11 +30,7 @@ if connection:
         # small fail, the incremented review_id didn't reset after the final test so the reviews start with id 4471
         query_general = """
         SELECT *
-        FROM reviews_general
-        WHERE (review_id BETWEEN 4471 AND 29470)
-        OR (review_id BETWEEN 104471 AND 129470)
-        OR (review_id BETWEEN 204471 AND 229470)
-        OR (review_id BETWEEN 304471 AND 329470);
+        FROM reviews_general;
         """
 
         cursor.execute(query_general)
@@ -45,7 +41,7 @@ if connection:
 
         # DataFrame erstellen
         df_reviews_general = pd.DataFrame(rows, columns=columns)
-        df_reviews_general.to_csv("/home/ubuntu/scraping/reviews_general_selected.csv", index=False)
+        df_reviews_general.to_csv("/home/ubuntu/scraping/reviews_general_backup_2025_01_10.csv", index=False)
 
         print("Dataframe with reviews general was constructed")
     except Exception as e:
@@ -57,11 +53,7 @@ if connection:
         # small fail, the incremented review_id didn't reset after the final test so the reviews start with id 4471
         query_additional = """
         SELECT *
-        FROM reviews_additional
-        WHERE (review_id BETWEEN 4471 AND 29470)
-        OR (review_id BETWEEN 104471 AND 129470)
-        OR (review_id BETWEEN 204471 AND 229470)
-        OR (review_id BETWEEN 304471 AND 329470);
+        FROM reviews_additional;
         """
 
         cursor.execute(query_additional)
@@ -72,7 +64,7 @@ if connection:
 
         # DataFrame erstellen
         df_reviews_additional = pd.DataFrame(rows, columns=columns)
-        df_reviews_additional.to_csv("/home/ubuntu/scraping/reviews_additional_selected.csv", index=False)
+        df_reviews_additional.to_csv("/home/ubuntu/scraping/reviews_additional_backup_2025_01_10.csv", index=False)
 
         print("Dataframe with reviews additional was constructed")
     except Exception as e:

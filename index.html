@@ -67,33 +67,41 @@
 
         <!-- Right side -->
         <main class="main-content">
-            <h1>Kartenplatzhalter</h1>
-            <p>Hier wird später eine Karte eingebunden.</p>
+            <h1>Placeholder for the map</h1>
+            <p>This is where the map is supposed to be :)</p>
 
             <!-- Test button to open detail side -->
             <div class="button-container">
-                <button class="restaurant-button" value="1" onclick=open_details()></button>
+                <button class="restaurant-button" value="1" onclick=open_details(this.value)></button>
             </div>
             <div class="button-container">
-                <button class="restaurant-button" value="2" onclick=open_details()></button>
+                <button class="restaurant-button" value="2" onclick=open_details(this.value)></button>
             </div>
             <div class="button-container">
-                <button class="restaurant-button" value="3" onclick=open_details()></button>
+                <button class="restaurant-button" value="3" onclick=open_details(this.value)></button>
             </div>
             <div class="button-container">
-                <button class="restaurant-button" value="4" onclick=open_details()></button>
+                <button class="restaurant-button" value="4" onclick=open_details(this.value)></button>
             </div>
             <div class="button-container">
-                <button class="restaurant-button" value="5" onclick=open_details()></button>
+                <button class="restaurant-button" value="5" onclick=open_details(this.value)></button>
             </div>
         </main>
 
         <!-- Right sidebar -->
         <aside class="details-sidebar">
-            <div>
-                Rechte Sidebar Inhalt
-                <button class="close-details-sidebar" onclick=close_details()>x</button>
+            <div class="details">
+                <div>
+                    <h2 id="name">Details content</h2>
+                    <button class="close-details-sidebar" onclick=close_details()>x</button>
+                </div>
+
+                <div>
+                    <p id="details-name"></p>
+                    <p id="details-description"></p>
+                </div>
             </div>
+            
             
         </aside>
     </div>

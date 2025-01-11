@@ -2,13 +2,18 @@
 .stripe {
     height: 100vh; /* Full viewport height */
     display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-align: center;
+    flex-direction: column; /* Stack content vertically */
+    align-items: flex-start; /* Align content to the left */
+    justify-content: flex-start; /* Align content to the top */
+    padding: 1rem; /* Padding for content spacing */
+    color: white; /* Default text color */
+    text-align: left; /* Align text to the left */
+    overflow: hidden; /* Prevent scrolling by default */
 }
 
-/* Left Stripe */
+
+/* all the settings for the filter menu */
+/* Left Stripe - Filter menu */
 .stripe-left {
     background-color: #255847; /* Dark green */
     width: 20%; /* Default width is 20% */
@@ -16,15 +21,48 @@
     flex-shrink: 0; /* Prevent shrinking below min-width */
 }
 
-/* Center Stripe */
+
+
+
+
+
+
+/* all the settings for the map area
+/* Center Stripe - Map */
 .stripe-center {
     background-color: #f4f4f4; /* Light gray */
     color: black; /* Text color for better contrast */
 }
 
-/* Right Stripe */
+.restaurant-button {
+    background-color: #f88c53;
+    color: white;
+    font-size: 2rem;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 100%;
+    border: none; 
+    margin: 10px;
+}
+
+.restaurant-button:hover {
+    background-color: #DF6149;
+}
+
+
+
+
+
+
+
+
+
+/* all the settings for the restaurant details side*/
+/* Right Stripe - Restaurant details*/
 .stripe-right {
     background-color: #255847; /* Dark green */
+    width: 0;
+    min-width: 0px;
     width: 30%; /* Default width is 20% */
     min-width: 70px; /* Minimum width */
     flex-shrink: 0; /* Prevent shrinking below min-width */
@@ -33,4 +71,25 @@
     padding: 1rem; /* Add padding for better content layout */
     display: block; /* Override any flex properties */
     text-align: left; /* Align text to the left */
+}
+
+
+
+/* Close button */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    color: #7F7F7F;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.close-btn:hover {
+    color: #404040;
+    /*transform: scale(1.2); /* Slight zoom on hover */
 }

@@ -16,9 +16,17 @@
 <body class="m-0">
     <div class="container-fluid p-0 d-flex flex-nowrap">
         <!-- Left Stripe - Filter menu -->
-        <div class="stripe stripe-left">
-            <h1>Filter menu</h1>
+        <div class="stripe stripe-left d-flex flex-column">
+            <div class="filter-1 flex-shrink-0 position-relative">
+                <div class="header">
+                    Filters
+                    <button class="close-btn" onclick="toggleSidebar('close')">←</button>
+                </div>  
+            </div>
+            <div class="filter-2 flex-grow-1">2</div>
+            <div class="filter-3 flex-shrink-0">3</div>
         </div>
+
         <!-- Center Stripe - Map -->
         <div class="stripe stripe-center flex-grow-1">
             <h1>Map placeholder</h1>

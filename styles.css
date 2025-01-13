@@ -1,3 +1,9 @@
+/* Reset für einheitliche Darstellung */
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
+
 /* Global styles for all stripes */
 .stripe {
     height: 100vh; /* Full viewport height */
@@ -17,8 +23,37 @@
 .stripe-left {
     background-color: #255847; /* Dark green */
     width: 20%; /* Default width is 20% */
-    min-width: 70px; /* Minimum width */
+    min-width: 200px; /* Minimum width */
     flex-shrink: 0; /* Prevent shrinking below min-width */
+}
+
+.filter-1 {
+    height: 12%;
+    min-height: 30px;
+    width: 100%;
+}
+
+.header {
+    /*align-items: center; /* Inhalt vertikal zentrieren */
+    justify-content: space-between; /* Platz zwischen Überschrift und Pfeil */
+    align-items: center; /* Zentriert vertikal */
+    padding-top: 10px; /* Abstand oben */
+    padding-left: 5px;
+    font-size: 1.5rem;
+    /*font-weight: bold; */
+    letter-spacing: 1.5px;
+    color: white;
+}
+
+/* css for button in third stripe */
+
+.filter-2 {
+    width: 100%;
+}
+
+.filter-3 {
+    height: 20%;
+    width: 100%;
 }
 
 

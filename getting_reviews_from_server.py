@@ -30,7 +30,7 @@ if connection:
         # small fail, the incremented review_id didn't reset after the final test so the reviews start with id 4471
         query_general = """
         SELECT *
-        FROM reviews_general;
+        FROM reviews_general_new;
         """
 
         cursor.execute(query_general)
@@ -41,7 +41,7 @@ if connection:
 
         # DataFrame erstellen
         df_reviews_general = pd.DataFrame(rows, columns=columns)
-        df_reviews_general.to_csv("/home/ubuntu/scraping/reviews_general_backup_2025_01_10.csv", index=False)
+        df_reviews_general.to_csv("/home/ubuntu/scraping/reviews_general_test_backup_2025_01_13.csv", index=False)
 
         print("Dataframe with reviews general was constructed")
     except Exception as e:
@@ -53,7 +53,7 @@ if connection:
         # small fail, the incremented review_id didn't reset after the final test so the reviews start with id 4471
         query_additional = """
         SELECT *
-        FROM reviews_additional;
+        FROM reviews_additional_new;
         """
 
         cursor.execute(query_additional)
@@ -64,7 +64,7 @@ if connection:
 
         # DataFrame erstellen
         df_reviews_additional = pd.DataFrame(rows, columns=columns)
-        df_reviews_additional.to_csv("/home/ubuntu/scraping/reviews_additional_backup_2025_01_10.csv", index=False)
+        df_reviews_additional.to_csv("/home/ubuntu/scraping/reviews_additional_new_backup_2025_01_13.csv", index=False)
 
         print("Dataframe with reviews additional was constructed")
     except Exception as e:

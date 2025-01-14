@@ -41,7 +41,7 @@ if connection:
 
         # DataFrame erstellen
         df_reviews_general = pd.DataFrame(rows, columns=columns)
-        df_reviews_general.to_csv("/home/ubuntu/scraping/reviews_general_test_backup_2025_01_13.csv", index=False)
+        df_reviews_general.to_csv("/home/ubuntu/scraping/reviews_general_test_new_2025_01_14.csv", index=False)
 
         print("Dataframe with reviews general was constructed")
     except Exception as e:
@@ -64,7 +64,7 @@ if connection:
 
         # DataFrame erstellen
         df_reviews_additional = pd.DataFrame(rows, columns=columns)
-        df_reviews_additional.to_csv("/home/ubuntu/scraping/reviews_additional_new_backup_2025_01_13.csv", index=False)
+        df_reviews_additional.to_csv("/home/ubuntu/scraping/reviews_additional_new_backup_2025_01_14.csv", index=False)
 
         print("Dataframe with reviews additional was constructed")
     except Exception as e:

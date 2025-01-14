@@ -1,0 +1,281 @@
+/* Reset für einheitliche Darstellung */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Container für das Flexbox-Layout */
+.container {
+    display: flex;
+    height: 100vh; /* Vollbildhöhe */
+}
+
+
+
+
+
+
+
+
+/* Styling for Burger Menu */
+#burger-menu {
+    display: none; /* Versteckt standardmäßig */
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #ffffff;
+    cursor: pointer;
+    z-index: 20; /* Überlagert andere Elemente */
+    justify-content: center;
+}
+
+/* Zeige das Burger-Menü, wenn die Sidebar eingeklappt ist */
+.sidebar.collapsed + #burger-menu {
+    display: block;
+}
+
+
+
+/* -- Left side (Sidebar)  -- */
+.sidebar {
+    background-color: #255847; /* see Design.txt */
+    color: white;
+    width: 20%;
+    min-width: 70px; /* min 250px width */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10; 
+    transition: width 0.3s ease; /* Weiche Animation beim Ein-/Ausklappen */
+    overflow: hidden; /* Inhalt wird abgeschnitten */
+    position: relative;
+}
+
+/* Versteckte Inhalte */
+.sidebar .hidden {
+    visibility: hidden; /* Unsichtbar, aber belegt Platz */
+    opacity: 0; /* Verhindert, dass es angezeigt wird */
+    pointer-events: none; /* Interaktionen deaktivieren */
+    transition: visibility 0.3s ease, opacity 0.3s ease;
+}
+
+.sidebar.collapsed {
+    width: 50px; /* Eingeklappte Breite */
+}
+
+.sidebar.collapsed .dashboard-filter {
+    display: none; /* Versteckt Inhalte */
+}
+
+/* Container for the Dashboard */
+.dashboard-filter {
+    display: flex; /* Flexbox-Layout for horizontale distribution */
+    height: 100vh; /* Höhe des gesamten Viewports */
+    flex-direction: column;
+}
+
+/* Styling für den Header */
+.header {
+    flex: 1; 
+    display: flex;
+    /*align-items: center; /* Inhalt vertikal zentrieren */
+    justify-content: space-between; /* Platz zwischen Überschrift und Pfeil */
+    align-items: center; /* Zentriert vertikal */
+    padding-top: 10px; /* Abstand oben */
+    padding-left: 5px;
+    font-size: 1.5rem;
+    /*font-weight: bold; */
+    letter-spacing: 1.5px;
+    color: white;
+}
+
+.toggle-arrow {
+    cursor: pointer;
+    color: #7F7F7F; /* Color of arrow */
+    background-color: #255847;
+    font-size: 1.5rem;
+    margin-right: 10px; /* Abstand vom rechten Rand */
+    transition: transform 0.3s ease; /* Animation für Pfeilbewegung */
+    border: None;
+}
+
+.toggle-arrow:hover {
+    transform: scale(1.2); /* Pfeil vergrößert sich bei Hover */
+}
+
+
+/* Styling für Review-Filter */
+.review-filter {
+    flex: 7;
+    display: flex;
+    /*justify-content: center;
+    align-items: center; */
+    padding-top: 10px; /* Abstand oben */
+    padding-left: 5px;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.filter-section label {
+    margin-bottom: 8px; /* Margin under the label text */
+    display: block; /* makes sure, that the label is above the dropdown */
+}
+
+#food-type {
+    width: 100%;
+    background-color: #153329;  /* Dark green background */
+    color: white;               /* White text */
+    padding: 10px;              /* Optional padding for aesthetics */
+    margin-bottom: 10px;
+    border: none;               /* Remove border if desired */
+    appearance: none;           /* Remove default browser styling */
+    -webkit-appearance: none;   /* For Safari */
+    -moz-appearance: none;      /* For Firefox */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='white'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+    border-radius: 7px;
+}
+
+.filter {
+    padding-top: 20px;
+}
+
+.filter:nth-child(6) {
+    padding-bottom: 20px;     /* padding for below Food Filter */
+}
+
+
+/* Styling für den Button-Bereich */
+.button {
+    flex: 1.2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#filter-button {
+    background-color: #f88c53;
+    color: white;
+    font-size: 1.1rem;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 7px;
+}
+
+#delete-filter-button {
+    background-color: #255847;;
+    color: #7F7F7F;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    align-items: end;
+}
+
+#delete-filter-button:hover {
+    transform: scale(1.05); /* Pfeil vergrößert sich bei Hover */
+}
+
+
+
+
+
+
+
+
+/* Right side (placeholder for map) */
+.main-content {
+    flex: 1; /* rest of space on dashboard apart from the sidebar */
+    background-color: #f4f4f4;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.main-content h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.main-content p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+
+.restaurant-button {
+    background-color: #f88c53;
+    color: white;
+    font-size: 2rem;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 100%;
+    border: none; 
+    margin: 10px;
+}
+
+.restaurant-button:hover {
+    background-color: #DF6149;
+}
+
+
+
+
+
+
+
+
+
+/* -- Right side (Details-Sidebar)  -- */
+.details-sidebar {
+    background-color: #255847; /* see Design.txt */
+    color: white;
+    width: 0;
+    min-width: 0px; /* min 250px width */
+    padding: 0; /* Keine Polsterung, damit nichts sichtbar bleibt */
+    visibility: hidden; /* Unsichtbar machen */
+    opacity: 0; /* Komplett transparent */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10; 
+    transition: width 0.3s ease; /* Weiche Animation beim Ein-/Ausklappen */
+    overflow: hidden; /* Inhalt wird abgeschnitten */
+    position: relative;
+}
+
+.details-sidebar.open {
+    width: 20%; /* Sidebar wird sichtbar */
+    min-width: 70px;
+    padding: 20px; /* Polsterung wieder hinzufügen */
+    visibility: visible; /* Sichtbarkeit aktivieren */
+    opacity: 1; /* Wieder sichtbar */
+}
+
+
+
+.close-details-sidebar {
+    cursor: pointer;
+    color: #7F7F7F; /* Color of arrow */
+    background-color: #255847;
+    font-size: 1.5rem;
+    margin-right: 10px; /* Abstand vom rechten Rand */
+    transition: transform 0.3s ease; /* Animation für Pfeilbewegung */
+    border: None;
+}
+
+.close_details_sidebar:hover {
+    color: #404040;
+}

@@ -23,8 +23,48 @@
                     <button class="close-btn" onclick="toggleSidebar('close')">←</button>
                 </div>  
             </div>
-            <div class="filter-2 flex-grow-1">2</div>
-            <div class="filter-3 flex-shrink-0">3</div>
+            <div class="filter-2 flex-grow-1">
+                <div class="filter-section">
+                    <label for="food-type">Food Type</label>
+                    <select id="food-type">
+                        <option value="all">All</option>
+                        <option value="german">German</option>
+                        <option value="italian">Italian</option>
+                        <option value="french">French</option>
+                    </select>
+
+                    <div class="filter">
+                        <label>Rating</label>
+                        <div class="stars"><span>⭐⭐⭐⭐⭐</span></div>
+                    </div>
+    
+                    <div class="filter">
+                        <label>Service</label>
+                        <div class="stars"><span>⭐⭐⭐⭐⭐</span></div>
+                    </div>
+    
+                    <div class="filter">
+                        <label>Ambience</label>
+                        <div class="stars"><span>⭐⭐⭐⭐⭐</span></div>
+                    </div>
+    
+                    <div class="filter">
+                        <label>Food</label>
+                        <div class="stars"><span>⭐⭐⭐⭐⭐</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-3 flex-shrink-0">
+                <div class="d-flex flex-column gap-2">
+                    <button id="delete-filter-button" class="btn btn-green w-100" onclick="delete_all_filters()">
+                        Delete all filters
+                    </button>
+                    <button id="filter-button" class="btn btn-primary w-100" onclick="filter()">
+                        Filter
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- Center Stripe - Map -->

@@ -3,6 +3,39 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+/* global change of bootstrap design */
+.btn-primary {
+    background-color: #f88c53;
+    border-color: #f88c53;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 7px;
+}
+
+.btn-primary:hover {
+    background-color: #DF6149 !important;
+    border-color: #DF6149 !important;
+    box-shadow: none !important;
+}
+
+.btn-green {
+    background-color: #255847;;
+    border-color: #255847;;
+    color: #7F7F7F;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 7px;
+}
+
+.btn-green:hover,
+.btn-green:active {
+    background-color: #153329 !important;
+    border-color: #153329 !important;
+    box-shadow: none !important;
+    color: #7F7F7F !important;
+}
+
 
 /* Global styles for all stripes */
 .stripe {
@@ -25,6 +58,9 @@
     width: 20%; /* Default width is 20% */
     min-width: 200px; /* Minimum width */
     flex-shrink: 0; /* Prevent shrinking below min-width */
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10; 
+    transition: width 0.3s ease; /* Weiche Animation beim Ein-/Ausklappen */
 }
 
 .filter-1 {
@@ -50,6 +86,49 @@
 .filter-2 {
     width: 100%;
 }
+
+
+/* Styling für Review-Filter */
+.review-filter {
+    /*justify-content: center;
+    align-items: center; */
+    padding-top: 10px; /* Abstand oben */
+    padding-left: 5px;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.filter-section label {
+    margin-bottom: 8px; /* Margin under the label text */
+    display: block; /* makes sure, that the label is above the dropdown */
+}
+
+#food-type {
+    width: 100%;
+    background-color: #153329;  /* Dark green background */
+    color: white;               /* White text */
+    padding: 10px;              /* Optional padding for aesthetics */
+    margin-bottom: 10px;
+    border: none;               /* Remove border if desired */
+    appearance: none;           /* Remove default browser styling */
+    -webkit-appearance: none;   /* For Safari */
+    -moz-appearance: none;      /* For Firefox */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='white'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+    border-radius: 7px;
+}
+
+.filter {
+    padding-top: 20px;
+}
+
+.filter:nth-child(6) {
+    padding-bottom: 20px;     /* padding for below Food Filter */
+}
+
+
 
 .filter-3 {
     height: 20%;
@@ -106,6 +185,9 @@
     padding: 1rem; /* Add padding for better content layout */
     display: block; /* Override any flex properties */
     text-align: left; /* Align text to the left */
+    box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10; 
+    transition: width 0.3s ease; /* Weiche Animation beim Ein-/Ausklappen */
 }
 
 

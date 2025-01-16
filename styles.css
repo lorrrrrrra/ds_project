@@ -160,6 +160,45 @@ html, body {
     padding: 0;
 }
 
+.input-group{
+    position: absolute;
+    top: 10px;
+    left: 40%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 300px;
+} 
+
+.form-control {
+    border-left: none; 
+    border-right: none; 
+    border-radius: 0 50px 50px 0; /* Rechts abgerundet */
+}
+
+.input-group-text {
+    background-color: white; 
+    border-right: none; 
+    border-radius: 50px 0 0 50px;
+}
+
+#search-icon {
+    background-color: white !important; /* Sicherstellen, dass die Hintergrundfarbe weiß bleibt */
+    border: none; /* Rand entfernen */
+    padding: 10px; /* Optional: Abstände innerhalb des Buttons */
+    border-radius: 50px 0 0 50px; /* Links abgerundet */
+    display: flex; /* Für zentrierten SVG-Inhalt */
+    align-items: center;
+    justify-content: center;
+}
+
+#search-icon:active,
+#search-icon:focus {
+    background-color: white !important; /* Auch im aktiven Zustand weiß */
+    box-shadow: none; /* Entfernt den Bootstrap-Klickeffekt */
+    border: none;
+}
+
+
 #map-container {
     min-height: 100vh; /* Sicherstellen, dass der Container mindestens die Höhe des Viewports hat */
     height: 100%; /* die Karte soll die volle Höhe des Containers einnehmen */
@@ -169,11 +208,6 @@ html, body {
 #map {
     height: 100%; /* die Karte soll die volle Höhe des Containers einnehmen */
     width: 100%;
-}
-
-.leaflet-container {
-    max-width: 100%;
-    max-height: 100%;
 }
 
 .restaurant-button {

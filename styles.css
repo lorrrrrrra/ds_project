@@ -72,6 +72,8 @@ html, body {
     height: 12%;
     min-height: 30px;
     width: 100%;
+    padding-left:5px;
+    padding-right: 10px;
 }
 
 .header {
@@ -79,8 +81,7 @@ html, body {
     justify-content: space-between; /* Platz zwischen Überschrift und Pfeil */
     align-items: center; /* Zentriert vertikal */
     padding-top: 10px; /* Abstand oben */
-    padding-left: 5px;
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     /*font-weight: bold; */
     letter-spacing: 1.5px;
     color: white;
@@ -134,7 +135,6 @@ html, body {
 .filter:nth-child(6) {
     padding-bottom: 20px;     /* padding for below Food Filter */
 }
-
 
 
 .filter-3 {
@@ -210,20 +210,11 @@ html, body {
     width: 100%;
 }
 
-.restaurant-button {
-    background-color: #f88c53;
-    color: white;
-    font-size: 2rem;
-    padding: 15px;
-    cursor: pointer;
-    border-radius: 100%;
-    border: none; 
-    margin: 10px;
+.awesome-marker-icon-my-custom-color {
+    background-color: #f88c53 !important; /* Hier dein RGB oder HEX Code */
+    border-color: #f88c53 !important;    /* Optional: Rahmenfarbe */
 }
 
-.restaurant-button:hover {
-    background-color: #DF6149;
-}
 
 
 
@@ -250,6 +241,8 @@ html, body {
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.2);
     z-index: 10; 
     transition: width 0.3s ease; /* Weiche Animation beim Ein-/Ausklappen */
+    padding-right: 1.5rem;
+    position: relative;
 }
 
 
@@ -271,4 +264,74 @@ html, body {
 .close-btn:hover {
     color: #404040;
     /*transform: scale(1.2); /* Slight zoom on hover */
+}
+
+.top-part-right{
+    padding-left:5px;
+    padding-right: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+/* header is defined in left stripe*/
+
+#address {
+    color: grey;
+    font-style: italic;
+}
+
+#star-rating{
+    color:#FEDC7B !important;
+    font-size: 1.0rem;
+    padding:12px;
+
+}
+
+#hr-right-side{
+    width:100%;
+    border: 1px solid gray;
+}
+
+#summary{
+    text-align: justify;
+    font-size: 0.9rem;
+}
+
+.summary-right-side {
+    position: relative; /* Ermöglicht absolute Positionierung des Buttons */
+}
+
+#info-button {
+    position: absolute;
+    right: 20px;
+    bottom: 10px;
+    width: 20px;
+    height: 20px; 
+    border-radius: 50%;     
+    background-color: #D9D9D9;
+    color: black;
+    border: none;
+    font-size: 14px;
+    cursor: pointer; 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+}
+
+#detailed-info-right-side{
+    width: 100%;
+}
+
+.nav-link{
+    color: grey;
+}
+
+.nav-link:hover,
+.nav-link.active{
+    color: white !important;
+    font: normal !important;
+}
+
+.tab-pane{
+    padding-top: 10px !important;
 }

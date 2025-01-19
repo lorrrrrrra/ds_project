@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Science Project Dashboard</title>
+    <title>GourLlama</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -91,13 +91,42 @@
 
 
         <!-- Right Stripe - Restaurant details -->
-        <div id="rightSidebar" class="stripe stripe-right">
-            <button class="close-btn" onclick="close_details()">×</button>
-            <h1>Restaurant details</h1>
-            <p>Scrollable content goes here.</p>
+        <div id="rightSidebar" class="stripe stripe-right d-flex flex-column">
+            <div class="top-part-right">
+                <div class="header" >
+                    <div id="name">Restaurant Name</div>
+                    <button class="close-btn" onclick="close_details()">×</button>
+                </div>
+                <p id="address">Street, 123 PLZ City, Country</p>
+                <p id="star-rating" class="badge rounded-pill text-bg-secondary">Star Rating</p>
+            </div>
+            <div id="summary-right-side">
+                <hr id="hr-right-side">
+                <p id="summary">"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." (based on 100 reviews)</p>
+                <!-- <button id="info-button" onclick="showPopup()">?</button> --> 
+                <hr id="hr-right-side">
+            </div>
+            <div id="detailed-info-right-side">
+                <nav>
+                    <div class="nav nav-underline" id="nav-tab" role="tablist">
+                      <button class="nav-link active" id="nav-food-tab" data-bs-toggle="tab" data-bs-target="#nav-food" type="button" role="tab" aria-controls="nav-food" aria-selected="true">Food</button>
+                      <button class="nav-link" id="nav-service-tab" data-bs-toggle="tab" data-bs-target="#nav-service" type="button" role="tab" aria-controls="nav-service" aria-selected="false">Service</button>
+                      <button class="nav-link" id="nav-atmosphere-tab" data-bs-toggle="tab" data-bs-target="#nav-atmosphere" type="button" role="tab" aria-controls="nav-atmosphere" aria-selected="false">Atmosphere</button>
+                      <button class="nav-link" id="nav-price-tab" data-bs-toggle="tab" data-bs-target="#nav-price" type="button" role="tab" aria-controls="nav-price" aria-selected="false">Price Level</button>
+                    </div>
+                  </nav>
+                  <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-food" role="tabpanel" aria-labelledby="nav-food-tab" tabindex="0">Tab for food</div>
+                    <div class="tab-pane fade" id="nav-service" role="tabpanel" aria-labelledby="nav-service-tab" tabindex="0">Tab for service</div>
+                    <div class="tab-pane fade" id="nav-atmosphere" role="tabpanel" aria-labelledby="nav-atmosphere-tab" tabindex="0">Tab for atmosphere</div>
+                    <div class="tab-pane fade" id="nav-price" role="tabpanel" aria-labelledby="nav-price-tab" tabindex="0">Tab for price</div>
+                  </div>
+            </div>
         </div>
     </div>
 
+    <!-- PapaParse-library -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
     <script src="script.js"></script>
     
 </body>

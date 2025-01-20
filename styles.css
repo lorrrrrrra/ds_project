@@ -276,15 +276,14 @@ html, body {
 /* header is defined in left stripe*/
 
 #address {
-    color: grey;
+    color: #F2F2F2;
     font-style: italic;
 }
 
 #star-rating{
-    color:#FEDC7B !important;
+    background-color:#255847 !important;
     font-size: 1.0rem;
     padding:12px;
-
 }
 
 #hr-right-side{
@@ -323,7 +322,7 @@ html, body {
 }
 
 .nav-link{
-    color: grey;
+    color: #F2F2F2;
 }
 
 .nav-link:hover,

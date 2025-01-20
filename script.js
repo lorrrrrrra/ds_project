@@ -27,6 +27,7 @@ var clickedIcon = L.icon({
         
 
 let restaurants = []; // Globale Variable
+let restaurants_general = [];
 let activeMarker = null;
 
 fetch('API_basics.csv')
@@ -87,25 +88,126 @@ fetch('API_basics.csv')
   .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
+// loading the general data for the restaurants
+fetch('API_general.csv')
+.then((response) => response.text())
+.then((csvData) => {
+  // CSV parsen
+  Papa.parse(csvData, {
+    header: true, // Erste Zeile als Header interpretieren
+    complete: (results) => {
+      restaurants_general = results.data; // Speichern der geparsten Restaurants
+    },
+    error: (error) => console.error('Fehler beim Parsen der CSV:', error),
+  });
+})
+.catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
-  function handleMarkerClick(markerId) {
-    // Restaurant mit passender ID suchen
-    const restaurant = restaurants.find((r) => r.restaurant_id === markerId);
-  
-    if (restaurant) {
-      const name = restaurant.name || 'Unbekanntes Restaurant';
-      const address = restaurant.address || 'Keine Adresse verfügbar';
-  
-      // Dynamische Aktualisierung der Sidebar mit den Details
-      const sidebarName = document.getElementById('name');
-      const sidebarAddress = document.getElementById('address');
-  
-      if (sidebarName && sidebarAddress) {
-        sidebarName.textContent = name;
-        sidebarAddress.textContent = address;
-      }
-    } else {
-      console.error(`Kein Restaurant mit der ID ${markerId} gefunden.`);
+
+function getStarRating(markerId) {
+  const restaurant = restaurants_general.find((r) => r.restaurant_id === markerId);
+
+  if (restaurant) {
+    const star_rating = parseFloat(restaurant.google_rating);
+    const amount_reviews = parseFloat(restaurant.google_user_rating_count);
+
+    const star_1 = document.getElementById('star-1');
+    const star_2 = document.getElementById('star-2');
+    const star_3 = document.getElementById('star-3');
+    const star_4 = document.getElementById('star-4');
+    const star_5 = document.getElementById('star-5');
+
+    switch(true) {
+      case star_rating < 0.5:
+        star_1.src = "/graphics/halber_stern.png";
+        break;
+      case star_rating >= 0.5 && star_rating < 1.0:
+        star_1.src = "/graphics/voller_stern.png";
+        break;
+      case star_rating >= 1.0 && star_rating < 1.5:
+        star_1.src = "/graphics/voller_stern.png";
+        star_2.src = "/graphics/halber_stern.png";
+        break;  
+      case star_rating >= 1.5 && star_rating < 2.0:
+        star_1.src = "/graphics/voller_stern.png";
+        star_2.src = "/graphics/voller_stern.png";
+        break;
+      case star_rating >= 2.0 && star_rating < 2.5:
+        star_1.src = "/graphics/voller_stern.png";
+        star_2.src = "/graphics/voller_stern.png";
+        star_3.src = "/graphics/halber_stern.png";
+        break;
+      case star_rating >= 2.5 && star_rating < 3.0:
+        star_1.src = "/graphics/voller_stern.png";
+        star_2.src = "/graphics/voller_stern.png";
+        star_3.src = "/graphics/voller_stern.png";
+        break;
+      case star_rating >= 3.0 && star_rating < 3.5:
+        star_1.src = "/graphics/voller_stern.png";
+        star_2.src = "/graphics/voller_stern.png";
+        star_3.src = "/graphics/voller_stern.png";
+        star_4.src = "/graphics/halber_stern.png";
+        break;  
+      case star_rating >= 3.5 && star_rating < 4.0:
+        star_1.src = "/graphics/voller_stern.png";
+        star_2.src = "/graphics/voller_stern.png";
+        star_3.src = "/graphics/voller_stern.png";
+        star_4.src = "/graphics/voller_stern.png";
+        break;
+      case star_rating >= 4.0 && star_rating < 4.5:
+        star_1.src = "/graphics/voller_stern.png";
+        star_2.src = "/graphics/voller_stern.png";
+        star_3.src = "/graphics/voller_stern.png";
+        star_4.src = "/graphics/voller_stern.png";
+        star_5.src = "/graphics/halber_stern.png";
+        break;
+      case star_rating >= 4.5:
+        star_1.src = "/graphics/voller_stern.png";
+        star_2.src = "/graphics/voller_stern.png";
+        star_3.src = "/graphics/voller_stern.png";
+        star_4.src = "/graphics/voller_stern.png";
+        star_5.src = "/graphics/voller_stern.png";
+        break;
     }
+    console.log(star_rating, amount_reviews)
+
+    
+  } else {
+    console.error(`Kein Restaurant mit der ID ${markerId} gefunden.`);
   }
+
+
+
+    
+
+}
+
+
+
+
+function handleMarkerClick(markerId) {
+  // Restaurant mit passender ID suchen
+  const restaurant = restaurants.find((r) => r.restaurant_id === markerId);
+  
+  if (restaurant) {
+    const name = restaurant.name || 'Unbekanntes Restaurant';
+    const address = restaurant.address || 'Keine Adresse verfügbar';
+  
+    // Dynamische Aktualisierung der Sidebar mit den Details
+    const sidebarName = document.getElementById('name');
+    const sidebarAddress = document.getElementById('address');
+    // const starRating = document.getElementById('star-rating');
+
+    getStarRating(markerId);
+  
+    if (sidebarName && sidebarAddress) {
+      sidebarName.textContent = name;
+      sidebarAddress.textContent = address;
+
+    }
+  } else {
+    console.error(`Kein Restaurant mit der ID ${markerId} gefunden.`);
+  }
+}
+

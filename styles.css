@@ -363,3 +363,7 @@ html, body {
     font-size: 0.85rem;
     font-weight: 400;
 }
+
+.graph{
+    width: 100%;
+}

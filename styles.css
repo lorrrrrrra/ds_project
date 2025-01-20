@@ -286,6 +286,10 @@ html, body {
     padding:12px;
 }
 
+#avg-rating{
+    font-weight: 400;
+}
+
 
 #hr-right-side{
     width:100%;

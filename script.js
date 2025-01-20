@@ -28,6 +28,10 @@ var clickedIcon = L.icon({
 
 let restaurants = []; // Globale Variable
 let restaurants_general = [];
+let reviews_grouped = [];
+let reviews_grouped_month = [] ;
+let reviews_grouped_year = [];
+let reviews_grouped_price = [];
 let activeMarker = null;
 
 // loading the general data for the restaurants
@@ -46,6 +50,66 @@ fetch('API_general.csv')
 .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
+fetch('csv files/reviews_grouped.csv')
+.then((response) => response.text())
+.then((csvData) => {
+  // CSV parsen
+  Papa.parse(csvData, {
+    header: true, // Erste Zeile als Header interpretieren
+    complete: (results) => {
+      reviews_grouped = results.data; // Speichern der geparsten Restaurants
+    },
+    error: (error) => console.error('Fehler beim Parsen der CSV:', error),
+  });
+})
+.catch((error) => console.error('Fehler beim Laden der CSV:', error));
+
+
+fetch('csv files/reviews_grouped_month.csv')
+.then((response) => response.text())
+.then((csvData) => {
+  // CSV parsen
+  Papa.parse(csvData, {
+    header: true, // Erste Zeile als Header interpretieren
+    complete: (results) => {
+      reviews_grouped_month = results.data; // Speichern der geparsten Restaurants
+    },
+    error: (error) => console.error('Fehler beim Parsen der CSV:', error),
+  });
+})
+.catch((error) => console.error('Fehler beim Laden der CSV:', error));
+
+
+fetch('csv files/reviews_grouped_year.csv')
+.then((response) => response.text())
+.then((csvData) => {
+  // CSV parsen
+  Papa.parse(csvData, {
+    header: true, // Erste Zeile als Header interpretieren
+    complete: (results) => {
+      reviews_grouped_year = results.data; // Speichern der geparsten Restaurants
+    },
+    error: (error) => console.error('Fehler beim Parsen der CSV:', error),
+  });
+})
+.catch((error) => console.error('Fehler beim Laden der CSV:', error));
+
+
+fetch('csv files/dining_price_range_group.csv')
+.then((response) => response.text())
+.then((csvData) => {
+  // CSV parsen
+  Papa.parse(csvData, {
+    header: true, // Erste Zeile als Header interpretieren
+    complete: (results) => {
+      reviews_grouped_price = results.data; // Speichern der geparsten Restaurants
+    },
+    error: (error) => console.error('Fehler beim Parsen der CSV:', error),
+  });
+})
+.catch((error) => console.error('Fehler beim Laden der CSV:', error));
+
+
 fetch('API_basics.csv')
   .then((response) => response.text())
   .then((csvData) => {
@@ -56,9 +120,8 @@ fetch('API_basics.csv')
         restaurants = results.data; // Speichern der geparsten Restaurants
 
         // Nur die ersten 10 Restaurants anzeigen
-        const first10Restaurants = restaurants.slice(0, 10);
 
-        first10Restaurants.forEach((restaurant) => {
+        restaurants.forEach((restaurant) => {
           const lat = parseFloat(restaurant.lat_value);
           const lon = parseFloat(restaurant.long_value);
           const id = restaurant.restaurant_id;
@@ -77,7 +140,7 @@ fetch('API_basics.csv')
                 handleMarkerClick(e.target.options.id); // ID des Markers verwenden
             });
 
-            if (restaurant === first10Restaurants[0]) {
+            if (restaurant === restaurants[0]) {
               activeMarker = marker; // Setze den ersten Marker als aktiven Marker
               marker.setIcon(clickedIcon); // Setze das Icon des aktiven Markers auf clickedIcon
               handleMarkerClick(id); // Führe die Funktion für den ersten Marker aus
@@ -89,8 +152,8 @@ fetch('API_basics.csv')
         });
 
         // Optional: Karte auf das erste Restaurant fokussieren
-        if (first10Restaurants.length > 0) {
-          const firstRestaurant = first10Restaurants[0];
+        if (restaurants.length > 0) {
+          const firstRestaurant = restaurants[0];
           const lat = parseFloat(firstRestaurant.lat_value);
           const lon = parseFloat(firstRestaurant.long_value);
           const id = firstRestaurant.restaurant_id;
@@ -107,54 +170,82 @@ fetch('API_basics.csv')
 
 
 
-function getStarRating(markerId) {
-  const restaurant = restaurants_general.find((r) => r.restaurant_id === markerId);
-
-  if (restaurant) {
-    const star_rating = parseFloat(restaurant.google_rating);
-    const amount_reviews = parseFloat(restaurant.google_user_rating_count);
-
-    if (star_rating != null) {
-      document.getElementById('average-rating').textContent = ` (${star_rating.toFixed(1)})`;
-    } else {
-      document.getElementById('average-rating').textContent = ` `;
-    }
+  function getStarRating(markerId) {
+    const restaurant = reviews_grouped.find((r) => r.restaurant_id === markerId);
   
-    // Alle Sterne-Elemente abrufen
-    const stars = [
-      document.getElementById('star-1'),
-      document.getElementById('star-2'),
-      document.getElementById('star-3'),
-      document.getElementById('star-4'),
-      document.getElementById('star-5'),
-    ];
+    if (restaurant) {
+      // Allgemeine Sternebewertung
+      const star_rating = parseFloat(restaurant.stars_mean);
+      const star_rating_food = parseFloat(restaurant.dining_stars_food_mean);
+      const star_rating_service = parseFloat(restaurant.dining_stars_service_mean);
+      const star_rating_atmosphere = parseFloat(restaurant.dining_stars_atmosphere_mean);
   
-    // Anzahl voller Sterne und halber Sterne berechnen
-    const fullStars = Math.floor(star_rating);
-    const hasHalfStar = (star_rating) % 1 >= 0.3 && (star_rating) % 1 < 0.8;
-    const hasFullStar = (star_rating) % 1 >= 0.8
-
-    document.getElementById('average-rating').textContent = ` (${star_rating.toFixed(1)})`;
-  
-    // Sterne aktualisieren
-    stars.forEach((star, index) => {
-      if (index < fullStars) {
-        star.src = "/graphics/voller_stern.png"; // Voller Stern
-      } else if (index === fullStars && hasHalfStar) {
-        star.src = "/graphics/halber_stern.png"; // Halber Stern
-      } else if (index === fullStars && hasFullStar) {
-        star.src = "/graphics/voller_stern.png"; // Voller Stern
+      // Durchschnittliche Bewertungen aktualisieren
+    const updateAverageRating = (rating, group) => {
+      const avgRatingElement = document.getElementById(`avg-rating${group}`);
+      if (rating != null) {
+        avgRatingElement.textContent = ` (${rating.toFixed(1)})`;
       } else {
-        star.src = "/graphics/leerer_stern.png"; // Leerer Stern
+        avgRatingElement.textContent = ` `;
       }
-    });
-  
-    console.log(star_rating, amount_reviews);
-  } else {
-    console.error(`Kein Restaurant mit der ID ${markerId} gefunden.`); 
+    };
 
-}
-}
+    updateAverageRating(star_rating, ''); // Allgemeine Bewertung
+    //updateAverageRating(star_rating_food, '-food-ov'); // Food-Bewertung
+    //updateAverageRating(star_rating_service, '-service-ov'); // Service-Bewertung
+    //updateAverageRating(star_rating_atmosphere, '-atmosphere-ov'); // Atmosphere-Bewertung
+    updateAverageRating(star_rating_food, '-food'); // Food-Bewertung
+    updateAverageRating(star_rating_service, '-service'); // Service-Bewertung
+    updateAverageRating(star_rating_atmosphere, '-atmosphere'); // Atmosphere-Bewertung
+  
+      // Helper-Funktion zum Aktualisieren der Sterne
+      const updateStars = (rating, group) => {
+        const stars = [
+          document.getElementById(`star-1${group}`),
+          document.getElementById(`star-2${group}`),
+          document.getElementById(`star-3${group}`),
+          document.getElementById(`star-4${group}`),
+          document.getElementById(`star-5${group}`),
+        ];
+
+
+  
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = (rating % 1) >= 0.3 && (rating % 1) < 0.75;
+        const hasFullStar = (rating % 1) >= 0.75;
+  
+        stars.forEach((star, index) => {
+          if (index < fullStars) {
+            star.src = "/graphics/voller_stern.png"; // Voller Stern
+          } else if (index === fullStars && hasHalfStar) {
+            star.src = "/graphics/halber_stern.png"; // Halber Stern
+          } else if (index === fullStars && hasFullStar) {
+            star.src = "/graphics/voller_stern.png"; // Voller Stern
+          } else {
+            star.src = "/graphics/leerer_stern.png"; // Leerer Stern
+          }
+        });
+      };
+  
+      // Sterne für jede Gruppe aktualisieren
+      updateStars(star_rating, ''); // Allgemeine Sterne
+      //updateStars(star_rating_food, '-food-ov'); // Food
+      //updateStars(star_rating_service, '-service-ov'); // Service
+      //updateStars(star_rating_atmosphere, '-atmosphere-ov'); // Atmosphere
+      updateStars(star_rating_food, '-food'); // Food
+      updateStars(star_rating_service, '-service'); // Service
+      updateStars(star_rating_atmosphere, '-atmosphere'); // Atmosphere
+  
+      console.log({
+        general: star_rating,
+        food: star_rating_food,
+        service: star_rating_service,
+        atmosphere: star_rating_atmosphere,
+      });
+    } else {
+      console.error(`Kein Restaurant mit der ID ${markerId} gefunden.`);
+    }
+  }
 
 
 
@@ -184,3 +275,7 @@ function handleMarkerClick(markerId) {
   }
 }
 
+
+function get_graph(markerId) {
+    
+}

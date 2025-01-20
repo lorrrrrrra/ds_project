@@ -280,7 +280,7 @@ html, body {
     font-style: italic;
 }
 
-#star-rating{
+.star-rating{
     background-color:#255847 !important;
     font-size: 1.0rem;
     padding:12px;
@@ -293,7 +293,7 @@ html, body {
 }
 
 #summary{
-    text-align: justify;
+    text-align: center;
     font-size: 0.9rem;
 }
 
@@ -334,4 +334,28 @@ html, body {
 
 .tab-pane{
     padding-top: 10px !important;
+    width: 100%;
+}
+
+.star-rating-detail{
+    background-color:#255847 !important;
+    font-size: 1.0rem;
+    padding-left:2px;
+    padding-bottom: 10px;
+}
+
+.star-rating-ov {
+    display: flex; 
+    align-items: center; 
+    gap: 5px;
+}
+
+.summary-subcategory{
+    font-size: 0.85rem;
+    text-align: justify !important;
+}
+
+.avg-rating-label{
+    font-size: 0.85rem;
+    font-weight: 400;
 }

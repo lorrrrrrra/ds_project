@@ -92,45 +92,131 @@
 
         <!-- Right Stripe - Restaurant details -->
         <div id="rightSidebar" class="stripe stripe-right d-flex flex-column">
+
+            <!-- header, adress and stars-->
             <div class="top-part-right">
                 <div class="header" >
                     <div id="name">Restaurant Name</div>
                     <button class="close-btn" onclick="close_details()">×</button>
                 </div>
                 <p id="address">Street, 123 PLZ City, Country</p>
-                <p id="star-rating" class="badge rounded-pill text-bg-secondary position-relative">
+                <div id="star-rating" class="star-rating badge rounded-pill text-bg-secondary position-relative">
                     <img src="/graphics/leerer_stern.png" id="star-1" alt="Star" style="width: 20px; height: 20px;">
                     <img src="/graphics/leerer_stern.png" id="star-2" alt="Star" style="width: 20px; height: 20px;">
                     <img src="/graphics/leerer_stern.png" id="star-3" alt="Star" style="width: 20px; height: 20px;">
                     <img src="/graphics/leerer_stern.png" id="star-4" alt="Star" style="width: 20px; height: 20px;">
                     <img src="/graphics/leerer_stern.png" id="star-5" alt="Star" style="width: 20px; height: 20px;">
                     <span id="average-rating"> (4.2) </span>
-                </p>
+                </div>
             </div>
+
+            <!-- LLM summary -->
             <div id="summary-right-side">
                 <hr id="hr-right-side">
                 <div id="summary">"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." (based on 100 reviews)</div>
                 <!-- <button id="info-button" onclick="showPopup()">?</button> --> 
                 <hr id="hr-right-side">
             </div>
+
+            <!-- details for food, service, atmosphere and price -->
             <div id="detailed-info-right-side">
                 <nav>
                     <div class="nav nav-underline" id="nav-tab" role="tablist">
-                      <button class="nav-link active" id="nav-food-tab" data-bs-toggle="tab" data-bs-target="#nav-food" type="button" role="tab" aria-controls="nav-food" aria-selected="true">Food</button>
+                        <button class="nav-link active" id="nav-info-tab" data-bs-toggle="tab" data-bs-target="#nav-info" type="button" role="tab" aria-controls="nav-info" aria-selected="true">Info</button>
+                      <button class="nav-link" id="nav-food-tab" data-bs-toggle="tab" data-bs-target="#nav-food" type="button" role="tab" aria-controls="nav-food" aria-selected="true">Food</button>
                       <button class="nav-link" id="nav-service-tab" data-bs-toggle="tab" data-bs-target="#nav-service" type="button" role="tab" aria-controls="nav-service" aria-selected="false">Service</button>
                       <button class="nav-link" id="nav-atmosphere-tab" data-bs-toggle="tab" data-bs-target="#nav-atmosphere" type="button" role="tab" aria-controls="nav-atmosphere" aria-selected="false">Atmosphere</button>
                       <button class="nav-link" id="nav-price-tab" data-bs-toggle="tab" data-bs-target="#nav-price" type="button" role="tab" aria-controls="nav-price" aria-selected="false">Price Level</button>
                     </div>
                   </nav>
+
                   <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-food" role="tabpanel" aria-labelledby="nav-food-tab" tabindex="0">
-                        <span class="summary-subcategory" id="summary-food">
-                            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." (based on 100 reviews)
-                        </span>
+                    <div class="tab-pane fade show active" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab" tabindex="0">
+                        <p class="overview" id="overview-food">
+                            <span>Food</span>
+                            <div id="star-rating-food" class="star-rating-detail star-rating-ov badge rounded-pill text-bg-secondary position-relative">
+                                <img src="/graphics/leerer_stern.png" id="star-1" alt="Star" style="width: 15px; height: 15px;">
+                                <img src="/graphics/leerer_stern.png" id="star-2" alt="Star" style="width: 15px; height: 15px;">
+                                <img src="/graphics/leerer_stern.png" id="star-3" alt="Star" style="width: 15px; height: 15px;">
+                                <img src="/graphics/leerer_stern.png" id="star-4" alt="Star" style="width: 15px; height: 15px;">
+                                <img src="/graphics/leerer_stern.png" id="star-5" alt="Star" style="width: 15px; height: 15px;">
+                                <span id="avg-rating-food" class="avg-rating-label"> (4.2) </span>
+                            </div>
+                        </p>
+                        <p class="overview" id="overview-service">
+                            <span>Service</span>
+                            <div id="star-rating-food" class="star-rating-detail star-rating-ov badge rounded-pill text-bg-secondary position-relative">
+                                <img src="/graphics/leerer_stern.png" id="star-1" alt="Star" style="width: 15px; height: 15px;">
+                                <img src="/graphics/leerer_stern.png" id="star-2" alt="Star" style="width: 15px; height: 15px;">
+                                <img src="/graphics/leerer_stern.png" id="star-3" alt="Star" style="width: 15px; height: 15px;">
+                                <img src="/graphics/leerer_stern.png" id="star-4" alt="Star" style="width: 15px; height: 15px;">
+                                <img src="/graphics/leerer_stern.png" id="star-5" alt="Star" style="width: 15px; height: 15px;">
+                                <span id="avg-rating-food" class="avg-rating-label"> (4.2) </span>
+                            </div>
+                        </p>
+                        <p class="overview" id="overview-atmosphere">
+                            <span>Atmosphere</span>
+                            <div id="star-rating-food" class="star-rating-detail star-rating-ov badge rounded-pill text-bg-secondary position-relative">
+                                <img src="/graphics/leerer_stern.png" id="star-1" alt="Star" style="width: 15px; height: 15px;">
+                                <img src="/graphics/leerer_stern.png" id="star-2" alt="Star" style="width: 15px; height: 15px;">
+                                <img src="/graphics/leerer_stern.png" id="star-3" alt="Star" style="width: 15px; height: 15px;">
+                                <img src="/graphics/leerer_stern.png" id="star-4" alt="Star" style="width: 15px; height: 15px;">
+                                <img src="/graphics/leerer_stern.png" id="star-5" alt="Star" style="width: 15px; height: 15px;">
+                                <span id="avg-rating-food" class="avg-rating-label"> (4.2) </span>
+                            </div>
+                        </p>
                     </div>
-                    <div class="tab-pane fade" id="nav-service" role="tabpanel" aria-labelledby="nav-service-tab" tabindex="0">Tab for service</div>
-                    <div class="tab-pane fade" id="nav-atmosphere" role="tabpanel" aria-labelledby="nav-atmosphere-tab" tabindex="0">Tab for atmosphere</div>
-                    <div class="tab-pane fade" id="nav-price" role="tabpanel" aria-labelledby="nav-price-tab" tabindex="0">Tab for price</div>
+                    <div class="tab-pane fade" id="nav-food" role="tabpanel" aria-labelledby="nav-food-tab" tabindex="0">
+                        <div id="star-rating-food" class="star-rating-detail badge rounded-pill text-bg-secondary position-relative">
+                            <img src="/graphics/leerer_stern.png" id="star-1" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="/graphics/leerer_stern.png" id="star-2" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="/graphics/leerer_stern.png" id="star-3" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="/graphics/leerer_stern.png" id="star-4" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="/graphics/leerer_stern.png" id="star-5" alt="Star" style="width: 15px; height: 15px;">
+                            <span id="avg-rating-food" class="avg-rating-label"> (4.2) </span>
+                        </div>
+                        <p class="summary-subcategory" id="summary-food">
+                            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." (based on 100 reviews)
+                        </p>
+                        <div class="graph" id="graph-avg-food">Graph avg food</div>
+                        <div class="graph" id="graph-avg-food">Graph total food</div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-service" role="tabpanel" aria-labelledby="nav-service-tab" tabindex="0">
+                        <div id="star-rating-service" class="star-rating-detail badge rounded-pill text-bg-secondary position-relative">
+                            <img src="/graphics/leerer_stern.png" id="star-1" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="/graphics/leerer_stern.png" id="star-2" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="/graphics/leerer_stern.png" id="star-3" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="/graphics/leerer_stern.png" id="star-4" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="/graphics/leerer_stern.png" id="star-5" alt="Star" style="width: 15px; height: 15px;">
+                            <span id="avg-rating-food" class="avg-rating-label"> (4.2) </span>
+                        </div>
+                        <p class="summary-subcategory" id="summary-service">
+                            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." (based on 100 reviews)
+                        </p>
+                        <div class="graph" id="graph-avg-service">Graph avg service</div>
+                        <div class="graph" id="graph-total-service">Graph total service</div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-atmosphere" role="tabpanel" aria-labelledby="nav-atmosphere-tab" tabindex="0">
+                        <div id="star-rating-atmosphere" class="star-rating-detail badge rounded-pill text-bg-secondary position-relative">
+                            <img src="/graphics/leerer_stern.png" id="star-1" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="/graphics/leerer_stern.png" id="star-2" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="/graphics/leerer_stern.png" id="star-3" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="/graphics/leerer_stern.png" id="star-4" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="/graphics/leerer_stern.png" id="star-5" alt="Star" style="width: 15px; height: 15px;">
+                            <span id="avg-rating-food" class="avg-rating-label"> (4.2) </span>
+                        </div>
+                        <p class="summary-subcategory" id="summary-atmosphere">
+                            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." (based on 100 reviews)
+                        </p>
+                        <div class="graph" id="graph-avg-atmosphere">Graph avg atmosphere</div>
+                        <div class="graph" id="graph-avg-atmosphere">Graph total atmosphere</div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-price" role="tabpanel" aria-labelledby="nav-price-tab" tabindex="0">
+                        <p class="summary-subcategory" id="summary-price">
+                            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet." (based on 100 reviews)
+                        </p>
+                        <div class="graph" id="graph-total-price">Graph total price</div>
+                    </div>
                   </div>
             </div>
         </div>

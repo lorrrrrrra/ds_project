@@ -9,7 +9,7 @@ const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // new Icon for clicked Marker
 var defaultIcon = L.icon({
   iconUrl: 'marker_green.png', // Standardmarker
-  iconSize: [37.5, 61.5],
+  iconSize: [37.5, 58],
   iconAnchor: [22, 94],
   shadowAnchor: [4, 62],
   popupAnchor: [-3, -76],
@@ -17,7 +17,7 @@ var defaultIcon = L.icon({
 
 var clickedIcon = L.icon({
   iconUrl: 'marker_orange.png', // Marker bei Klick
-  iconSize: [37.5, 61.5],
+  iconSize: [37.5, 58],
   iconAnchor: [22, 94],
   shadowAnchor: [4, 62],
   popupAnchor: [-3, -76],
@@ -29,6 +29,22 @@ var clickedIcon = L.icon({
 let restaurants = []; // Globale Variable
 let restaurants_general = [];
 let activeMarker = null;
+
+// loading the general data for the restaurants
+fetch('API_general.csv')
+.then((response) => response.text())
+.then((csvData) => {
+  // CSV parsen
+  Papa.parse(csvData, {
+    header: true, // Erste Zeile als Header interpretieren
+    complete: (results) => {
+      restaurants_general = results.data; // Speichern der geparsten Restaurants
+    },
+    error: (error) => console.error('Fehler beim Parsen der CSV:', error),
+  });
+})
+.catch((error) => console.error('Fehler beim Laden der CSV:', error));
+
 
 fetch('API_basics.csv')
   .then((response) => response.text())
@@ -88,20 +104,6 @@ fetch('API_basics.csv')
   .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
-// loading the general data for the restaurants
-fetch('API_general.csv')
-.then((response) => response.text())
-.then((csvData) => {
-  // CSV parsen
-  Papa.parse(csvData, {
-    header: true, // Erste Zeile als Header interpretieren
-    complete: (results) => {
-      restaurants_general = results.data; // Speichern der geparsten Restaurants
-    },
-    error: (error) => console.error('Fehler beim Parsen der CSV:', error),
-  });
-})
-.catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
 
@@ -112,75 +114,46 @@ function getStarRating(markerId) {
     const star_rating = parseFloat(restaurant.google_rating);
     const amount_reviews = parseFloat(restaurant.google_user_rating_count);
 
-    const star_1 = document.getElementById('star-1');
-    const star_2 = document.getElementById('star-2');
-    const star_3 = document.getElementById('star-3');
-    const star_4 = document.getElementById('star-4');
-    const star_5 = document.getElementById('star-5');
-
-    switch(true) {
-      case star_rating < 0.5:
-        star_1.src = "/graphics/halber_stern.png";
-        break;
-      case star_rating >= 0.5 && star_rating < 1.0:
-        star_1.src = "/graphics/voller_stern.png";
-        break;
-      case star_rating >= 1.0 && star_rating < 1.5:
-        star_1.src = "/graphics/voller_stern.png";
-        star_2.src = "/graphics/halber_stern.png";
-        break;  
-      case star_rating >= 1.5 && star_rating < 2.0:
-        star_1.src = "/graphics/voller_stern.png";
-        star_2.src = "/graphics/voller_stern.png";
-        break;
-      case star_rating >= 2.0 && star_rating < 2.5:
-        star_1.src = "/graphics/voller_stern.png";
-        star_2.src = "/graphics/voller_stern.png";
-        star_3.src = "/graphics/halber_stern.png";
-        break;
-      case star_rating >= 2.5 && star_rating < 3.0:
-        star_1.src = "/graphics/voller_stern.png";
-        star_2.src = "/graphics/voller_stern.png";
-        star_3.src = "/graphics/voller_stern.png";
-        break;
-      case star_rating >= 3.0 && star_rating < 3.5:
-        star_1.src = "/graphics/voller_stern.png";
-        star_2.src = "/graphics/voller_stern.png";
-        star_3.src = "/graphics/voller_stern.png";
-        star_4.src = "/graphics/halber_stern.png";
-        break;  
-      case star_rating >= 3.5 && star_rating < 4.0:
-        star_1.src = "/graphics/voller_stern.png";
-        star_2.src = "/graphics/voller_stern.png";
-        star_3.src = "/graphics/voller_stern.png";
-        star_4.src = "/graphics/voller_stern.png";
-        break;
-      case star_rating >= 4.0 && star_rating < 4.5:
-        star_1.src = "/graphics/voller_stern.png";
-        star_2.src = "/graphics/voller_stern.png";
-        star_3.src = "/graphics/voller_stern.png";
-        star_4.src = "/graphics/voller_stern.png";
-        star_5.src = "/graphics/halber_stern.png";
-        break;
-      case star_rating >= 4.5:
-        star_1.src = "/graphics/voller_stern.png";
-        star_2.src = "/graphics/voller_stern.png";
-        star_3.src = "/graphics/voller_stern.png";
-        star_4.src = "/graphics/voller_stern.png";
-        star_5.src = "/graphics/voller_stern.png";
-        break;
+    if (star_rating != null) {
+      document.getElementById('average-rating').textContent = ` (${star_rating.toFixed(1)})`;
+    } else {
+      document.getElementById('average-rating').textContent = ` `;
     }
-    console.log(star_rating, amount_reviews)
+  
+    // Alle Sterne-Elemente abrufen
+    const stars = [
+      document.getElementById('star-1'),
+      document.getElementById('star-2'),
+      document.getElementById('star-3'),
+      document.getElementById('star-4'),
+      document.getElementById('star-5'),
+    ];
+  
+    // Anzahl voller Sterne und halber Sterne berechnen
+    const fullStars = Math.floor(star_rating);
+    const hasHalfStar = (star_rating) % 1 >= 0.3 && (star_rating) % 1 < 0.8;
+    const hasFullStar = (star_rating) % 1 >= 0.8
 
-    
+    document.getElementById('average-rating').textContent = ` (${star_rating.toFixed(1)})`;
+  
+    // Sterne aktualisieren
+    stars.forEach((star, index) => {
+      if (index < fullStars) {
+        star.src = "/graphics/voller_stern.png"; // Voller Stern
+      } else if (index === fullStars && hasHalfStar) {
+        star.src = "/graphics/halber_stern.png"; // Halber Stern
+      } else if (index === fullStars && hasFullStar) {
+        star.src = "/graphics/voller_stern.png"; // Voller Stern
+      } else {
+        star.src = "/graphics/leerer_stern.png"; // Leerer Stern
+      }
+    });
+  
+    console.log(star_rating, amount_reviews);
   } else {
-    console.error(`Kein Restaurant mit der ID ${markerId} gefunden.`);
-  }
+    console.error(`Kein Restaurant mit der ID ${markerId} gefunden.`); 
 
-
-
-    
-
+}
 }
 
 

@@ -227,7 +227,7 @@ fetch('API_basics.csv')
 
   
         const fullStars = Math.floor(rating);
-        const hasHalfStar = (rating % 1) >= 0.3 && (rating % 1) < 0.75;
+        const hasHalfStar = (rating % 1) >= 0.26 && (rating % 1) < 0.75;
         const hasFullStar = (rating % 1) >= 0.75;
   
         stars.forEach((star, index) => {
@@ -396,8 +396,9 @@ function get_graph(markerId, type, category) {
       dataField = type === 'avg' ? 'dining_stars_atmosphere_mean' : 'dining_stars_atmosphere_count';
     }
 
+    const maxCount = d3.max(filteredRows, d => parseFloat(d[dataField]));
     const y = d3.scaleLinear()
-      .domain([0, d3.max(filteredRows, d => d[dataField]) || 1]) // Fallback-Wert
+      .domain([0, maxCount || 1]) // Fallback-Wert
       .range([height, 0]);
 
     chart.append("g").call(d3.axisLeft(y));
@@ -427,12 +428,13 @@ function get_graph(markerId, type, category) {
 }
 
 
+
 function get_graph_price(markerId) {
   const filteredRows = reviews_grouped_price.filter((r) => r.restaurant_id === markerId);
 
   // SVG-Setup: Wählen des SVG-Elements
   const svg = d3.select("#graph-total-price"); // Dein SVG für den Bar Plot
-  const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+  const margin = { top: 20, right: 30, bottom: 70, left: 40 };
 
   // Berechne die Breite und Höhe dynamisch
   function updateGraphSize() {
@@ -450,6 +452,8 @@ function get_graph_price(markerId) {
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // X-Achse (Preisbereich)
+    console.log(filteredRows.map(d => d.dining_price_range)); 
+
     const x = d3.scaleBand()
       .domain(filteredRows.map(d => d.dining_price_range)) // Wähle dining_price_range für die X-Achse
       .range([0, containerWidth])
@@ -459,11 +463,13 @@ function get_graph_price(markerId) {
       .attr("transform", `translate(0, ${containerHeight})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
-      .style("text-anchor", "middle");
+      .attr("transform", "rotate(-45)")
+      .style("text-anchor", "end");
 
     // Y-Achse (Anzahl der Bewertungen)
+    const maxCount = d3.max(filteredRows, d => parseFloat(d.dining_price_range_count));
     const y = d3.scaleLinear()
-      .domain([0, d3.max(filteredRows, d => d.dining_price_range_count)]) // Höchster Wert der dining_price_range_count
+      .domain([0, maxCount]) // Höchster Wert der dining_price_range_count
       .nice() // Runden der Werte für die Achse
       .range([containerHeight, 0]);
 
@@ -489,7 +495,7 @@ function get_graph_price(markerId) {
       .attr("text-anchor", "middle") // Zentriere den Text
       .style("font-size", "16px") // Schriftgröße
       .style("font-weight", "bold") // Fettgedruckt
-      .style("color", "black") // Textfarbe
+      .style("fill", "white") // Textfarbe
       .text(heading);
   }
 

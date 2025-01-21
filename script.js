@@ -32,6 +32,7 @@ let reviews_grouped = [];
 let reviews_grouped_month = [] ;
 let reviews_grouped_year = [];
 let reviews_grouped_price = [];
+let summaries = [];
 let activeMarker = null;
 
 // loading the general data for the restaurants
@@ -103,6 +104,21 @@ fetch('csv files/dining_price_range_group.csv')
     header: true, // Erste Zeile als Header interpretieren
     complete: (results) => {
       reviews_grouped_price = results.data; // Speichern der geparsten Restaurants
+    },
+    error: (error) => console.error('Fehler beim Parsen der CSV:', error),
+  });
+})
+.catch((error) => console.error('Fehler beim Laden der CSV:', error));
+
+
+fetch('csv files/filtered_summary_restaurants.csv')
+.then((response) => response.text())
+.then((csvData) => {
+  // CSV parsen
+  Papa.parse(csvData, {
+    header: true, // Erste Zeile als Header interpretieren
+    complete: (results) => {
+      summaries = results.data; // Speichern der geparsten Restaurants
     },
     error: (error) => console.error('Fehler beim Parsen der CSV:', error),
   });
@@ -250,31 +266,50 @@ fetch('API_basics.csv')
 
 
 
-  function get_graph(markerId,) {
+  function get_graph(markerId, type, category) {
     const filteredRows = reviews_grouped_month.filter((r) => r.restaurant_id === markerId);
   
-    // SVG-Setup: Wählen eines SVG-Elements mit einer bestimmten ID
-    const svg = d3.select("#graph-avg-food"); // Ersetze "your-svg-id" mit der tatsächlichen ID des SVG-Elements
-    const margin = { top: 20, right: 30, bottom: 50, left: 50 };
+    const svg = d3.select(`#graph-${type}-${category}`);
+    const margin = { top: 10, right: 10, bottom: 70, left: 30 };
   
-    // Berechne die Breite und Höhe dynamisch
     function updateGraphSize() {
-      const width = svg.node().getBoundingClientRect().width - margin.left - margin.right; // Dynamische Breite des Containers
-      const fullHeight = svg.attr("height") - margin.top - margin.bottom;
-      const height = fullHeight / 2;
+      // Berechne die Breite und Höhe des SVG-Containers dynamisch
+      const containerWidth = svg.node().getBoundingClientRect().width || 400; // Fallback-Breite
+      const containerHeight = svg.node().getBoundingClientRect().height || 300; // Fallback-Höhe
   
-      // Setze die neuen Dimensionen
-      svg.attr("width", width + margin.left + margin.right); // Um sicherzustellen, dass es 100% der Containerbreite einnimmt
+      const width = containerWidth - margin.left - margin.right;
+      const height = containerHeight - margin.top - margin.bottom;
   
-      // Lösche bestehende Inhalte (falls das Graph neu gezeichnet werden soll)
+      // Setze die SVG-Dimensionen
+      svg.attr("width", containerWidth).attr("height", containerHeight + 25);
+  
+      // Lösche vorherige Inhalte
       svg.selectAll("*").remove();
-  
+
+      // Überschrift hinzufügen
+      let heading;
+      if (category === 'food') {
+        heading = type === 'avg' ? 'Average food stars per month' : 'Total amount food reviews per month';
+      } else if (category === 'service') {
+        heading = type === 'avg' ? 'Average service stars per month' : 'Total amount service reviews per month';
+      } else if (category === 'atmosphere') {
+        heading = type === 'avg' ? 'Average atmosphere stars per month' : 'Total amount atmosphere reviews per month';
+      }
+
+      svg.append("text")
+        .attr("x", containerWidth / 2) // Horizontale Mitte
+        .attr("y", margin.top) // Platz oberhalb des Graphen
+        .attr("text-anchor", "middle") // Zentriere den Text
+        .style("font-size", "16px") // Schriftgröße
+        .style("font-weight", "bold") // Fettgedruckt
+        .style("fill", "white") 
+        .text(heading); // Text der Überschrift
+    
       const chart = svg.append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+        .attr("transform", `translate(${margin.left},${margin.top + 25})`);
   
-      // X-Achse (Zeitachse)
       const x = d3.scaleBand()
-        .domain(filteredRows.map(d => d.review_month)) // Monatsnamen als X-Achse
+        .domain(filteredRows.map(d => d.review_month))
         .range([0, width])
         .padding(0.1);
   
@@ -285,31 +320,24 @@ fetch('API_basics.csv')
         .attr("transform", "rotate(-45)")
         .style("text-anchor", "end");
   
-      
-      // Y-Achse (Bewertungen)
+      let dataField;
+      if (category === 'food') {
+        dataField = type === 'avg' ? 'dining_stars_food_mean' : 'dining_stars_food_count';
+      } else if (category === 'service') {
+        dataField = type === 'avg' ? 'dining_stars_service_mean' : 'dining_stars_service_count';
+      } else if (category === 'atmosphere') {
+        dataField = type === 'avg' ? 'dining_stars_atmosphere_mean' : 'dining_stars_atmosphere_count';
+      }
+  
       const y = d3.scaleLinear()
-        .domain([0, d3.max(filteredRows, d => d.dining_stars_food_mean)]) // Wertebereich von 0 bis max
+        .domain([0, d3.max(filteredRows, d => d[dataField]) || 1]) // Fallback-Wert
         .range([height, 0]);
   
-      const tickValues = [];
-      const tickStep = Math.floor(d3.max(filteredRows, d => d.dining_stars_food_mean) / 5); // Schrittweite für die Ticks
-
-      for (let i = 0; i <= d3.max(filteredRows, d => d.dining_stars_food_mean); i += tickStep) {
-        tickValues.push(i);
-      }
-
-      chart.append("g")
-      .call(d3.axisLeft(y)
-        .tickValues(tickValues) // Setze nur alle zwei Abschnitte Ticks
-        .tickSize(-width) // Horizontale Striche im Hintergrund
-        .tickPadding(10)) // Abstand der Ticks vom Rand der Achse
-      .selectAll("line")
-      .attr("stroke", "#ccc"); // Farbe der Striche im Hintergrund
+      chart.append("g").call(d3.axisLeft(y));
   
-      // Linie ohne Kurve (gerade Linien)
       const line = d3.line()
-        .x(d => x(d.review_month) + x.bandwidth() / 2) // Mittelpunkt der Kategorie
-        .y(d => y(d.dining_stars_food_mean));
+        .x(d => x(d.review_month) + x.bandwidth() / 2)
+        .y(d => y(d[dataField]));
   
       chart.append("path")
         .datum(filteredRows)
@@ -318,26 +346,18 @@ fetch('API_basics.csv')
         .attr("stroke-width", 2)
         .attr("d", line);
   
-      // Punkte markieren
       chart.selectAll("circle")
         .data(filteredRows)
         .join("circle")
         .attr("cx", d => x(d.review_month) + x.bandwidth() / 2)
-        .attr("cy", d => y(d.dining_stars_food_mean))
+        .attr("cy", d => y(d[dataField]))
         .attr("r", 5)
         .attr("fill", "#F49069");
     }
   
-    // Initialisiere den Graphen mit der aktuellen Größe
-    window.onload = updateGraphSize();
-  
-    // Aktualisiere den Graphen bei einer Größenänderung des Fensters
+    updateGraphSize();
     window.addEventListener("resize", updateGraphSize);
   }
-
-
-
-
 
 
 
@@ -356,11 +376,14 @@ function handleMarkerClick(markerId) {
     // const starRating = document.getElementById('star-rating');
 
     getStarRating(markerId);
-    get_graph(markerId);
   
     if (sidebarName && sidebarAddress) {
       sidebarName.textContent = name;
       sidebarAddress.textContent = address;
+
+    const infoTab = document.querySelector('#nav-info-tab');
+    const bootstrapTab = new bootstrap.Tab(infoTab);
+    bootstrapTab.show();
 
     }
   } else {
@@ -369,3 +392,40 @@ function handleMarkerClick(markerId) {
 }
 
 
+// only when clicking on the tab, the size will be rendered, so when tab is clicked function to construct graph will be opened
+document.querySelector('#nav-food-tab').addEventListener('shown.bs.tab', () => {
+  if (typeof activeMarker !== 'undefined' && activeMarker !== null) {
+    const markerId = activeMarker.options.id; // Zugriff auf die Marker-ID
+    const category = 'food'; // Beispielwert
+
+    get_graph(markerId, "avg", category);
+    get_graph(markerId, "total", category);
+  } else {
+    console.error('Kein aktiver Marker gefunden!');
+  }
+});
+
+
+document.querySelector('#nav-service-tab').addEventListener('shown.bs.tab', () => {
+  if (typeof activeMarker !== 'undefined' && activeMarker !== null) {
+    const markerId = activeMarker.options.id; // Zugriff auf die Marker-ID
+    const category = 'service';
+
+    get_graph(markerId, "avg", category);
+    get_graph(markerId, "total", category);
+  } else {
+    console.error('Kein aktiver Marker gefunden!');
+  }
+});
+
+document.querySelector('#nav-atmosphere-tab').addEventListener('shown.bs.tab', () => {
+  if (typeof activeMarker !== 'undefined' && activeMarker !== null) {
+    const markerId = activeMarker.options.id; // Zugriff auf die Marker-ID
+    const category = 'atmosphere';
+
+    get_graph(markerId, "avg", category);
+    get_graph(markerId, "total", category);
+  } else {
+    console.error('Kein aktiver Marker gefunden!');
+  }
+});

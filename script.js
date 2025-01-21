@@ -207,9 +207,9 @@ fetch('API_basics.csv')
     };
 
     updateAverageRating(star_rating, ''); // Allgemeine Bewertung
-    //updateAverageRating(star_rating_food, '-food-ov'); // Food-Bewertung
-    //updateAverageRating(star_rating_service, '-service-ov'); // Service-Bewertung
-    //updateAverageRating(star_rating_atmosphere, '-atmosphere-ov'); // Atmosphere-Bewertung
+    updateAverageRating(star_rating_food, '-food-detail'); // Food-Bewertung
+    updateAverageRating(star_rating_service, '-service-detail'); // Service-Bewertung
+    updateAverageRating(star_rating_atmosphere, '-atmosphere-detail'); // Atmosphere-Bewertung
     updateAverageRating(star_rating_food, '-food'); // Food-Bewertung
     updateAverageRating(star_rating_service, '-service'); // Service-Bewertung
     updateAverageRating(star_rating_atmosphere, '-atmosphere'); // Atmosphere-Bewertung
@@ -245,9 +245,9 @@ fetch('API_basics.csv')
   
       // Sterne für jede Gruppe aktualisieren
       updateStars(star_rating, ''); // Allgemeine Sterne
-      //updateStars(star_rating_food, '-food-ov'); // Food
-      //updateStars(star_rating_service, '-service-ov'); // Service
-      //updateStars(star_rating_atmosphere, '-atmosphere-ov'); // Atmosphere
+      updateStars(star_rating_food, '-food-detail'); // Food
+      updateStars(star_rating_service, '-service-detail'); // Service
+      updateStars(star_rating_atmosphere, '-atmosphere-detail'); // Atmosphere
       updateStars(star_rating_food, '-food'); // Food
       updateStars(star_rating_service, '-service'); // Service
       updateStars(star_rating_atmosphere, '-atmosphere'); // Atmosphere

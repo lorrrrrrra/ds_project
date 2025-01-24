@@ -1,8 +1,0 @@
-#255847   -> grün
-#153329   -> dunkleres grün
-#ABBA72   -> salbeigrün
-#708840   -> Mossgrün
-#FEDC7B   -> gelb
-#F49069   -> fuzzy peach
-#DF6149   -> coral blush
-#FFFBF0   -> beige/ weiß

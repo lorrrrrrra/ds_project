@@ -6,6 +6,8 @@ const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+const apiUrl = 'http://localhost:5000/api/restaurants';
+
 // new Icon for clicked Marker
 var defaultIcon = L.icon({
   iconUrl: 'marker_green.png', // Standardmarker
@@ -34,6 +36,25 @@ let reviews_grouped_year = [];
 let reviews_grouped_price = [];
 let summaries = [];
 let activeMarker = null;
+
+
+function fetchRestaurantData() {
+  fetch(apiUrl)
+      .then(response => response.json())  // Umwandeln der Antwort in JSON
+      .then(data => {
+          console.log(data);  // Die Daten im Console-Log anzeigen
+          // Hier kannst du die Daten verwenden, um sie im Frontend darzustellen
+          // Zum Beispiel könnte man die Daten in einer Tabelle anzeigen
+      })
+      .catch(error => {
+          console.error('Fehler beim Abrufen der Daten:', error);
+      });
+}
+
+// Die Funktion aufrufen, um die Daten zu laden
+fetchRestaurantData();
+
+
 
 // loading the general data for the restaurants
 fetch('API_general.csv')

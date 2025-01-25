@@ -40,7 +40,7 @@ def get_restaurants():
     return jsonify(restaurants)
 
 
-@app.route('/api/restaurant/<:restaurant_id>', methods=['GET'])
+@app.route('/api/restaurant/<restaurant_id>', methods=['GET'])
 def get_restaurant(restaurant_id):
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)

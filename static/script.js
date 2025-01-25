@@ -322,6 +322,9 @@ function get_summaries(markerId) {
 
 
 function handleMarkerClick(markerId) {
+  const sidebarName = document.getElementById('name');
+  const sidebarAddress = document.getElementById('address');
+
   const apiUrl = `/api/restaurant/${markerId}`; // Korrekte URL mit markerId
   fetch(apiUrl)
     .then(response => response.json())
@@ -330,7 +333,8 @@ function handleMarkerClick(markerId) {
         console.error('Fehler:', data.error);
       } else {
         console.log('Restaurant-Daten:', data);
-        // Hier kannst du die Daten verwenden, z. B. in einem Info-Popup oder einer Sidebar
+        sidebarName.textContent = data.name;
+        sidebarAddress.textContent = data.address;
       }
     })
     .catch(error => {
@@ -355,12 +359,12 @@ function handleMarkerClick(markerId) {
     get_summaries(markerId);
   
     if (sidebarName && sidebarAddress) {
-      sidebarName.textContent = name;
-      sidebarAddress.textContent = address;
+      // sidebarName.textContent = name;
+      // sidebarAddress.textContent = address;
 
-    const infoTab = document.querySelector('#nav-info-tab');
-    const bootstrapTab = new bootstrap.Tab(infoTab);
-    bootstrapTab.show();
+      const infoTab = document.querySelector('#nav-info-tab');
+      const bootstrapTab = new bootstrap.Tab(infoTab);
+      bootstrapTab.show();
 
     }
   } else {

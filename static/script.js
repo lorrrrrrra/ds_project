@@ -11,7 +11,7 @@ const apiUrl_2 = 'http://193.196.55.120:8080/api/restaurants';
 
 // new Icon for clicked Marker
 var defaultIcon = L.icon({
-  iconUrl: 'marker_green.png', // Standardmarker
+  iconUrl: 'static/marker_green.png', // Standardmarker
   iconSize: [37.5, 58],
   iconAnchor: [22, 94],
   shadowAnchor: [4, 62],
@@ -19,7 +19,7 @@ var defaultIcon = L.icon({
 });
 
 var clickedIcon = L.icon({
-  iconUrl: 'marker_orange.png', // Marker bei Klick
+  iconUrl: 'static/marker_orange.png', // Marker bei Klick
   iconSize: [37.5, 58],
   iconAnchor: [22, 94],
   shadowAnchor: [4, 62],
@@ -59,7 +59,7 @@ fetchRestaurantData(apiUrl_2);
 
 
 // loading the general data for the restaurants
-fetch('API_general.csv')
+fetch('static/API_general.csv')
 .then((response) => response.text())
 .then((csvData) => {
   // CSV parsen
@@ -149,7 +149,7 @@ fetch('static/csv files/filtered_summary_restaurants.csv')
 .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
-fetch('API_basics.csv')
+fetch('static/API_basics.csv')
   .then((response) => response.text())
   .then((csvData) => {
     // CSV parsen

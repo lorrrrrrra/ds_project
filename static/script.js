@@ -6,8 +6,8 @@ const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-const apiUrl = 'http://localhost:8000/api/restaurants';
-const apiUrl_2 = 'http://193.196.55.120:8000/api/restaurants';
+const apiUrl = 'http://localhost:8080/api/restaurants';
+const apiUrl_2 = 'http://193.196.55.120:8080/api/restaurants';
 
 // new Icon for clicked Marker
 var defaultIcon = L.icon({
@@ -74,7 +74,7 @@ fetch('API_general.csv')
 .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
-fetch('csv files/reviews_grouped.csv')
+fetch('static/csv files/reviews_grouped.csv')
 .then((response) => response.text())
 .then((csvData) => {
   // CSV parsen
@@ -89,7 +89,7 @@ fetch('csv files/reviews_grouped.csv')
 .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
-fetch('csv files/reviews_grouped_month.csv')
+fetch('static/csv files/reviews_grouped_month.csv')
 .then((response) => response.text())
 .then((csvData) => {
   // CSV parsen
@@ -104,7 +104,7 @@ fetch('csv files/reviews_grouped_month.csv')
 .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
-fetch('csv files/reviews_grouped_year.csv')
+fetch('static/csv files/reviews_grouped_year.csv')
 .then((response) => response.text())
 .then((csvData) => {
   // CSV parsen
@@ -119,7 +119,7 @@ fetch('csv files/reviews_grouped_year.csv')
 .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
-fetch('csv files/dining_price_range_group.csv')
+fetch('static/csv files/dining_price_range_group.csv')
 .then((response) => response.text())
 .then((csvData) => {
   // CSV parsen
@@ -134,7 +134,7 @@ fetch('csv files/dining_price_range_group.csv')
 .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
-fetch('csv files/filtered_summary_restaurants.csv')
+fetch('static/csv files/filtered_summary_restaurants.csv')
 .then((response) => response.text())
 .then((csvData) => {
   // CSV parsen

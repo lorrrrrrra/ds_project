@@ -18,7 +18,7 @@ def get_db_connection():
 def index():
     return render_template('index.html')
 
-@app.route('/api/restaurants', methods=['GET', 'POST'])
+@app.route('/api/restaurants', methods=['GET'])
 def get_restaurants():
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)

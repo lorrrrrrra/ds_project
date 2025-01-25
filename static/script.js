@@ -255,13 +255,13 @@ fetch('static/API_basics.csv')
   
         stars.forEach((star, index) => {
           if (index < fullStars) {
-            star.src = "/graphics/voller_stern.png"; // Voller Stern
+            star.src = "static/graphics/voller_stern.png"; // Voller Stern
           } else if (index === fullStars && hasHalfStar) {
-            star.src = "/graphics/halber_stern.png"; // Halber Stern
+            star.src = "static/graphics/halber_stern.png"; // Halber Stern
           } else if (index === fullStars && hasFullStar) {
-            star.src = "/graphics/voller_stern.png"; // Voller Stern
+            star.src = "static/graphics/voller_stern.png"; // Voller Stern
           } else {
-            star.src = "/graphics/leerer_stern.png"; // Leerer Stern
+            star.src = "static/graphics/leerer_stern.png"; // Leerer Stern
           }
         });
       };

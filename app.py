@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
@@ -16,7 +16,7 @@ def get_db_connection():
 
 @app.route('/')
 def index():
-    return "Hallo, Flask mit PostgreSQL!"
+    return render_template('index.html')
 
 @app.route('/api/restaurants', methods=['GET'])
 def get_restaurants():

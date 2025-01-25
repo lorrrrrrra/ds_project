@@ -322,6 +322,23 @@ function get_summaries(markerId) {
 
 
 function handleMarkerClick(markerId) {
+  const apiUrl = `/api/restaurant/${markerId}`; // Korrekte URL mit markerId
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        console.error('Fehler:', data.error);
+      } else {
+        console.log('Restaurant-Daten:', data);
+        // Hier kannst du die Daten verwenden, z. B. in einem Info-Popup oder einer Sidebar
+      }
+    })
+    .catch(error => {
+      console.error('Fehler beim Abrufen der Restaurant-Daten:', error);
+    });
+
+
+
   // Restaurant mit passender ID suchen
   const restaurant = restaurants.find((r) => r.restaurant_id === markerId);
   

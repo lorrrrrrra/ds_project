@@ -6,8 +6,8 @@ const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-const apiUrl = 'http://localhost/api/restaurants';
-const apiUrl_2 = 'http://193.196.55.120/api/restaurants';
+const apiUrl = '/api/restaurants';
+const apiUrl_2 = '/api/restaurants';
 
 // new Icon for clicked Marker
 var defaultIcon = L.icon({

@@ -479,10 +479,6 @@ function update_price_rating(button, min, max) {
     filters["price_filter"] = true;
     filters[price_category] = true;  
   }
-  console.log(min);
-  filters["price_min"] = min;
-  console.log(max);
-  filters["price_max"] = max;
 }
 
 
@@ -529,9 +525,7 @@ function delete_all_filters() {
   filters["price_20_30"] = false; 
   filters["price_30_40"] = false; 
   filters["price_40_50"] = false; 
-  filters["price_50_100"] = false; 
-
-
+  filters["price_50_100"] = false;
 }
 
 

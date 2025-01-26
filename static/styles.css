@@ -97,10 +97,10 @@ html, body {
     padding-right: 10px;
 }
 
-.filter-section label {
-    margin-bottom: 8px; /* Margin under the label text */
-    display: block; /* makes sure, that the label is above the dropdown */
-}
+/* .filter-section label {
+    margin-bottom: 8px; /* Margin under the label text 
+    display: block; /* makes sure, that the label is above the dropdown 
+} */
 
 #food-type {
     width: 100%;
@@ -130,6 +130,10 @@ html, body {
 
 .filter-star-img {
     cursor: pointer;
+}
+
+.label-filter {
+    font-weight: bold;
 }
 
 .btn-price-filter-inactive {

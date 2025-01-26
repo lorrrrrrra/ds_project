@@ -32,7 +32,7 @@
                 <div class="filter-section">
                     <div class="filter">
                         <div class="stars">
-                            <label>Overall</label>
+                            <label class="label-filter">Overall</label>
                             <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" class= "filter-star-img" id="star-1-filter-general" alt="Star" style="width: 20px; height: 20px;" onclick="setRating(1, 'general')">
                             <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" class= "filter-star-img" id="star-2-filter-general" alt="Star" style="width: 20px; height: 20px;" onclick="setRating(2, 'general')">
                             <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" class= "filter-star-img" id="star-3-filter-general" alt="Star" style="width: 20px; height: 20px;" onclick="setRating(3, 'general')">
@@ -42,7 +42,7 @@
                     </div>
     
                     <div class="filter">
-                        <label>Food</label>
+                        <label class="label-filter">Food</label>
                         <div class="stars"><span>
                             <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" class= "filter-star-img" id="star-1-filter-food" alt="Star" style="width: 20px; height: 20px;" onclick="setRating(1, 'food')">
                             <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" class= "filter-star-img" id="star-2-filter-food" alt="Star" style="width: 20px; height: 20px;" onclick="setRating(2, 'food')">
@@ -53,7 +53,7 @@
                     </div>
     
                     <div class="filter">
-                        <label>Service</label>
+                        <label class="label-filter">Service</label>
                         <div class="stars"><span>
                             <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" class= "filter-star-img" id="star-1-filter-service" alt="Star" style="width: 20px; height: 20px;" onclick="setRating(1, 'service')">
                             <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" class= "filter-star-img" id="star-2-filter-service" alt="Star" style="width: 20px; height: 20px;" onclick="setRating(2, 'service')">
@@ -64,7 +64,7 @@
                     </div>
     
                     <div class="filter">
-                        <label>Atmosphere</label>
+                        <label class="label-filter">Atmosphere</label>
                         <div class="stars"><span>
                             <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" class= "filter-star-img" id="star-1-filter-atmosphere" alt="Star" style="width: 20px; height: 20px;" onclick="setRating(1, 'atmosphere')">
                             <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" class= "filter-star-img" id="star-2-filter-atmosphere" alt="Star" style="width: 20px; height: 20px;" onclick="setRating(2, 'atmosphere')">
@@ -75,7 +75,7 @@
                     </div>
 
                     <div class="filter">
-                        <label>Price</label>
+                        <label class="label-filter">Price</label>
                         <div class="buttons"><span>
                             <button id="price-0-10" class="btn btn-price-filter-inactive mb-2" data-active="false" onclick="update_price_rating(this, 0, 10)">0 - 10€</button>
                             <button id="price-10-20" class="btn btn-price-filter-inactive mb-2" data-active="false" onclick="update_price_rating(this, 10, 20)">10 - 20€</button>
@@ -87,7 +87,7 @@
                     </div>
 
                     <div class="filter">
-                        <label for="food-type">Food Type</label>
+                        <label for="food-type" class="label-filter">Food Type</label>
                         <select id="food-type">
                             <option value="all">All</option>
                             <option value="german">German</option>

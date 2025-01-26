@@ -409,7 +409,9 @@ function setRating(rating, category) {
   for (let i = 1; i <= 5; i++) {
       const star = document.getElementById(`star-${i}-filter-${category}`);
       
-      if (i <= rating) {
+      if (rating == 0) {
+        star.src = "static/graphics/leerer_stern.png";
+      } else if (rating > 0 && i <= rating) {
           if (i === rating) {
               // Der Stern, auf den der Benutzer geklickt hat, kann entweder halb oder ganz gefüllt sein
               star.src = "static/graphics/voller_stern.png"; // Ersetze durch den vollen Stern

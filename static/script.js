@@ -398,7 +398,7 @@ function handleMarkerClick(markerId) {
 function setRating(rating, category) {
   // Anzahl der vollen Sterne, halben Sterne und leeren Sterne
   for (let i = 1; i <= 5; i++) {
-      const star = document.getElementById(`star-${i}-${category}`);
+      const star = document.getElementById(`star-${i}-filter-${category}`);
       
       if (i <= rating) {
           if (i === rating) {

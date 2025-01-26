@@ -40,7 +40,7 @@ let filters = {
   general: 0,
   food: 0,
   service: 0,
-  ambience: 0,
+  atmosphere: 0,
   price: 0
 }
 

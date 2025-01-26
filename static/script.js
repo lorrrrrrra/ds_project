@@ -382,7 +382,8 @@ function handleMarkerClick(markerId) {
           sidebarWebsiteUrl.textContent = "Click here to access website";
           sidebarWebsiteUrl.href = data.website_uri;
         } else {
-          //do nothing
+          sidebarWebsiteUrl.textContent = "";
+          sidebarWebsiteUrl.href = "";
         }
       }
     })

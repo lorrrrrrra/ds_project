@@ -36,6 +36,14 @@ let reviews_grouped_price = [];
 let summaries = [];
 let activeMarker = null;
 
+let filters = {
+  general: 0,
+  food: 0,
+  service: 0,
+  ambience: 0,
+  price: 0
+}
+
 
 // function fetchRestaurantData(Url) {
 //   fetch(Url)
@@ -394,9 +402,10 @@ function handleMarkerClick(markerId) {
 }
 
 
-
+// all things filter
 function setRating(rating, category) {
-  // Anzahl der vollen Sterne, halben Sterne und leeren Sterne
+  filters[category] = rating; 
+
   for (let i = 1; i <= 5; i++) {
       const star = document.getElementById(`star-${i}-filter-${category}`);
       

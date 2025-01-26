@@ -378,7 +378,7 @@ function handleMarkerClick(markerId) {
         sidebarName.textContent = data.name;
         sidebarAddress.textContent = data.address;
 
-        if (data.website_uri !== null && data.website_uri !== undefined && data.website_uri == "NaN") {
+        if (data.website_uri !== null && data.website_uri !== undefined && data.website_uri != "NaN") {
           sidebarWebsiteUrl.textContent = "Click here to access website";
           sidebarWebsiteUrl.href = data.website_uri;
         } else {

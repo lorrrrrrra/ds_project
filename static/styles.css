@@ -376,6 +376,6 @@ html, body {
 
 
 
-#footer{
-    background-color: #255847;
+#footer-div{
+    background-color: #255847 !important;
 }

@@ -385,6 +385,13 @@ function handleMarkerClick(markerId) {
           sidebarWebsiteUrl.textContent = "";
           sidebarWebsiteUrl.href = "";
         }
+
+        if (data.opening_hours !== null && data.opening_hours !== undefined && data.opening_hours != "NaN") {
+          // just for checking opening hours
+        } else {
+          // just for checking opening hours
+        }
+        
       }
     })
     .catch(error => {

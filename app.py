@@ -60,7 +60,7 @@ def get_restaurant(restaurant_id):
         
         # Zusätzliche SQL-Abfrage, um die Website-URI aus restaurant_general zu holen
         cursor.execute("""
-            SELECT website_uri
+            SELECT website_uri, opening_hours
             FROM restaurant_general
             WHERE restaurant_id = %s;
         """, (restaurant_id,))
@@ -72,6 +72,10 @@ def get_restaurant(restaurant_id):
         else:
             restaurant["website_uri"] = None  # Wenn keine Website gefunden wurde, setze den Wert auf None
         
+        if website_data and "website_uri" in website_data:
+            restaurant["opening_hours"] = website_data["opening_hours"]
+        else:
+            restaurant["opening_hours"] = None  # Wenn keine Website gefunden wurde, setze den Wert auf None
         # Gebe die Informationen als JSON zurück
         return jsonify(restaurant)
     

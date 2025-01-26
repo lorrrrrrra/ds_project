@@ -396,6 +396,7 @@ html, body {
 .label-amount {
     font-size: 0.75rem;
     text-align: right !important;
+    font-style: italic;
 }
 
 .avg-rating-label{

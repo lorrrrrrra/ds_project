@@ -350,11 +350,11 @@ function get_summaries(markerId) {
     html_summary_atmosphere.textContent = summary_atmosphere;
     html_summary_price.textContent = summary_price;
 
-    label_amount_overall.textContent = `based on ${count_overall} reviews`;
-    label_amount_food.textContent = `based on ${count_food} reviews`;
-    label_amount_service.textContent = `based on ${count_service} reviews`;
-    label_amount_atmosphere.textContent = `based on ${count_atmosphere} reviews`;
-    label_amount_price.textContent = `based on ${count_price} reviews`;
+    label_amount_overall.textContent = `generated with AI - based on ${count_overall} reviews`;
+    label_amount_food.textContent = `generated with AI -based on ${count_food} reviews`;
+    label_amount_service.textContent = `generated with AI -based on ${count_service} reviews`;
+    label_amount_atmosphere.textContent = `generated with AI -based on ${count_atmosphere} reviews`;
+    label_amount_price.textContent = `generated with AI -based on ${count_price} reviews`;
   }
 }
 

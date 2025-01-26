@@ -136,15 +136,6 @@ html, body {
     padding-bottom: 20px;     /* padding for below Food Filter */
 }
 
-.delete-single-filter-btn {
-    background-color: transparent;
-    color: #7F7F7F;
-    border: none;
-    font-size: 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 10;
-}
 
 .filter-star-img {
     cursor: pointer;

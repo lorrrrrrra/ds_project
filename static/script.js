@@ -332,11 +332,11 @@ function get_summaries(markerId) {
     const html_summary_atmosphere = document.getElementById('summary-atmosphere');
     const html_summary_price = document.getElementById('summary-price');
 
-    const summary_overall_text = `"${summary_overall}" (based on ${count_overall} reviews)`;
-    const summary_food_text = `"${summary_food}" (based on ${count_food} reviews)`;
-    const summary_service_text = `"${summary_service}" (based on ${count_service} reviews)`;
-    const summary_atmosphere_text = `"${summary_atmosphere}" (based on ${count_atmosphere} reviews)`;
-    const summary_price_text = `"${summary_price}" (based on ${count_price} reviews)`;
+    const summary_overall_text = `${summary_overall} (based on ${count_overall} reviews)`;
+    const summary_food_text = `${summary_food} (based on ${count_food} reviews)`;
+    const summary_service_text = `${summary_service} (based on ${count_service} reviews)`;
+    const summary_atmosphere_text = `${summary_atmosphere} (based on ${count_atmosphere} reviews)`;
+    const summary_price_text = `${summary_price} (based on ${count_price} reviews)`;
 
     html_summary_overall.textContent = summary_overall_text;
     html_summary_food.textContent = summary_food_text;

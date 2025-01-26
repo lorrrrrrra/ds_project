@@ -41,7 +41,8 @@ let filters = {
   food: 0,
   service: 0,
   atmosphere: 0,
-  price: 0
+  price_min: 0,
+  price_max: 50
 }
 
 
@@ -440,6 +441,11 @@ function setRating(rating, category) {
   }
 }
 
+
+function update_price_rating(min, max) {
+  console.log(min);
+  console.log(max);
+}
 
 function delete_all_filters() {
   const updateStars = (group) => {

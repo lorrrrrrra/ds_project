@@ -81,6 +81,15 @@
                             <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" class= "filter-star-img" id="star-5-filter-atmosphere" alt="Star" style="width: 20px; height: 20px;" onclick="setRating(5, 'atmosphere')">
                         </span></div>
                     </div>
+
+                    <div class="filter">
+                        <label>Price</label>
+                        <div class="buttons"><span>
+                            <button id="0-10" class="btn btn-secondary btn-price-filter" onclick="update_price_rating(0, 10)">0 - 10€</button>
+                            <button id="10-20" class="btn btn-secondary btn-price-filter" onclick="update_price_rating(0, 10)">10 - 20€</button>
+                            <button id="20-30" class="btn btn-secondary btn-price-filter" onclick="update_price_rating(0, 10)">20 - 30€</button>
+                        </span></div>
+                    </div>
                 </div>
             </div>
 

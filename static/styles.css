@@ -84,9 +84,10 @@ html, body {
     align-items: center; /* Zentriert vertikal */
     padding-top: 10px; /* Abstand oben */
     font-size: 1.7rem;
-    /*font-weight: bold; */
+    font-weight: bold;
     letter-spacing: 1.5px;
     color: white;
+    ;
 }
 
 /* css for button in third stripe */
@@ -306,6 +307,12 @@ html, body {
 #address {
     color: #F2F2F2;
     font-style: italic;
+}
+
+#website-url {
+    color: #F2F2F2;
+    font-style: italic;
+    font-size: 12px;
 }
 
 .star-rating{

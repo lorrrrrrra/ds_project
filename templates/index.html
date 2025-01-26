@@ -146,7 +146,10 @@
                     <div id="name">Restaurant Name</div>
                     <button class="close-btn" onclick="close_sidebar()">×</button>
                 </div>
-                <p id="address">Street, 123 PLZ City, Country</p>
+                <p >
+                    <div id="address"> Street, 123 PLZ City, Country</div>
+                    <a id="website-url"></a>
+                </p>
                 <div id="star-rating" class="star-rating badge rounded-pill text-bg-secondary position-relative">
                     <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-1" alt="Star" style="width: 20px; height: 20px;">
                     <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-2" alt="Star" style="width: 20px; height: 20px;">

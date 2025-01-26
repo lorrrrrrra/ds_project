@@ -365,7 +365,7 @@ function get_summaries(markerId) {
 function handleMarkerClick(markerId) {
   const sidebarName = document.getElementById('name');
   const sidebarAddress = document.getElementById('address');
-
+  const sidebarWebsiteUrl = document.getElementById('website-url');
 
   const apiUrl = `/api/restaurant/${markerId}`; // Korrekte URL mit markerId
   fetch(apiUrl)
@@ -377,6 +377,13 @@ function handleMarkerClick(markerId) {
         console.log('Restaurant-Daten:', data);
         sidebarName.textContent = data.name;
         sidebarAddress.textContent = data.address;
+
+        if (data.website_uri !== null && data.website_uri !== undefined) {
+          sidebarWebsiteUrl.textContent = "Click here to access website";
+          sidebarWebsiteUrl.href = data.website_uri;
+        } else {
+          //do nothing
+        }
       }
     })
     .catch(error => {

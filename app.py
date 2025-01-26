@@ -45,25 +45,40 @@ def get_restaurant(restaurant_id):
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)
     
-    # SQL-Abfrage, um die Informationen des spezifischen Restaurants zu holen
-    cursor.execute("""
-        SELECT name, address
-        FROM restaurant_basics
-        WHERE restaurant_id = %s;
-    """, (restaurant_id,))
-    
-    # Ergebnis abrufen
-    restaurant = cursor.fetchone()
-    
-    cursor.close()
-    connection.close()
-    
-    if restaurant:
+    try:
+        # SQL-Abfrage, um die Informationen des spezifischen Restaurants aus restaurant_basics zu holen
+        cursor.execute("""
+            SELECT name, address
+            FROM restaurant_basics
+            WHERE restaurant_id = %s;
+        """, (restaurant_id,))
+        restaurant = cursor.fetchone()
+        
+        if not restaurant:
+            # Falls kein Restaurant gefunden wurde, gebe eine Fehlermeldung zurück
+            return jsonify({"error": "Restaurant not found"}), 404
+        
+        # Zusätzliche SQL-Abfrage, um die Website-URI aus restaurant_general zu holen
+        cursor.execute("""
+            SELECT website_uri
+            FROM restaurant_general
+            WHERE restaurant_id = %s;
+        """, (restaurant_id,))
+        website_data = cursor.fetchone()
+        
+        # Falls eine Website gefunden wurde, füge sie den Restaurantinformationen hinzu
+        if website_data and "website_uri" in website_data:
+            restaurant["website_uri"] = website_data["website_uri"]
+        else:
+            restaurant["website_uri"] = None  # Wenn keine Website gefunden wurde, setze den Wert auf None
+        
         # Gebe die Informationen als JSON zurück
         return jsonify(restaurant)
-    else:
-        # Falls kein Restaurant mit der gegebenen ID existiert, gebe eine Fehlermeldung zurück
-        return jsonify({"error": "Restaurant not found"}), 404
+    
+    finally:
+        # Cursor und Verbindung schließen
+        cursor.close()
+        connection.close()
 
 
 

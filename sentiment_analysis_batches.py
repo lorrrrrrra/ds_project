@@ -133,8 +133,6 @@ results['review_id'] = results['review_id'].astype('int64')
 # merge results on review_id to database
 
 
-
-
 #####################
 ### Service
 #####################

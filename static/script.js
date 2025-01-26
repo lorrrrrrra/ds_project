@@ -423,7 +423,7 @@ function setRating(rating, category) {
     });
   };
 
-  if (filters[category] == 0) {
+  if (filters[category] == 0 || filters[category] != rating) {
     updateStars(rating, category);
     filters[category] = rating;
   } else {

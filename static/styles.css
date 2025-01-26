@@ -134,6 +134,8 @@ html, body {
 
 .label-filter {
     font-weight: bold;
+    padding-right: 5px;
+    padding-bottom: 5px;
 }
 
 .btn-price-filter-inactive {

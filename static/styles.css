@@ -97,17 +97,6 @@ html, body {
     padding-right: 10px;
 }
 
-
-/* Styling für Review-Filter */
-.review-filter {
-    /*justify-content: center;
-    align-items: center; */
-    padding-top: 10px; /* Abstand oben */
-    padding-left: 5px;
-    font-size: 1.2rem;
-    color: white;
-}
-
 .filter-section label {
     margin-bottom: 8px; /* Margin under the label text */
     display: block; /* makes sure, that the label is above the dropdown */

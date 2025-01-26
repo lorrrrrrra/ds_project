@@ -356,11 +356,11 @@ function get_summaries(markerId) {
     html_summary_atmosphere.textContent = summary_atmosphere;
     html_summary_price.textContent = summary_price;
 
-    label_amount_overall = `(based on ${count_overall} reviews)`;
-    label_amount_food = `(based on ${count_food} reviews)`;
-    label_amount_service = `(based on ${count_service} reviews)`;
-    label_amount_atmosphere = `(based on ${count_atmosphere} reviews)`;
-    label_amount_price = `(based on ${count_price} reviews)`;
+    label_amount_overall = `based on ${count_overall} reviews`;
+    label_amount_food = `based on ${count_food} reviews`;
+    label_amount_service = `based on ${count_service} reviews`;
+    label_amount_atmosphere = `based on ${count_atmosphere} reviews`;
+    label_amount_price = `based on ${count_price} reviews`;
   }
 }
 

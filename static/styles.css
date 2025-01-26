@@ -143,7 +143,7 @@ html, body {
     cursor: pointer;
 }
 
-.btn-price-filter-active {
+.btn-price-filter-inactive {
     color: white;
     border-color: #153329;
     background-color: #255847;
@@ -159,7 +159,7 @@ html, body {
     border-radius: 7px;
 }
 
-.btn-price-filter-inactive {
+.btn-price-filter-active {
     color: white;
     border-color: #153329;
     background-color: #153329;

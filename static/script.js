@@ -503,36 +503,35 @@ function delete_all_filters() {
     filters[group] = 0;
     
   };
-
-  const update_price_filters = () => {
-    const price_buttons = [
-      document.getElementById(`price-0-10`),
-      document.getElementById(`price-10-20`),
-      document.getElementById(`price-20-30`),
-      document.getElementById(`price-30-40`),
-      document.getElementById(`price-40-50`),
-      document.getElementById(`price-50-100`),
-    ];
-
-    price_buttons.forEach((button, index) => {
-      button.setAttribute("data-active", "false");
-      button.classList.remove("btn-price-filter-active");
-      button.classList.add("btn-price-filter-inactive"); 
-    });
-
-    filters["price_filter"] = false;
-    filters["price_0_10"] = false; 
-    filters["price_10_20"] = false; 
-    filters["price_20_30"] = false; 
-    filters["price_30_40"] = false; 
-    filters["price_40_50"] = false; 
-    filters["price_50_100"] = false; 
-  };
-
   updateStars("general");
   updateStars("food");
   updateStars("service");
   updateStars("atmosphere");
+
+  const price_buttons = [
+    document.getElementById(`price-0-10`),
+    document.getElementById(`price-10-20`),
+    document.getElementById(`price-20-30`),
+    document.getElementById(`price-30-40`),
+    document.getElementById(`price-40-50`),
+    document.getElementById(`price-50-100`),
+  ];
+
+  price_buttons.forEach((button, index) => {
+    button.setAttribute("data-active", "false");
+    button.classList.remove("btn-price-filter-active");
+    button.classList.add("btn-price-filter-inactive"); 
+  });
+
+  filters["price_filter"] = false;
+  filters["price_0_10"] = false; 
+  filters["price_10_20"] = false; 
+  filters["price_20_30"] = false; 
+  filters["price_30_40"] = false; 
+  filters["price_40_50"] = false; 
+  filters["price_50_100"] = false; 
+
+
 }
 
 

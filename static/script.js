@@ -415,7 +415,7 @@ function setRating(rating, category) {
     ];
 
     stars.forEach((star, index) => {
-      if (index <= rating) {
+      if ((index+1) <= rating) {
         star.src = "static/graphics/voller_stern.png"; // Voller Stern
       } else {
         star.src = "static/graphics/leerer_stern.png"; // Leerer Stern

@@ -455,7 +455,7 @@ function delete_all_filters() {
         star.src = "static/graphics/leerer_stern.png"; // Leerer Stern
       });
 
-    filters[category] = 0;
+    filters[group] = 0;
     
   };
 

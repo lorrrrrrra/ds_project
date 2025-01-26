@@ -6,8 +6,6 @@ const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-const apiUrl = '/api/restaurants';
-const apiUrl_2 = '/api/restaurants';
 
 // new Icon for clicked Marker
 var defaultIcon = L.icon({
@@ -39,22 +37,22 @@ let summaries = [];
 let activeMarker = null;
 
 
-function fetchRestaurantData(Url) {
-  fetch(Url)
-      .then(response => response.json())  // Umwandeln der Antwort in JSON
-      .then(data => {
-          console.log(data);  // Die Daten im Console-Log anzeigen
-          // Hier kannst du die Daten verwenden, um sie im Frontend darzustellen
-          // Zum Beispiel könnte man die Daten in einer Tabelle anzeigen
-      })
-      .catch(error => {
-          console.error('Fehler beim Abrufen der Daten:', error);
-      });
-}
+// function fetchRestaurantData(Url) {
+//   fetch(Url)
+//       .then(response => response.json())  // Umwandeln der Antwort in JSON
+//       .then(data => {
+//           console.log(data);  // Die Daten im Console-Log anzeigen
+//           // Hier kannst du die Daten verwenden, um sie im Frontend darzustellen
+//           // Zum Beispiel könnte man die Daten in einer Tabelle anzeigen
+//       })
+//       .catch(error => {
+//           console.error('Fehler beim Abrufen der Daten:', error);
+//       });
+// }
 
 // Die Funktion aufrufen, um die Daten zu laden
-fetchRestaurantData(apiUrl);
-fetchRestaurantData(apiUrl_2);
+// fetchRestaurantData(apiUrl);
+// fetchRestaurantData(apiUrl_2);
 
 
 

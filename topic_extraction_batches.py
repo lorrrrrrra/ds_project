@@ -33,9 +33,12 @@ def create_batch_tasks(data):
     
     for index, row in data.iterrows():
         review_text = row['review_text']
+
+        review_text = row['review_text']
+        review_id = row['review_id']  # Access the review_id from the DataFrame
         
         task = {
-            "custom_id": f"task-{index}",
+            "custom_id": f"{review_id}",  # Use review_id in the custom_id
             "method": "POST",
             "url": "/v1/chat/completions",
             "body": {
@@ -83,3 +86,59 @@ batch_job = client.batches.create(
     completion_window="24h"
 )
 print(f"Batch job started: {batch_job.id}")
+
+
+####################################
+### Prepare the results to be saved
+####################################
+
+# Get the output file_id
+batch_job_status = client.batches.retrieve(batch_job.id)
+result_file_id = batch_job_status.output_file_id
+
+# Download the results file
+result_content = client.files.content(result_file_id).content
+result_file_name = "batch_results.jsonl"
+with open(result_file_name, 'wb') as file:
+    file.write(result_content) # Save the content to a file
+
+# Parse the results
+results = []
+with open(result_file_name, 'r') as file:
+    for line in file:
+        results.append(json.loads(line.strip()))
+results = pd.DataFrame(results)
+
+# Extract the sentences for each topic
+def extract_sentences(response):
+    try:
+        # Parse the assistant's message content
+        content = json.loads(response['body']['choices'][0]['message']['content'])
+        return {
+            "food_sentences": " ".join(content.get("food_sentences", [])),
+            "service_sentences": " ".join(content.get("service_sentences", [])),
+            "atmosphere_sentences": " ".join(content.get("atmosphere_sentences", [])),
+            "price_sentences": " ".join(content.get("price_sentences", [])),
+        }
+    except Exception as e:
+        print(f"Error parsing response: {e}")
+        return {
+            "food_sentences": None,
+            "service_sentences": None,
+            "atmosphere_sentences": None,
+            "price_sentences": None,
+        }
+
+# Apply the extraction to the 'response' column
+category_data = results['response'].apply(extract_sentences)
+
+# Create a new DataFrame with the extracted category sentences
+category_df = pd.DataFrame(category_data.tolist())
+
+# Combine 'custom_id' and extracted category sentences
+category_df['custom_id'] = results['custom_id']
+# rename custom_id to review_id
+category_df.rename(columns={"custom_id": "review_id"}, inplace=True)
+
+
+# merge category_df on review_id and add to database

@@ -41,8 +41,13 @@ let filters = {
   food: 0,
   service: 0,
   atmosphere: 0,
-  price_min: 0,
-  price_max: 100
+  price_filter: false,
+  price_0_10: false,
+  price_10_20: false,
+  price_20_30: false,
+  price_30_40: false,
+  price_40_50: false,
+  price_50_100: false
 }
 
 
@@ -443,22 +448,43 @@ function setRating(rating, category) {
 
 
 function update_price_rating(button, min, max) {
+  const price_buttons = [
+    document.getElementById(`price-0-10`).getAttribute("data-active"),
+    document.getElementById(`price-10-20`).getAttribute("data-active"),
+    document.getElementById(`price-20-30`).getAttribute("data-active"),
+    document.getElementById(`price-30-40`).getAttribute("data-active"),
+    document.getElementById(`price-40-50`).getAttribute("data-active"),
+    document.getElementById(`price-50-100`).getAttribute("data-active"),
+  ];
+
   const isActive = button.getAttribute("data-active") === "true";
 
   if (isActive) {
     button.setAttribute("data-active", "false");
     button.classList.remove("btn-price-filter-active");
     button.classList.add("btn-price-filter-inactive");
+    let falseCount = price_buttons.filter(value => value === "false").length;
+
+    let price_category = `price_${min}_${max}`;
+    filters[price_category] = false;
+
+    if (falseCount === 4) {
+      filters["price_filter"] = false;
+    }
   } else {
     button.setAttribute("data-active", "true");
     button.classList.remove("btn-price-filter-inactive");
     button.classList.add("btn-price-filter-active");
+    let price_category = `price_${min}_${max}`;
+    filters["price_filter"] = true;
+    filters[price_category] = true;  
   }
   console.log(min);
   filters["price_min"] = min;
   console.log(max);
   filters["price_max"] = max;
 }
+
 
 function delete_all_filters() {
   const updateStars = (group) => {
@@ -476,6 +502,31 @@ function delete_all_filters() {
 
     filters[group] = 0;
     
+  };
+
+  const update_price_filters = () => {
+    const price_buttons = [
+      document.getElementById(`price-0-10`),
+      document.getElementById(`price-10-20`),
+      document.getElementById(`price-20-30`),
+      document.getElementById(`price-30-40`),
+      document.getElementById(`price-40-50`),
+      document.getElementById(`price-50-100`),
+    ];
+
+    price_buttons.forEach((button, index) => {
+      button.setAttribute("data-active", "false");
+      button.classList.remove("btn-price-filter-active");
+      button.classList.add("btn-price-filter-inactive"); 
+    });
+
+    filters["price_filter"] = false;
+    filters["price_0_10"] = false; 
+    filters["price_10_20"] = false; 
+    filters["price_20_30"] = false; 
+    filters["price_30_40"] = false; 
+    filters["price_40_50"] = false; 
+    filters["price_50_100"] = false; 
   };
 
   updateStars("general");

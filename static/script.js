@@ -359,6 +359,7 @@ function get_summaries(markerId) {
 function handleMarkerClick(markerId) {
   const sidebarName = document.getElementById('name');
   const sidebarAddress = document.getElementById('address');
+  
 
   const apiUrl = `/api/restaurant/${markerId}`; // Korrekte URL mit markerId
   fetch(apiUrl)

@@ -329,8 +329,9 @@ html, body {
     font-size: 0.9rem;
 }
 
-.summary-right-side {
+.subcategories-right-side {
     position: relative; /* Ermöglicht absolute Positionierung des Buttons */
+    width: 100%;
 }
 
 #info-button {

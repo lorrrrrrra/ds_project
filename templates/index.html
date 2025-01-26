@@ -158,41 +158,43 @@
             </div>
 
             <!-- LLM summary -->
-            <div id="summary-right-side">
+            <div id="-right-side">
                 <hr id="hr-right-side">
-                <p class="overview" id="overview-food">
-                    <div id="star-rating-food-ov" class="star-rating-detail star-rating-ov badge rounded-pill text-bg-secondary position-relative">
-                        <span>Food</span>
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-1-food" alt="Star" style="width: 15px; height: 15px;">
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-2-food" alt="Star" style="width: 15px; height: 15px;">
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-3-food" alt="Star" style="width: 15px; height: 15px;">
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-4-food" alt="Star" style="width: 15px; height: 15px;">
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-5-food" alt="Star" style="width: 15px; height: 15px;">
-                        <span id="avg-rating-food" class="avg-rating-label"> (4.2) </span>
-                    </div>
-                </p>
-                <p class="overview" id="overview-service">
-                    <div id="star-rating-service-ov" class="star-rating-detail star-rating-ov badge rounded-pill text-bg-secondary position-relative">
-                        <span>Service</span>
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-1-service" alt="Star" style="width: 15px; height: 15px;">
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-2-service" alt="Star" style="width: 15px; height: 15px;">
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-3-service" alt="Star" style="width: 15px; height: 15px;">
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-4-service" alt="Star" style="width: 15px; height: 15px;">
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-5-service" alt="Star" style="width: 15px; height: 15px;">
-                        <span id="avg-rating-service" class="avg-rating-label"> (4.2) </span>
-                    </div>
-                </p>
-                <p class="overview" id="overview-atmosphere">
-                    <div id="star-rating-atmosphere-ov" class="star-rating-detail star-rating-ov badge rounded-pill text-bg-secondary position-relative">
-                        <span>Atmosphere</span>
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-1-atmosphere" alt="Star" style="width: 15px; height: 15px;">
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-2-atmosphere" alt="Star" style="width: 15px; height: 15px;">
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-3-atmosphere" alt="Star" style="width: 15px; height: 15px;">
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-4-atmosphere" alt="Star" style="width: 15px; height: 15px;">
-                        <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-5-atmosphere" alt="Star" style="width: 15px; height: 15px;">
-                        <span id="avg-rating-atmosphere" class="avg-rating-label"> (4.2) </span>
-                    </div>
-                </p>
+                <div id="subcategory-ratings">
+                    <p class="overview" id="overview-food">
+                        <div id="star-rating-food-ov" class="star-rating-detail star-rating-ov badge rounded-pill text-bg-secondary position-relative">
+                            <span>Food</span>
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-1-food" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-2-food" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-3-food" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-4-food" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-5-food" alt="Star" style="width: 15px; height: 15px;">
+                            <span id="avg-rating-food" class="avg-rating-label"> (4.2) </span>
+                        </div>
+                    </p>
+                    <p class="overview" id="overview-service">
+                        <div id="star-rating-service-ov" class="star-rating-detail star-rating-ov badge rounded-pill text-bg-secondary position-relative">
+                            <span>Service</span>
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-1-service" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-2-service" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-3-service" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-4-service" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-5-service" alt="Star" style="width: 15px; height: 15px;">
+                            <span id="avg-rating-service" class="avg-rating-label"> (4.2) </span>
+                        </div>
+                    </p>
+                    <p class="overview" id="overview-atmosphere">
+                        <div id="star-rating-atmosphere-ov" class="star-rating-detail star-rating-ov badge rounded-pill text-bg-secondary position-relative">
+                            <span>Atmosphere</span>
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-1-atmosphere" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-2-atmosphere" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-3-atmosphere" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-4-atmosphere" alt="Star" style="width: 15px; height: 15px;">
+                            <img src="{{ url_for('static', filename='graphics/leerer_stern.png') }}" id="star-5-atmosphere" alt="Star" style="width: 15px; height: 15px;">
+                            <span id="avg-rating-atmosphere" class="avg-rating-label"> (4.2) </span>
+                        </div>
+                    </p>
+                </div>
                 <!-- <button id="info-button" onclick="showPopup()">?</button> --> 
                 <hr id="hr-right-side">
             </div>

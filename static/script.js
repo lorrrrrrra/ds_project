@@ -42,7 +42,7 @@ let filters = {
   service: 0,
   atmosphere: 0,
   price_min: 0,
-  price_max: 50
+  price_max: 100
 }
 
 
@@ -442,9 +442,22 @@ function setRating(rating, category) {
 }
 
 
-function update_price_rating(min, max) {
+function update_price_rating(button, min, max) {
+  const isActive = button.getAttribute("data-active") === "true";
+
+  if (isActive) {
+    button.setAttribute("data-active", "false");
+    button.classList.remove("btn-price-filter-active");
+    button.classList.add("btn-price-filter-inactive");
+  } else {
+    button.setAttribute("data-active", "true");
+    button.classList.remove("btn-price-filter-inactive");
+    button.classList.add("btn-price-filter-active");
+  }
   console.log(min);
+  filters["price_min"] = min;
   console.log(max);
+  filters["price_max"] = max;
 }
 
 function delete_all_filters() {

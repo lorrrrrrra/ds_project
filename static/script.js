@@ -395,6 +395,41 @@ function handleMarkerClick(markerId) {
 
 
 
+function setRating(rating, category) {
+  // Anzahl der vollen Sterne, halben Sterne und leeren Sterne
+  for (let i = 1; i <= 5; i++) {
+      const star = document.getElementById(`star-${i}-${category}`);
+      
+      if (i <= rating) {
+          if (i === rating) {
+              // Der Stern, auf den der Benutzer geklickt hat, kann entweder halb oder ganz gefüllt sein
+              star.src = "{{ url_for('static', filename='graphics/voller_stern.png') }}"; // Ersetze durch den vollen Stern
+          } else {
+              // Alle Sterne vor dem angeklickten werden ganz gefüllt
+              star.src = "{{ url_for('static', filename='graphics/voller_stern.png') }}";
+          }
+      } else {
+          // Alle Sterne nach dem angeklickten bleiben leer
+          star.src = "{{ url_for('static', filename='graphics/leerer_stern.png') }}";
+      }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // All things graphs

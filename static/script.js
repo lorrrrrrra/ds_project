@@ -404,26 +404,54 @@ function handleMarkerClick(markerId) {
 
 // all things filter
 function setRating(rating, category) {
-  filters[category] = rating; 
 
-  for (let i = 1; i <= 5; i++) {
-      const star = document.getElementById(`star-${i}-filter-${category}`);
-      
-      if (rating == 0) {
-        star.src = "static/graphics/leerer_stern.png";
-      } else if (rating > 0 && i <= rating) {
-          if (i === rating) {
-              // Der Stern, auf den der Benutzer geklickt hat, kann entweder halb oder ganz gefüllt sein
-              star.src = "static/graphics/voller_stern.png"; // Ersetze durch den vollen Stern
-          } else {
-              // Alle Sterne vor dem angeklickten werden ganz gefüllt
-              star.src = "static/graphics/voller_stern.png";
-          }
+  const updateStars = (rating, group) => {
+    const stars = [
+      document.getElementById(`star-1-filter-${group}`),
+      document.getElementById(`star-2-filter-${group}`),
+      document.getElementById(`star-3-filter-${group}`),
+      document.getElementById(`star-4-filter-${group}`),
+      document.getElementById(`star-5-filter-${group}`),
+    ];
+
+    stars.forEach((star, index) => {
+      if (index <= rating) {
+        star.src = "static/graphics/voller_stern.png"; // Voller Stern
       } else {
-          // Alle Sterne nach dem angeklickten bleiben leer
-          star.src = "static/graphics/leerer_stern.png";
+        star.src = "static/graphics/leerer_stern.png"; // Leerer Stern
       }
+    });
+  };
+
+  if (filters[category] == 0) {
+    updateStars(rating, category);
+    filters[category] = rating;
+  } else {
+    updateStars(0, category);
+    filters[category] = 0;
   }
+  
+
+  // for (let i = 1; i <= 5; i++) {
+  //     const star = document.getElementById(`star-${i}-filter-${category}`);
+      
+  //     if (rating == 0) {
+  //       star.src = "static/graphics/leerer_stern.png";
+  //     } else if (rating > 0 && i <= rating) {
+  //         if (i === rating) {
+  //             // Der Stern, auf den der Benutzer geklickt hat, kann entweder halb oder ganz gefüllt sein
+  //             star.src = "static/graphics/voller_stern.png"; // Ersetze durch den vollen Stern
+  //         } else {
+  //             // Alle Sterne vor dem angeklickten werden ganz gefüllt
+  //             star.src = "static/graphics/voller_stern.png";
+  //         }
+  //     } else {
+  //         // Alle Sterne nach dem angeklickten bleiben leer
+  //         star.src = "static/graphics/leerer_stern.png";
+  //     }
+
+  //     filters[category] = rating; 
+  // }
 }
 
 

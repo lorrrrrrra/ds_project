@@ -66,6 +66,8 @@ html, body {
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
     z-index: 10; 
     transition: width 0.3s ease; /* Weiche Animation beim Ein-/Ausklappen */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .filter-1 {
@@ -132,16 +134,21 @@ html, body {
     padding-top: 20px;
 }
 
-.filter:nth-child(6) {
-    padding-bottom: 20px;     /* padding for below Food Filter */
-}
+/* .filter:nth-child(6) {
+    padding-bottom: 20px;     /* padding for below Food Filter 
+} */
 
 
 .filter-star-img {
     cursor: pointer;
 }
 
-
+.btn-price-filter {
+    color: white;
+    border-color: #153329;
+    background-color: #255847;
+    border-radius: 7px;
+}
 
 .filter-3 {
     height: 15%;

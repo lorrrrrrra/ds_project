@@ -381,9 +381,12 @@ function handleMarkerClick(markerId) {
         if (data.website_uri !== null && data.website_uri !== undefined && data.website_uri != "NaN") {
           sidebarWebsiteUrl.textContent = "Click here to access website";
           sidebarWebsiteUrl.href = data.website_uri;
+          sidebarWebsiteUrl.target = "_blank";
         } else {
           sidebarWebsiteUrl.textContent = "";
           sidebarWebsiteUrl.href = "";
+          sidebarWebsiteUrl.target = "";
+
         }
 
         if (data.opening_hours !== null && data.opening_hours !== undefined && data.opening_hours != "NaN") {

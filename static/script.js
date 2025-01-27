@@ -372,6 +372,7 @@ function get_summaries(markerId) {
 
 
 function get_type_tags (type_tags) {
+  type_tags = JSON.parse(type_tags);
   const container = document.getElementById("type_tags");   //container on the html in which the badges will go
   let type_to_show = [];
 
@@ -381,12 +382,6 @@ function get_type_tags (type_tags) {
       type_to_show.push(element);
     }
   }
-
-  type_tags.forEach(element => {
-    if (types.includes(element)) {
-      type_to_show.push(element);
-    }
-  })
 
   type_to_show = type_to_show.map(element => {
     // "_restaurant" entfernen

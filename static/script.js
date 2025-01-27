@@ -382,7 +382,7 @@ function get_type_tags (type_tags) {
     }
   }
 
-  type_to_show = liste.map(element => {
+  type_to_show = type_to_show.map(element => {
     // "_restaurant" entfernen
     let no_restaurant = element.replace("_restaurant", "");
     // "_" durch Leerzeichen ersetzen

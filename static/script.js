@@ -58,6 +58,9 @@ let types = ["african_restaurant", "asian_restaurant", "bakery", "bar", "breakfa
   "italian_restaurant", "meal_delivery", "meal_takeaway", "seafood_restaurant", "sushi_restaurant", "vegan_restaurant", 
   "vegetarian_restaurant" ]
 
+//initiate filter buttons for types
+display_food_type_buttons(types);
+
 
 // function fetchRestaurantData(Url) {
 //   fetch(Url)
@@ -400,7 +403,7 @@ function get_type_tags (type_tags) {
     // Badge dem Container hinzufügen
     container.appendChild(badge);
   });
-  console.log(type_to_show);
+  // console.log(type_to_show);
 }
 
 
@@ -537,6 +540,30 @@ function update_price_rating(button, min, max) {
     filters[price_category] = true;  
   }
 }
+
+
+function display_food_type_buttons(types) {
+  type = JSON.parse(types);
+  const container = document.getElementById("filter-food-types");   //container on the html in which the badges will go
+  container.innerHTML = ""; //deleting everything in it
+
+  for (const element of type) {
+    // getting name without underscore and restaurant 
+    let name = element.replace("_restaurant", "");
+    name = name.replace(/_/g, " ");
+    // creating a new button element
+    const button = document.createElement("span");
+    button.className = "btn btn-price-filter-inactive mb-2"; // Bootstrap-Klassen
+    button.setAttribute("data-active", "false");
+    button.textContent = name; // Textinhalt setzen
+
+
+    // Badge dem Container hinzufügen
+    container.appendChild(button);
+  }
+}
+
+
 
 
 function delete_all_filters() {

@@ -479,7 +479,7 @@ function handleMarkerClick(markerId) {
 
 
 // all things filter
-function set_filter_stars(rating, category) {
+function update_filter_stars(rating, category) {
   const updateStars = (rating, group) => {
     const stars = [
       document.getElementById(`star-1-filter-${group}`),

@@ -543,7 +543,7 @@ function update_price_rating(button, min, max) {
 
 
 function display_food_type_buttons(types) {
-  type = JSON.parse(types);
+  type = JSON.parse(types.replace(/'/g, '"'));
   const container = document.getElementById("filter-food-types");   //container on the html in which the badges will go
   container.innerHTML = ""; //deleting everything in it
 

@@ -63,22 +63,8 @@ let types = ["bakery", "bar", "breakfast_restaurant", "brunch_restaurant", "buff
 display_food_type_buttons(types);
 
 
-// function fetchRestaurantData(Url) {
-//   fetch(Url)
-//       .then(response => response.json())  // Umwandeln der Antwort in JSON
-//       .then(data => {
-//           console.log(data);  // Die Daten im Console-Log anzeigen
-//           // Hier kannst du die Daten verwenden, um sie im Frontend darzustellen
-//           // Zum Beispiel könnte man die Daten in einer Tabelle anzeigen
-//       })
-//       .catch(error => {
-//           console.error('Fehler beim Abrufen der Daten:', error);
-//       });
-// }
 
-// Die Funktion aufrufen, um die Daten zu laden
-// fetchRestaurantData(apiUrl);
-// fetchRestaurantData(apiUrl_2);
+
 
 
 
@@ -643,6 +629,25 @@ function delete_all_filters() {
   filters["price_50_100"] = false;
 
   // deleting type buttons
+  const container = document.getElementById("filter-food-types");  // Container mit den Buttons
+  const buttons = container.querySelectorAll("span");  // Alle Buttons im Container finden
+
+  buttons.forEach(button => {
+    // Setze den Button auf "inactive"
+    button.setAttribute("data-active", "false");
+    button.classList.remove("btn-price-filter-active");
+    button.classList.add("btn-price-filter-inactive");
+
+    // Hole den entsprechenden type aus der ID des Buttons
+    const type = button.id.replace("type-", "");
+
+    // Lösche den type aus der filters.type Liste, falls er vorhanden ist
+    const index = filters.type.indexOf(type);
+    if (index > -1) {
+      filters.type.splice(index, 1);  // Entfernt das Element aus der Liste
+    }
+  });
+
 
 }
 

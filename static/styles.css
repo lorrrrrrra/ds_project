@@ -315,6 +315,10 @@ html, body {
     font-size: 12px;
 }
 
+.bg-type {
+    background-color: #153329 !important;
+}
+
 .star-rating{
     background-color:#255847 !important;
     font-size: 1.0rem;

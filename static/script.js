@@ -393,7 +393,7 @@ function get_type_tags (type_tags) {
   type_to_show.forEach(item => {
     // Ein neues Badge-Element erstellen
     const badge = document.createElement("span");
-    badge.className = "badge bg-primary me-2"; // Bootstrap-Klassen
+    badge.className = "badge bg-type me-2 mt-2"; // Bootstrap-Klassen
     badge.textContent = item; // Textinhalt setzen
     
     // Badge dem Container hinzufügen

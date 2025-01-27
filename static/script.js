@@ -359,7 +359,9 @@ function get_summaries(markerId) {
 }
 
 
-
+function get_type_tags (type_tags) {
+  console.log(type_tags);
+}
 
 
 function handleMarkerClick(markerId) {
@@ -394,7 +396,8 @@ function handleMarkerClick(markerId) {
         } else {
           // just for checking opening hours
         }
-        
+        get_type_tags(data.types);
+
       }
     })
     .catch(error => {

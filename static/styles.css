@@ -317,6 +317,7 @@ html, body {
 
 .bg-type {
     background-color: #153329 !important;
+    border-color: #153329 !important;
 }
 
 .star-rating{

@@ -144,6 +144,7 @@ html, body {
     border-color: #153329;
     background-color: #255847;
     border-radius: 7px;
+    font-size: 12px;
 }
 
 .btn-price-filter-active:hover,
@@ -160,6 +161,7 @@ html, body {
     border-color: #153329;
     background-color: #153329;
     border-radius: 7px;
+    font-size: 12px;
 }
 
 .filter-3 {

@@ -50,13 +50,14 @@ let filters = {
   price_20_30: false,
   price_30_40: false,
   price_40_50: false,
-  price_50_100: false
+  price_50_100: false,
+  type: []
 }
 
-let types = ["african_restaurant", "asian_restaurant", "bakery", "bar", "breakfast_restaurant", "brunch_restaurant", 
-  "buffet_restaurant", "cafe", "chinese_restaurant", "fast_food_restaurant", "fine_dining_restaurant", "indian_restaurant", 
-  "italian_restaurant", "meal_delivery", "meal_takeaway", "seafood_restaurant", "sushi_restaurant", "vegan_restaurant", 
-  "vegetarian_restaurant" ]
+let types = ["fast_food_restaurant", "fine_dining_restaurant", "meal_delivery", "meal_takeaway", 
+  "vegan_restaurant", "vegetarian_restaurant", "african_restaurant", "asian_restaurant", "chinese_restaurant", "indian_restaurant", 
+  "italian_restaurant", "seafood_restaurant", "sushi_restaurant",  "bakery", "bar", "breakfast_restaurant", "brunch_restaurant", 
+  "buffet_restaurant", "cafe"]
 
 //initiate filter buttons for types
 display_food_type_buttons(types);
@@ -552,11 +553,11 @@ function display_food_type_buttons(types) {
     name = name.replace(/_/g, " ");
     // creating a new button element
     const button = document.createElement("span");
-    button.className = "btn btn-price-filter-inactive mb-2"; // Bootstrap-Klassen
+    button.className = "btn btn-price-filter-inactive mb-2 me-2"; // Bootstrap-Klassen
     button.setAttribute("data-active", "false");
     button.textContent = name; // Textinhalt setzen
     button.id = `type-${element}`;
-    button.onclick = () => update_filter_type(element);
+    button.onclick = () => update_filter_type(button, element);
 
 
     // Badge dem Container hinzufügen
@@ -565,8 +566,30 @@ function display_food_type_buttons(types) {
 }
 
 
-function update_filter_type (type) {
-  console.log(type);
+function update_filter_type (button, type) {
+  const isActive = button.getAttribute("data-active") === "true";
+
+  if (isActive) {
+    // deactivating the button
+    button.setAttribute("data-active", "false");
+    button.classList.remove("btn-price-filter-active");
+    button.classList.add("btn-price-filter-inactive");
+
+    // removing the type of the type list in the filters
+    const index = filters.type.indexOf(type);
+    if (index > -1) {
+      filters.type.splice(index, 1); // Entfernt das Element aus der Liste
+    }
+  } else {
+    // activating the button 
+    button.setAttribute("data-active", "true");
+    button.classList.remove("btn-price-filter-inactive");
+    button.classList.add("btn-price-filter-active");
+
+    if (!filters.type.includes(type)) {
+      filters.type.push(type);
+    } 
+  }
 }
 
 

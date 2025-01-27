@@ -10,10 +10,23 @@ from typing import List
 import numpy as np
 import os
 import json
+import csv
 
+# # Juliana
+# client = OpenAI(
+#   api_key="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"
+# )
+
+#Laura
 client = OpenAI(
-  api_key="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"
+  api_key= "sk-aCxLYPM7ksEW5hRC0p80hQUs0LGuw5SQGSFgL1URxcT3BlbkFJG7J7YTe0SluXJZtU1ZMEr_y2VmtsZHIbn1nBsapmsA"
 )
+
+# # Theresa
+# client = OpenAI(
+#   api_key="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"
+# )
+
 # configuration details for the postgresql database on the ubuntu server
 db_config = {
     "dbname": "reviews_db",
@@ -50,7 +63,7 @@ if connection:
 
         # DataFrame erstellen
         df_reviews_general = pd.DataFrame(rows, columns=columns)
-        df_reviews_general.to_csv("/home/ubuntu/OpenAI/OpenAI_test.csv", index=False)
+        #df_reviews_general.to_csv("/home/ubuntu/OpenAI/OpenAI_test.csv", index=False)
 
         print("Dataframe with reviews general was constructed")
     except Exception as e:
@@ -63,12 +76,12 @@ data = df_reviews_general.dropna(subset=['review_text'])
 # remove extra spaces, newlines, and tabs
 data['review_text'] = data['review_text'].str.replace(r'\s+', ' ', regex=True).str.strip()
 # Drop rows where the "review_text" column contains only one character
-data = data[data["review_text"].str.len() > 1]
+data = data[data["review_text"].str.len() > 10]
+
+print(len(data))
 
 
-
-
-def split_dataset_into_subsets(dataframe, max_rows_per_subset=50000):
+def split_dataset_into_subsets(dataframe, max_rows_per_subset=5000):
     subsets = []
     num_rows = len(dataframe)
     
@@ -82,6 +95,9 @@ def split_dataset_into_subsets(dataframe, max_rows_per_subset=50000):
 # split the dataset into subsets
 subsets = split_dataset_into_subsets(data)
 
+
+# split the dataset into subsets
+subsets = split_dataset_into_subsets(data)
 
 
 # Define the system prompt for topic extraction
@@ -106,7 +122,7 @@ def create_batch_tasks(data):
         review_id = row['review_id']  # Access the review_id from the DataFrame
         
         task = {
-            "custom_id": f"task-{review_id}",
+            "custom_id": f"{review_id}",
             "method": "POST",
             "url": "/v1/chat/completions",
             "body": {
@@ -136,22 +152,25 @@ def create_batch_tasks(data):
 # Define the directory where you want to save the files
 output_dir = "/home/ubuntu/OpenAI/"
 
-# Save tasks for each subset into separate .jsonl files in the specified directory
-for i, subset in enumerate(subsets, start=1):
+# read the data from the csv file
+csv_file_path = os.path.join(output_dir, "batches_OpenAI.csv")
+
+# Process only the first two subsets
+for i, subset in enumerate(subsets[18:20], start=19):  # Limit to two subsets
     # Generate tasks for the current subset
     subset_tasks = create_batch_tasks(subset)
-    
+
     # Define a unique file name for the current subset, including the path
-    batch_file_name = os.path.join(output_dir, f"batch_tasks_subset_{i}.jsonl")
-    
+    batch_file_name = os.path.join(output_dir, f"batch_topic_recognition_{i}.jsonl")
+
     # Save the tasks to the .jsonl file
     with open(batch_file_name, 'w') as file:
         for task in subset_tasks:
             file.write(json.dumps(task) + '\n')
-    
+
     print(f"Saved tasks for Subset {i} to {batch_file_name}")
 
-    # Upload the file to OpenAI API
+    # Uncomment if OpenAI batch job creation is needed
     try:
         batch_file = client.files.create(
             file=open(batch_file_name, "rb"),
@@ -166,6 +185,15 @@ for i, subset in enumerate(subsets, start=1):
             completion_window="24h"  # This is the time window for the batch job
         )
         print(f"Batch job started: {batch_job.id}")
+        
+        # Append the information to the CSV file
+        with open(csv_file_path, 'a', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=["api_key", "batch_file_name", "batch_job_id"])
+            writer.writerow({
+                "api_key": client.api_key,  # Assuming `client.api_key` stores your API key
+                "batch_file_name": batch_file_name,
+                "batch_job_id": batch_job.id
+            })
         
     except Exception as e:
         print(f"Error uploading {batch_file_name} or creating batch job: {e}")

@@ -372,7 +372,7 @@ function get_summaries(markerId) {
 
 
 function get_type_tags (type_tags) {
-  type_tags = JSON.parse(type_tags);
+  type_tags = JSON.parse(type_tags.replace(/'/g, '"'));
   const container = document.getElementById("type_tags");   //container on the html in which the badges will go
   let type_to_show = [];
 

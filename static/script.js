@@ -161,21 +161,21 @@ fetch('static/csv files/filtered_summary_restaurants.csv')
 .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
-// Funktion zum Schließen des Stripes
-function close_sidebar() {
-  const rightSidebar = document.getElementById('rightSidebar');
-  rightSidebar.classList.add('closed');
-  // rightSidebar.style.width = '0'; // Breite auf 0 setzen, um den Stripe zu schließen
-  // rightSidebar.style.minWidth = '0'; // Minimum Breite ebenfalls anpassen
-}
+// // Funktion zum Schließen des Stripes
+// function close_sidebar() {
+//   const rightSidebar = document.getElementById('rightSidebar');
+//   rightSidebar.classList.add('closed');
+//   // rightSidebar.style.width = '0'; // Breite auf 0 setzen, um den Stripe zu schließen
+//   // rightSidebar.style.minWidth = '0'; // Minimum Breite ebenfalls anpassen
+// }
 
-// Funktion zum Öffnen des Stripes
-function open_sidebar() {
-  const rightSidebar = document.getElementById('rightSidebar');
-  rightSidebar.classList.remove('closed'); // Sidebar öffnen
-  // rightSidebar.style.width = '30%'; // Breite auf Standardwert setzen
-  // rightSidebar.style.minWidth = '70px'; // Minimum Breite zurücksetzen
-}
+// // Funktion zum Öffnen des Stripes
+// function open_sidebar() {
+//   const rightSidebar = document.getElementById('rightSidebar');
+//   rightSidebar.classList.remove('closed'); // Sidebar öffnen
+//   // rightSidebar.style.width = '30%'; // Breite auf Standardwert setzen
+//   // rightSidebar.style.minWidth = '70px'; // Minimum Breite zurücksetzen
+// }
 
 
 
@@ -403,33 +403,33 @@ function handleMarkerClick(markerId) {
 
 
 
-  // Restaurant mit passender ID suchen
-  const restaurant = restaurants.find((r) => r.restaurant_id === markerId);
+  // // Restaurant mit passender ID suchen
+  // const restaurant = restaurants.find((r) => r.restaurant_id === markerId);
   
-  if (restaurant) {
-    const name = restaurant.name || 'Unbekanntes Restaurant';
-    const address = restaurant.address || 'Keine Adresse verfügbar';
+  // if (restaurant) {
+  //   const name = restaurant.name || 'Unbekanntes Restaurant';
+  //   const address = restaurant.address || 'Keine Adresse verfügbar';
   
-    // Dynamische Aktualisierung der Sidebar mit den Details
-    const sidebarName = document.getElementById('name');
-    const sidebarAddress = document.getElementById('address');
-    // const starRating = document.getElementById('star-rating');
+  //   // Dynamische Aktualisierung der Sidebar mit den Details
+  //   const sidebarName = document.getElementById('name');
+  //   const sidebarAddress = document.getElementById('address');
+  //   // const starRating = document.getElementById('star-rating');
 
-    getStarRating(markerId);
-    get_summaries(markerId);
+  //   getStarRating(markerId);
+  //   get_summaries(markerId);
   
-    if (sidebarName && sidebarAddress) {
-      // sidebarName.textContent = name;
-      // sidebarAddress.textContent = address;
+  //   if (sidebarName && sidebarAddress) {
+  //     // sidebarName.textContent = name;
+  //     // sidebarAddress.textContent = address;
 
-      const infoTab = document.querySelector('#nav-info-tab');
-      const bootstrapTab = new bootstrap.Tab(infoTab);
-      bootstrapTab.show();
+  //     const infoTab = document.querySelector('#nav-info-tab');
+  //     const bootstrapTab = new bootstrap.Tab(infoTab);
+  //     bootstrapTab.show();
 
-    }
-  } else {
-    console.error(`Kein Restaurant mit der ID ${markerId} gefunden.`);
-  }
+  //   }
+  // } else {
+  //   console.error(`Kein Restaurant mit der ID ${markerId} gefunden.`);
+  // }
 }
 
 

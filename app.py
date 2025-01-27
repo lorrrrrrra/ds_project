@@ -48,7 +48,7 @@ def get_restaurant(restaurant_id):
     try:
         # SQL-Abfrage, um die Informationen des spezifischen Restaurants aus restaurant_basics zu holen
         cursor.execute("""
-            SELECT name, address
+            SELECT name, address, types
             FROM restaurant_basics
             WHERE restaurant_id = %s;
         """, (restaurant_id,))

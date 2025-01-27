@@ -25,7 +25,10 @@ var clickedIcon = L.icon({
 });
 
 
-        
+    
+
+
+
 
 let restaurants = []; // Globale Variable
 let restaurants_general = [];
@@ -49,6 +52,11 @@ let filters = {
   price_40_50: false,
   price_50_100: false
 }
+""
+let types = ["african_restaurant", "asian_restaurant", "bakery", "bar", "breakfast_restaurant", "brunch_restaurant", 
+  "buffet_restaurant", "cafe", "chinese_restaurant", "fast_food_restaurant", "fine_dining_restaurant", "indian_restaurant", 
+  "italian_restaurant", "meal_delivery", "meal_takeaway", "seafood_restaurant", "sushi_restaurant", "vegan_restaurant", 
+  "vegetarian_restaurant" ]
 
 
 // function fetchRestaurantData(Url) {
@@ -416,7 +424,6 @@ function handleMarkerClick(markerId) {
 
 // all things filter
 function set_filter_stars(rating, category) {
-
   const updateStars = (rating, group) => {
     const stars = [
       document.getElementById(`star-1-filter-${group}`),

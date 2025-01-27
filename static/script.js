@@ -442,7 +442,7 @@ function handleMarkerClick(markerId) {
 
 
 // all things filter
-function setRating(rating, category) {
+function set_filter_stars(rating, category) {
 
   const updateStars = (rating, group) => {
     const stars = [

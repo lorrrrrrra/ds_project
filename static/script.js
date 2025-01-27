@@ -507,7 +507,7 @@ function set_filter_stars(rating, category) {
 }
 
 
-function update_price_rating(button, min, max) {
+function update_filter_price_rating(button, min, max) {
   const price_buttons = [
     document.getElementById(`price-0-10`).getAttribute("data-active"),
     document.getElementById(`price-10-20`).getAttribute("data-active"),
@@ -548,18 +548,25 @@ function display_food_type_buttons(types) {
 
   for (const element of types) {
     // getting name without underscore and restaurant 
-    let name = element.replace("_restaurant", "");
+    let name = element.replace("_restaurant", "").replace(/_/g, " ");
     name = name.replace(/_/g, " ");
     // creating a new button element
     const button = document.createElement("span");
     button.className = "btn btn-price-filter-inactive mb-2"; // Bootstrap-Klassen
     button.setAttribute("data-active", "false");
     button.textContent = name; // Textinhalt setzen
+    button.id = `type-${element}`;
+    button.onclick = () => update_filter_type(element);
 
 
     // Badge dem Container hinzufügen
     container.appendChild(button);
   }
+}
+
+
+function update_filter_type (type) {
+  console.log(type);
 }
 
 

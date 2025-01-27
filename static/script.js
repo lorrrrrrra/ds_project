@@ -382,6 +382,12 @@ function get_type_tags (type_tags) {
     }
   }
 
+  type_tags.forEach(element => {
+    if (types.includes(element)) {
+      type_to_show.push(element);
+    }
+  })
+
   type_to_show = type_to_show.map(element => {
     // "_restaurant" entfernen
     let no_restaurant = element.replace("_restaurant", "");

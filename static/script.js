@@ -374,6 +374,7 @@ function get_summaries(markerId) {
 function get_type_tags (type_tags) {
   type_tags = JSON.parse(type_tags.replace(/'/g, '"'));
   const container = document.getElementById("type_tags");   //container on the html in which the badges will go
+  container.innerHTML = ""; //deleting everything in it
   let type_to_show = [];
 
   for (const element of type_tags) {
@@ -393,7 +394,7 @@ function get_type_tags (type_tags) {
   type_to_show.forEach(item => {
     // Ein neues Badge-Element erstellen
     const badge = document.createElement("span");
-    badge.className = "badge bg-type me-2 mt-2"; // Bootstrap-Klassen
+    badge.className = "badge rounded-pill bg-type me-2 mt-2"; // Bootstrap-Klassen
     badge.textContent = item; // Textinhalt setzen
     
     // Badge dem Container hinzufügen

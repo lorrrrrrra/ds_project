@@ -52,7 +52,7 @@ let filters = {
   price_40_50: false,
   price_50_100: false
 }
-""
+
 let types = ["african_restaurant", "asian_restaurant", "bakery", "bar", "breakfast_restaurant", "brunch_restaurant", 
   "buffet_restaurant", "cafe", "chinese_restaurant", "fast_food_restaurant", "fine_dining_restaurant", "indian_restaurant", 
   "italian_restaurant", "meal_delivery", "meal_takeaway", "seafood_restaurant", "sushi_restaurant", "vegan_restaurant", 
@@ -252,6 +252,10 @@ fetch('static/API_basics.csv')
 
 
 
+
+
+
+  // all things details side
   function getStarRating(markerId) {
     const restaurant = reviews_grouped.find((r) => r.restaurant_id === markerId);
   
@@ -368,7 +372,33 @@ function get_summaries(markerId) {
 
 
 function get_type_tags (type_tags) {
-  console.log(type_tags);
+  const container = document.getElementById("type_tags");   //container on the html in which the badges will go
+  let type_to_show = [];
+
+  for (const element of type_tags) {
+    //checking if element is in list of predefined tags we want to show 
+    if (types.includes(element)) {
+      type_to_show.push(element);
+    }
+  }
+
+  type_to_show = liste.map(element => {
+    // "_restaurant" entfernen
+    let no_restaurant = element.replace("_restaurant", "");
+    // "_" durch Leerzeichen ersetzen
+    return no_restaurant.replace(/_/g, " ");
+  });
+
+  type_to_show.forEach(item => {
+    // Ein neues Badge-Element erstellen
+    const badge = document.createElement("span");
+    badge.className = "badge bg-primary me-2"; // Bootstrap-Klassen
+    badge.textContent = item; // Textinhalt setzen
+    
+    // Badge dem Container hinzufügen
+    container.appendChild(badge);
+  });
+  console.log(type_to_show);
 }
 
 

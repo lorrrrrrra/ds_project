@@ -54,10 +54,10 @@ let filters = {
   type: []
 }
 
-let types = ["fast_food_restaurant", "fine_dining_restaurant", "meal_delivery", "meal_takeaway", 
-  "vegan_restaurant", "vegetarian_restaurant", "african_restaurant", "asian_restaurant", "chinese_restaurant", "indian_restaurant", 
-  "italian_restaurant", "seafood_restaurant", "sushi_restaurant",  "bakery", "bar", "breakfast_restaurant", "brunch_restaurant", 
-  "buffet_restaurant", "cafe"]
+let types = ["bakery", "bar", "breakfast_restaurant", "brunch_restaurant", "buffet_restaurant", "cafe", "fast_food_restaurant", 
+  "fine_dining_restaurant", "meal_delivery", "meal_takeaway","vegan_restaurant", "vegetarian_restaurant", 
+  "african_restaurant", "asian_restaurant", "chinese_restaurant", "indian_restaurant", "italian_restaurant", "seafood_restaurant", 
+  "sushi_restaurant"]
 
 //initiate filter buttons for types
 display_food_type_buttons(types);
@@ -596,6 +596,7 @@ function update_filter_type (button, type) {
 
 
 function delete_all_filters() {
+  // deleting stars
   const updateStars = (group) => {
     const stars = [
       document.getElementById(`star-1-filter-${group}`),
@@ -617,6 +618,7 @@ function delete_all_filters() {
   updateStars("service");
   updateStars("atmosphere");
 
+  // deleting price filters
   const price_buttons = [
     document.getElementById(`price-0-10`),
     document.getElementById(`price-10-20`),
@@ -639,6 +641,9 @@ function delete_all_filters() {
   filters["price_30_40"] = false; 
   filters["price_40_50"] = false; 
   filters["price_50_100"] = false;
+
+  // deleting type buttons
+
 }
 
 

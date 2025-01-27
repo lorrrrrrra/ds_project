@@ -381,11 +381,11 @@ function handleMarkerClick(markerId) {
         if (data.website_uri !== null && data.website_uri !== undefined && data.website_uri != "NaN") {
           sidebarWebsiteUrl.textContent = "Click here to access website";
           sidebarWebsiteUrl.href = data.website_uri;
-          sidebarWebsiteUrl.target = "_blank";
+          // sidebarWebsiteUrl.target = "_blank";
         } else {
           sidebarWebsiteUrl.textContent = "";
           sidebarWebsiteUrl.href = "";
-          sidebarWebsiteUrl.target = "";
+          // sidebarWebsiteUrl.target = "";
 
         }
 

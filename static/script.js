@@ -327,15 +327,13 @@ function open_sidebar() {
 
 
   // all things details side
-  function get_star_rating(markerId) {
-    const restaurant = reviews_grouped.find((r) => r.restaurant_id === markerId);
-  
-    if (restaurant) {
+  function get_star_rating(data) {  
+    if (data) {
       // Allgemeine Sternebewertung
-      const star_rating = parseFloat(restaurant.stars_mean);
-      const star_rating_food = parseFloat(restaurant.dining_stars_food_mean);
-      const star_rating_service = parseFloat(restaurant.dining_stars_service_mean);
-      const star_rating_atmosphere = parseFloat(restaurant.dining_stars_atmosphere_mean);
+      const star_rating = parseFloat(data.rating_overall);
+      const star_rating_food = parseFloat(data.rating_food);
+      const star_rating_service = parseFloat(data.rating_service);
+      const star_rating_atmosphere = parseFloat(data.rating_atmosphere);
   
       // Durchschnittliche Bewertungen aktualisieren
     const updateAverageRating = (rating, group) => {
@@ -394,26 +392,24 @@ function open_sidebar() {
       updateStars(star_rating_atmosphere, '-atmosphere'); // Atmosphere
   
     } else {
-      console.error(`Kein Restaurant mit der ID ${markerId} gefunden.`);
+      console.error(`Kein Restaurant gefunden.`);
     }
   }
 
 
-function get_summaries(markerId) {
+function get_summaries(data) {
   // Restaurant mit passender ID suchen
-  const restaurant = summaries.find((r) => r.restaurant_id === markerId);
-
-  if (restaurant) {
-    const summary_overall = restaurant.overall_summary;
-    const summary_food = restaurant.food_summary;
-    const summary_service = restaurant.service_summary;
-    const summary_atmosphere = restaurant.atmosphere_summary;
-    const summary_price = restaurant.price_summary;
-    const count_overall = parseFloat(restaurant.overall_count);
-    const count_food = parseFloat(restaurant.food_count);
-    const count_service = parseFloat(restaurant.service_count);
-    const count_atmosphere = parseFloat(restaurant.atmosphere_count);
-    const count_price = parseFloat(restaurant.price_count);
+  if (data) {
+    const summary_overall = data.summary_overall;
+    const summary_food = data.summary_food;
+    const summary_service = data.summary_service;
+    const summary_atmosphere = data.summary_atmosphere;
+    const summary_price = data.summary_price;
+    const count_overall = parseFloat(data.user_count_overall);
+    const count_food = parseFloat(data.user_count_food);
+    const count_service = parseFloat(data.user_count_service);
+    const count_atmosphere = parseFloat(data.user_count_atmosphere);
+    const count_price = parseFloat(data.user_count_price);
 
     const html_summary_overall = document.getElementById('summary');
     const html_summary_food = document.getElementById('summary-food');
@@ -515,8 +511,8 @@ function handleMarkerClick(markerId) {
         console.error('Fehler:', data.error);
       } else {
         get_details(data);
-        // get_star_rating(data);
-        // get_summaries(data); 
+        get_star_rating(data);
+        get_summaries(data); 
 
         const infoTab = document.querySelector('#nav-info-tab');
         const bootstrapTab = new bootstrap.Tab(infoTab);

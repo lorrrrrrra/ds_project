@@ -40,6 +40,8 @@ const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+let markersLayer = L.layerGroup().addTo(map); // Eine Markergruppe für alle Marker
+
 
 // new Icons
 var defaultIcon = L.icon({
@@ -93,7 +95,10 @@ function update_map() {
   fetch(`/api/restaurants/${boundsString}`)
     .then(response => response.json())
     .then(data => {
-      // console.log("Restaurants:", data); 
+      // Marker-Set löschen, bevor neue hinzugefügt werden
+      markersLayer.clearLayers();
+
+      // creating new markers
       create_marker(data);
     })
     .catch(error => {
@@ -118,7 +123,7 @@ function create_marker(data) {
 
     if (!isNaN(lat_value) && !isNaN(long_value)) {
       const marker = L.marker([lat_value, long_value], { id: id, icon: defaultIcon})
-      .addTo(map)
+      .addTo(markersLayer);
   
       marker.on('click', (e) => {
         if (activeMarker) {

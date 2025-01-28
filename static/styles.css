@@ -185,6 +185,7 @@ html, body {
     align-items: center; /* Optional: Vertikal zentrieren */
     justify-content: center; /* Optional: Horizontal zentrieren */
     padding: 0;
+    position: relative; /* Für Leaflet wichtig */
 }
 
 .input-group{

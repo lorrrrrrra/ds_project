@@ -76,6 +76,7 @@ function create_marker(data) {
         activeMarker = marker;
         marker.setIcon(clickedIcon);
         // marker.bringToFront();   // to show in front of the other markers
+        open_sidebar();
         handleMarkerClick(e.target.options.id); // ID des Markers verwenden
       });
     } else {
@@ -259,13 +260,18 @@ function close_sidebar() {
 }
 
 // Funktion zum Öffnen des Stripes
-// function open_sidebar() {
-//   const rightSidebar = document.getElementById('rightSidebar');
-//   rightSidebar.classList.remove('closed'); // Sidebar öffnen
-//   // rightSidebar.style.width = '30%'; // Breite auf Standardwert setzen
-//   // rightSidebar.style.minWidth = '70px'; // Minimum Breite zurücksetzen
-// }
-
+function open_sidebar() {
+  const sidebar = document.querySelector(".stripe-right");
+  const mapContainer = document.getElementById("map");
+  if (sidebar) {
+      sidebar.classList.remove("hidden"); // Zeigt die Sidebar wieder an
+      setTimeout(() => {
+          if (map) {
+              map.invalidateSize(); // Aktualisiert die Kartengröße
+          }
+      }, 300); // Wartezeit für die Transition
+  }
+}
 
 
 

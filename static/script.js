@@ -268,64 +268,64 @@ fetch('static/csv files/filtered_summary_restaurants.csv')
 
 
 
-fetch('static/API_basics.csv')
-  .then((response) => response.text())
-  .then((csvData) => {
-    // CSV parsen
-    Papa.parse(csvData, {
-      header: true, // Erste Zeile als Header interpretieren
-      complete: (results) => {
-        restaurants = results.data; // Speichern der geparsten Restaurants
+// fetch('static/API_basics.csv')
+//   .then((response) => response.text())
+//   .then((csvData) => {
+//     // CSV parsen
+//     Papa.parse(csvData, {
+//       header: true, // Erste Zeile als Header interpretieren
+//       complete: (results) => {
+//         restaurants = results.data; // Speichern der geparsten Restaurants
 
-        // Nur die ersten 10 Restaurants anzeigen
+//         // Nur die ersten 10 Restaurants anzeigen
 
-        restaurants.forEach((restaurant) => {
-          const lat = parseFloat(restaurant.lat_value);
-          const lon = parseFloat(restaurant.long_value);
-          const id = restaurant.restaurant_id;
+//         restaurants.forEach((restaurant) => {
+//           const lat = parseFloat(restaurant.lat_value);
+//           const lon = parseFloat(restaurant.long_value);
+//           const id = restaurant.restaurant_id;
 
-          // Marker setzen
-          if (!isNaN(lat) && !isNaN(lon)) {
-            const marker = L.marker([lat, lon], { id: id, icon: defaultIcon})
-              .addTo(map)
+//           // Marker setzen
+//           if (!isNaN(lat) && !isNaN(lon)) {
+//             const marker = L.marker([lat, lon], { id: id, icon: defaultIcon})
+//               .addTo(map)
             
-              marker.on('click', (e) => {
-                if (activeMarker) {
-                  activeMarker.setIcon(defaultIcon);
-                }
-                activeMarker = marker;
-                marker.setIcon(clickedIcon);
-                // open_sidebar();
-                handleMarkerClick(e.target.options.id); // ID des Markers verwenden
-            });
+//               marker.on('click', (e) => {
+//                 if (activeMarker) {
+//                   activeMarker.setIcon(defaultIcon);
+//                 }
+//                 activeMarker = marker;
+//                 marker.setIcon(clickedIcon);
+//                 // open_sidebar();
+//                 handleMarkerClick(e.target.options.id); // ID des Markers verwenden
+//             });
 
-            if (restaurant === restaurants[0]) {
-              activeMarker = marker; // Setze den ersten Marker als aktiven Marker
-              marker.setIcon(clickedIcon); // Setze das Icon des aktiven Markers auf clickedIcon
-              // open_sidebar();
-              handleMarkerClick(id); // Führe die Funktion für den ersten Marker aus
-            }
+//             if (restaurant === restaurants[0]) {
+//               activeMarker = marker; // Setze den ersten Marker als aktiven Marker
+//               marker.setIcon(clickedIcon); // Setze das Icon des aktiven Markers auf clickedIcon
+//               // open_sidebar();
+//               handleMarkerClick(id); // Führe die Funktion für den ersten Marker aus
+//             }
 
-          } else {
-            console.error('Ungültige Koordinaten:', restaurant);
-          }
-        });
+//           } else {
+//             console.error('Ungültige Koordinaten:', restaurant);
+//           }
+//         });
 
-        // Optional: Karte auf das erste Restaurant fokussieren
-        if (restaurants.length > 0) {
-          const firstRestaurant = restaurants[0];
-          const lat = parseFloat(firstRestaurant.lat_value);
-          const lon = parseFloat(firstRestaurant.long_value);
-          const id = firstRestaurant.restaurant_id;
-          map.setView([lat, lon], 15);
-          // open_sidebar();
-          handleMarkerClick(id);
-        }
-      },
-      error: (error) => console.error('Fehler beim Parsen der CSV:', error),
-    });
-  })
-  .catch((error) => console.error('Fehler beim Laden der CSV:', error));
+//         // Optional: Karte auf das erste Restaurant fokussieren
+//         if (restaurants.length > 0) {
+//           const firstRestaurant = restaurants[0];
+//           const lat = parseFloat(firstRestaurant.lat_value);
+//           const lon = parseFloat(firstRestaurant.long_value);
+//           const id = firstRestaurant.restaurant_id;
+//           map.setView([lat, lon], 15);
+//           // open_sidebar();
+//           handleMarkerClick(id);
+//         }
+//       },
+//       error: (error) => console.error('Fehler beim Parsen der CSV:', error),
+//     });
+//   })
+//   .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
 

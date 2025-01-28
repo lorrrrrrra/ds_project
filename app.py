@@ -27,7 +27,7 @@ def get_restaurants(bounds):
         return jsonify({"error": "Invalid bounds format. Use: south,north,west,east"}), 400
 
     # Erweitere die Grenzen um 0.1 Grad
-    buffer = 0.05
+    buffer = 0.03
     south -= buffer
     north += buffer
     west -= buffer

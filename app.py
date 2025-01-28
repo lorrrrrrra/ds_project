@@ -26,8 +26,8 @@ def get_restaurants(bounds):
     except ValueError:
         return jsonify({"error": "Invalid bounds format. Use: south,north,west,east"}), 400
 
-    # Erweitere die Grenzen um 0.3 Grad
-    buffer = 0.1
+    # Erweitere die Grenzen um 0.1 Grad
+    buffer = 0.05
     south -= buffer
     north += buffer
     west -= buffer
@@ -57,9 +57,9 @@ def get_restaurants(bounds):
 
     # Berechne die maximale Anzahl von Restaurants pro Stadt
     if num_cities > 1:
-        max_per_city = 200 // num_cities
+        max_per_city = 400 // num_cities
     else:
-        max_per_city = 200
+        max_per_city = 400
 
     # Filtere Restaurants, so dass es maximal max_per_city pro Stadt gibt
     filtered_restaurants = []

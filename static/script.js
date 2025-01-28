@@ -46,11 +46,12 @@ let bound_values = {
 let boundsString = `${bound_values.lowLat},${bound_values.highLat},${bound_values.lowLng},${bound_values.highLng}`;
 
 
-// Fetch-Aufruf
+// Fetch-Aufruf to get restaurants
 fetch(`/api/restaurants/${boundsString}`)
   .then(response => response.json())
   .then(data => {
-    console.log("Restaurants:", data); // Daten ausgeben
+    console.log("Restaurants:", data); 
+    create_marker(data);
   })
   .catch(error => {
     console.error("Fehler beim Abrufen der Daten:", error);
@@ -58,18 +59,34 @@ fetch(`/api/restaurants/${boundsString}`)
 
 
 
+function create_marker(data) {
+  data.forEach(item => {
+    id = item.restaurant_id;
+    lat_value = item.lat_value;
+    long_value = item.long_value; 
+
+    console.log(`Restaurant ID: ${item.restaurant_id}`);
+    console.log(`Latitude: ${item.lat_value}`);
+    console.log(`Longitude: ${item.long_value}`);
 
 
-
-
-
-
-
-
-
-
-
-
+    if (!isNaN(lat_value) && !isNaN(long_value)) {
+      const marker = L.marker([lat_value, lat_value], { id: id, icon: defaultIcon})
+      .addTo(map)
+  
+      marker.on('click', (e) => {
+        if (activeMarker) {
+          activeMarker.setIcon(defaultIcon);
+        }
+        activeMarker = marker;
+        marker.setIcon(clickedIcon);
+        handleMarkerClick(e.target.options.id); // ID des Markers verwenden
+      });
+    } else {
+      console.error('Ungültige Koordinaten:', restaurant);
+    }
+  });
+}
 
 
 

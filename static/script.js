@@ -60,6 +60,7 @@ fetch(`/api/restaurants/${boundsString}`)
 
 
 function create_marker(data) {
+
   data.forEach(item => {
     id = item.restaurant_id;
     lat_value = item.lat_value;
@@ -75,6 +76,7 @@ function create_marker(data) {
         }
         activeMarker = marker;
         marker.setIcon(clickedIcon);
+        marker.bringToFront();   // to show in front of the other markers
         handleMarkerClick(e.target.options.id); // ID des Markers verwenden
       });
     } else {

@@ -159,21 +159,21 @@ fetch('static/csv files/filtered_summary_restaurants.csv')
 .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
-// Funktion zum Schließen des Stripes
-function close_sidebar() {
-  const rightSidebar = document.getElementById('rightSidebar');
-  rightSidebar.classList.add('closed');
-  // rightSidebar.style.width = '0'; // Breite auf 0 setzen, um den Stripe zu schließen
-  // rightSidebar.style.minWidth = '0'; // Minimum Breite ebenfalls anpassen
-}
+// // Funktion zum Schließen des Stripes
+// function close_sidebar() {
+//   const rightSidebar = document.getElementById('rightSidebar');
+//   rightSidebar.classList.add('closed');
+//   // rightSidebar.style.width = '0'; // Breite auf 0 setzen, um den Stripe zu schließen
+//   // rightSidebar.style.minWidth = '0'; // Minimum Breite ebenfalls anpassen
+// }
 
 // Funktion zum Öffnen des Stripes
-function open_sidebar() {
-  const rightSidebar = document.getElementById('rightSidebar');
-  rightSidebar.classList.remove('closed'); // Sidebar öffnen
-  // rightSidebar.style.width = '30%'; // Breite auf Standardwert setzen
-  // rightSidebar.style.minWidth = '70px'; // Minimum Breite zurücksetzen
-}
+// function open_sidebar() {
+//   const rightSidebar = document.getElementById('rightSidebar');
+//   rightSidebar.classList.remove('closed'); // Sidebar öffnen
+//   // rightSidebar.style.width = '30%'; // Breite auf Standardwert setzen
+//   // rightSidebar.style.minWidth = '70px'; // Minimum Breite zurücksetzen
+// }
 
 
 
@@ -206,14 +206,14 @@ fetch('static/API_basics.csv')
                 }
                 activeMarker = marker;
                 marker.setIcon(clickedIcon);
-                open_sidebar();
+                // open_sidebar();
                 handleMarkerClick(e.target.options.id); // ID des Markers verwenden
             });
 
             if (restaurant === restaurants[0]) {
               activeMarker = marker; // Setze den ersten Marker als aktiven Marker
               marker.setIcon(clickedIcon); // Setze das Icon des aktiven Markers auf clickedIcon
-              open_sidebar();
+              // open_sidebar();
               handleMarkerClick(id); // Führe die Funktion für den ersten Marker aus
             }
 
@@ -229,7 +229,7 @@ fetch('static/API_basics.csv')
           const lon = parseFloat(firstRestaurant.long_value);
           const id = firstRestaurant.restaurant_id;
           map.setView([lat, lon], 15);
-          open_sidebar();
+          // open_sidebar();
           handleMarkerClick(id);
         }
       },

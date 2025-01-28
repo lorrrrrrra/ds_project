@@ -52,6 +52,7 @@ function update_map() {
 
   let boundsString = `${bound_values.lowLat},${bound_values.highLat},${bound_values.lowLng},${bound_values.highLng}`;
 
+  let currentActiveMarker = activeMarker;
   // Fetch-Aufruf to get restaurants
   fetch(`/api/restaurants/${boundsString}`)
     .then(response => response.json())
@@ -62,6 +63,10 @@ function update_map() {
     .catch(error => {
       console.error("Fehler beim Abrufen der Daten:", error);
     });
+
+    // keeping active Marker
+    activeMarker = currentActiveMarker;
+    currentActiveMarker.setIcon(clickedIcon);
 }
 
 

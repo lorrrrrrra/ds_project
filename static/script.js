@@ -63,15 +63,10 @@ function create_marker(data) {
   data.forEach(item => {
     id = item.restaurant_id;
     lat_value = item.lat_value;
-    long_value = item.long_value; 
-
-    console.log(`Restaurant ID: ${item.restaurant_id}`);
-    console.log(`Latitude: ${item.lat_value}`);
-    console.log(`Longitude: ${item.long_value}`);
-
+    long_value = item.long_value;
 
     if (!isNaN(lat_value) && !isNaN(long_value)) {
-      const marker = L.marker([lat_value, lat_value], { id: id, icon: defaultIcon})
+      const marker = L.marker([lat_value, long_value], { id: id, icon: defaultIcon})
       .addTo(map)
   
       marker.on('click', (e) => {

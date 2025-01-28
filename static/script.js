@@ -93,28 +93,6 @@ function create_marker(data) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 let restaurants = []; // Globale Variable
 let restaurants_general = [];
 let reviews_grouped = [];
@@ -349,7 +327,7 @@ function open_sidebar() {
 
 
   // all things details side
-  function getStarRating(markerId) {
+  function get_star_rating(markerId) {
     const restaurant = reviews_grouped.find((r) => r.restaurant_id === markerId);
   
     if (restaurant) {
@@ -497,6 +475,33 @@ function get_type_tags (type_tags) {
 }
 
 
+function get_details(data) {
+  const sidebarName = document.getElementById('name');
+  const sidebarAddress = document.getElementById('address');
+  const sidebarWebsiteUrl = document.getElementById('website-url');
+
+  sidebarName.textContent = data.name;
+  sidebarAddress.textContent = data.address;
+
+  if (data.website_uri !== null && data.website_uri !== undefined && data.website_uri != "NaN") {
+    sidebarWebsiteUrl.textContent = "Click here to access website";
+    sidebarWebsiteUrl.href = data.website_uri;
+    // sidebarWebsiteUrl.target = "_blank";
+  } else {
+    sidebarWebsiteUrl.textContent = "";
+    sidebarWebsiteUrl.href = "";
+    // sidebarWebsiteUrl.target = "";
+  }
+
+  if (data.opening_hours !== null && data.opening_hours !== undefined && data.opening_hours != "NaN") {
+    // just for checking opening hours
+  } else {
+    // just for checking opening hours
+  }
+  get_type_tags(data.types);
+}
+
+
 function handleMarkerClick(markerId) {
   const sidebarName = document.getElementById('name');
   const sidebarAddress = document.getElementById('address');
@@ -509,31 +514,33 @@ function handleMarkerClick(markerId) {
       if (data.error) {
         console.error('Fehler:', data.error);
       } else {
-        console.log('Restaurant-Daten:', data);
-        sidebarName.textContent = data.name;
-        sidebarAddress.textContent = data.address;
+        // console.log('Restaurant-Daten:', data);
+      //   sidebarName.textContent = data.name;
+      //   sidebarAddress.textContent = data.address;
 
-        if (data.website_uri !== null && data.website_uri !== undefined && data.website_uri != "NaN") {
-          sidebarWebsiteUrl.textContent = "Click here to access website";
-          sidebarWebsiteUrl.href = data.website_uri;
-          // sidebarWebsiteUrl.target = "_blank";
-        } else {
-          sidebarWebsiteUrl.textContent = "";
-          sidebarWebsiteUrl.href = "";
-          // sidebarWebsiteUrl.target = "";
+      //   if (data.website_uri !== null && data.website_uri !== undefined && data.website_uri != "NaN") {
+      //     sidebarWebsiteUrl.textContent = "Click here to access website";
+      //     sidebarWebsiteUrl.href = data.website_uri;
+      //     // sidebarWebsiteUrl.target = "_blank";
+      //   } else {
+      //     sidebarWebsiteUrl.textContent = "";
+      //     sidebarWebsiteUrl.href = "";
+      //     // sidebarWebsiteUrl.target = "";
 
-        }
+      //   }
 
-        if (data.opening_hours !== null && data.opening_hours !== undefined && data.opening_hours != "NaN") {
-          // just for checking opening hours
-        } else {
-          // just for checking opening hours
-        }
-        get_type_tags(data.types);
+      //   if (data.opening_hours !== null && data.opening_hours !== undefined && data.opening_hours != "NaN") {
+      //     // just for checking opening hours
+      //   } else {
+      //     // just for checking opening hours
+      //   }
+      //   get_type_tags(data.types);
 
-      }
-    })
-    .catch(error => {
+      // }
+      get_details(data); 
+    }
+  })
+  .catch(error => {
       console.error('Fehler beim Abrufen der Restaurant-Daten:', error);
     });
 
@@ -541,7 +548,7 @@ function handleMarkerClick(markerId) {
   const restaurant = restaurants.find((r) => r.restaurant_id === markerId);
   
   if (restaurant) {
-    getStarRating(markerId);
+    get_star_rating(markerId);
     get_summaries(markerId);
   
     if (sidebarName && sidebarAddress) {

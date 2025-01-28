@@ -33,7 +33,8 @@ def get_restaurants(bounds):
         SELECT restaurant_id, lat_value, long_value
         FROM restaurant_basics
         WHERE lat_value BETWEEN %s AND %s
-        AND long_value BETWEEN %s AND %s;
+        AND long_value BETWEEN %s AND %s
+        LIMIT 200;
     """, (south, north, west, east))
 
     # Hole die Ergebnisse

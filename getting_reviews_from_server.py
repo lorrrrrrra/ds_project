@@ -30,7 +30,7 @@ if connection:
         # small fail, the incremented review_id didn't reset after the final test so the reviews start with id 4471
         query_general = """
         SELECT *
-        FROM reviews_general_new;
+        FROM reviews_subcategories;
         """
 
         cursor.execute(query_general)
@@ -41,34 +41,34 @@ if connection:
 
         # DataFrame erstellen
         df_reviews_general = pd.DataFrame(rows, columns=columns)
-        df_reviews_general.to_csv("/home/ubuntu/scraping/reviews_general_test_new_2025_01_14.csv", index=False)
+        df_reviews_general.to_csv("/home/ubuntu/scraping/reviews_subcategories_backup_2025_01_28.csv", index=False)
 
-        print("Dataframe with reviews general was constructed")
+        print("Dataframe with restaurant additional was constructed")
     except Exception as e:
         print("Error while accessing the data", e)
 
 
-    # reviews additional table
-    try:
-        # small fail, the incremented review_id didn't reset after the final test so the reviews start with id 4471
-        query_additional = """
-        SELECT *
-        FROM reviews_additional_new;
-        """
+    # # reviews additional table
+    # try:
+    #     # small fail, the incremented review_id didn't reset after the final test so the reviews start with id 4471
+    #     query_additional = """
+    #     SELECT *
+    #     FROM restaurant_general;
+    #     """
 
-        cursor.execute(query_additional)
-        rows = cursor.fetchall()
+    #     cursor.execute(query_additional)
+    #     rows = cursor.fetchall()
 
-        # Spaltennamen aus der Tabelle abrufen
-        columns = [desc[0] for desc in cursor.description]
+    #     # Spaltennamen aus der Tabelle abrufen
+    #     columns = [desc[0] for desc in cursor.description]
 
-        # DataFrame erstellen
-        df_reviews_additional = pd.DataFrame(rows, columns=columns)
-        df_reviews_additional.to_csv("/home/ubuntu/scraping/reviews_additional_new_backup_2025_01_14.csv", index=False)
+    #     # DataFrame erstellen
+    #     df_reviews_additional = pd.DataFrame(rows, columns=columns)
+    #     df_reviews_additional.to_csv("/home/ubuntu/scraping/restaurant_general_backup_2025_01_23.csv", index=False)
 
-        print("Dataframe with reviews additional was constructed")
-    except Exception as e:
-        print("Error while accessing the data", e)
+    #     print("Dataframe with reviews additional was constructed")
+    # except Exception as e:
+    #     print("Error while accessing the data", e)
 
 
     finally:

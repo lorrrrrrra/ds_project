@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, render_template
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from collections import defaultdict
 
 app = Flask(__name__)
 
@@ -30,21 +31,43 @@ def get_restaurants(bounds):
 
     # SQL-Abfrage mit den bounds filtern
     cursor.execute("""
-        SELECT restaurant_id, lat_value, long_value
+        SELECT restaurant_id, city_id, lat_value, long_value
         FROM restaurant_basics
         WHERE lat_value BETWEEN %s AND %s
-        AND long_value BETWEEN %s AND %s
-        LIMIT 200;
+        AND long_value BETWEEN %s AND %s;
     """, (south, north, west, east))
 
-    # Hole die Ergebnisse
+
     restaurants = cursor.fetchall()
+
+    # Restaurants nach city_id gruppieren
+    cities = defaultdict(list)
+    for restaurant in restaurants:
+        cities[restaurant['city_id']].append(restaurant)
+
+    # Bestimme die Anzahl der Städte
+    num_cities = len(cities)
+
+    # Berechne die maximale Anzahl von Restaurants pro Stadt
+    if num_cities > 1:
+        max_per_city = 200 // num_cities
+    else:
+        max_per_city = 200
+
+    # Filtere Restaurants, so dass es maximal max_per_city pro Stadt gibt
+    filtered_restaurants = []
+    for city_id, city_restaurants in cities.items():
+        filtered_restaurants.extend(city_restaurants[:max_per_city])
+
+    # Die finalen Restaurants
+    final_restaurants = filtered_restaurants
+
 
     cursor.close()
     connection.close()
 
     # Ergebnisse als JSON zurückgeben
-    return jsonify(restaurants)
+    return jsonify(final_restaurants)
 
 
 

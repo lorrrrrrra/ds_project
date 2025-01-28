@@ -245,13 +245,19 @@ fetch('static/csv files/filtered_summary_restaurants.csv')
 .catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
-// // Funktion zum Schließen des Stripes
-// function close_sidebar() {
-//   const rightSidebar = document.getElementById('rightSidebar');
-//   rightSidebar.classList.add('closed');
-//   // rightSidebar.style.width = '0'; // Breite auf 0 setzen, um den Stripe zu schließen
-//   // rightSidebar.style.minWidth = '0'; // Minimum Breite ebenfalls anpassen
-// }
+// Funktion zum Schließen des Stripes
+function close_sidebar() {
+  const sidebar = document.getElementById("rightSidebar");
+  const mapContainer = document.getElementById("map"); // ID des Kartencontainers
+  if (sidebar) {
+    sidebar.classList.add("hidden"); // Versteckt die Sidebar
+    setTimeout(() => {
+        if (map) {
+          map.invalidateSize(); // Aktualisiert die Kartengröße
+        }
+    }, 300); // Wartezeit, um sicherzustellen, dass die Transition abgeschlossen ist
+  }
+}
 
 // Funktion zum Öffnen des Stripes
 // function open_sidebar() {

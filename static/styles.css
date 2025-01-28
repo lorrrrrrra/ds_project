@@ -268,12 +268,18 @@ html, body {
     transition: width 0.3s ease; /* Weiche Animation beim Ein-/Ausklappen */
     padding-right: 1.5rem;
     position: relative;
+    transform: translateX(0);
 }
 
-.stripe-right.close {
-    width: 0 !important; /* Vollständig versteckt */
-    min-width: 0 !important; /* Kein Mindestabstand */
-    padding: 0 !important; /* Entferne Innenabstände */
+.stripe-right.hidden {
+    transform: translateX(100%);
+    min-width: 0px !important;
+    width: 0 !important; /* Setzt die Breite auf 0 */
+    padding: 0 !important; /* Entfernt das Padding */
+}
+
+.stripe-right.hidden + .stripe-center {
+    width: 80%; /* Nimmt den Platz der Sidebar ein (100% - 20% von left) */
 }
 
 

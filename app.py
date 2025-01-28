@@ -26,6 +26,13 @@ def get_restaurants(bounds):
     except ValueError:
         return jsonify({"error": "Invalid bounds format. Use: south,north,west,east"}), 400
 
+    # Erweitere die Grenzen um 0.3 Grad
+    buffer = 0.3
+    south -= buffer
+    north += buffer
+    west -= buffer
+    east += buffer
+    
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)
 
@@ -35,7 +42,7 @@ def get_restaurants(bounds):
         FROM restaurant_basics
         WHERE lat_value BETWEEN %s AND %s
         AND long_value BETWEEN %s AND %s;
-    """, (south + 1, north + 1, west + 1, east + 1))
+    """, (south , north, west, east))
 
 
     restaurants = cursor.fetchall()

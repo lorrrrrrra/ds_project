@@ -251,6 +251,12 @@ function close_sidebar() {
   const mapContainer = document.getElementById("map"); // ID des Kartencontainers
   if (sidebar) {
     sidebar.classList.add("hidden"); // Versteckt die Sidebar
+
+    // deleting active marker
+    activeMarker.setIcon(defaultIcon); // 
+    activeMarker = null;
+
+    // resizing map
     setTimeout(() => {
         if (map) {
           map.invalidateSize(); // Aktualisiert die Kartengröße

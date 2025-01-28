@@ -1,5 +1,6 @@
+// all things map
 // loading of the map
-const map = L.map('map').setView([51.505, -0.09], 13);
+const map = L.map('map').setView([48.52, 9.05], 13);
     
 const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -7,7 +8,7 @@ const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
-// new Icon for clicked Marker
+// new Icons
 var defaultIcon = L.icon({
   iconUrl: 'static/marker_green.png', // Standardmarker
   iconSize: [37.5, 58],
@@ -24,8 +25,78 @@ var clickedIcon = L.icon({
   popupAnchor: [-3, -76],
 });
 
+var deactivatedIcon = L.icon({
+  iconUrl: 'static/marker_grey.svg', // Marker wenn nicht bei filter
+  iconSize: [37.5, 58],
+  iconAnchor: [22, 94],
+  shadowAnchor: [4, 62],
+  popupAnchor: [-3, -76],
+});
 
-    
+
+let bounds = map.getBounds();
+
+let bound_values = {
+  lowLat: bounds.getSouth(),
+  highLat: bounds.getNorth(),
+  lowLng: bounds.getWest(),
+  highLng: bounds.getEast()
+};
+
+let boundsString = `${bound_values.lowLat},${bound_values.highLat},${bound_values.lowLng},${bound_values.highLng}`;
+
+
+// Fetch-Aufruf
+fetch(`/api/restaurants/${boundsString}`)
+  .then(response => response.json())
+  .then(data => {
+    console.log("Restaurants:", data); // Daten ausgeben
+  })
+  .catch(error => {
+    console.error("Fehler beim Abrufen der Daten:", error);
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -61,6 +132,7 @@ let types = ["bakery", "bar", "breakfast_restaurant", "brunch_restaurant", "buff
 
 //initiate filter buttons for types
 display_food_type_buttons(types);
+
 
 
 

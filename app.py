@@ -18,26 +18,34 @@ def get_db_connection():
 def index():
     return render_template('index.html')
 
-@app.route('/api/restaurants', methods=['GET'])
-def get_restaurants():
+@app.route('/api/restaurants/<bounds>', methods=['GET'])
+def get_restaurants(bounds):
+    try:
+        south, north, west, east = map(float, bounds.split(','))
+    except ValueError:
+        return jsonify({"error": "Invalid bounds format. Use: south,north,west,east"}), 400
+
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)
-    
-    # SQL-Abfrage, um die ersten 5 Zeilen der gewünschten Spalten aus restaurant_basics zu holen
+
+    # SQL-Abfrage mit den bounds filtern
     cursor.execute("""
         SELECT restaurant_id, lat_value, long_value
         FROM restaurant_basics
-        LIMIT 5;
-    """)
-    
+        WHERE lat_value BETWEEN %s AND %s
+        AND long_value BETWEEN %s AND %s;
+    """, (south, north, west, east))
+
     # Hole die Ergebnisse
     restaurants = cursor.fetchall()
-    
+
     cursor.close()
     connection.close()
-    
-    # Gebe die Ergebnisse als JSON zurück
+
+    # Ergebnisse als JSON zurückgeben
     return jsonify(restaurants)
+
+
 
 
 @app.route('/api/restaurant/<restaurant_id>', methods=['GET'])

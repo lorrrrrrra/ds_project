@@ -344,9 +344,14 @@ html, body {
     font-size: 0.9rem;
 }
 
-.subcategories-right-side {
+.hr-divider {
+    width: 100%;
+}
+
+#subcategories-right-side {
     position: relative; /* Ermöglicht absolute Positionierung des Buttons */
     width: 100%;
+    text-align: center !important;
 }
 
 #info-button {

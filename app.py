@@ -52,45 +52,57 @@ def get_restaurants(bounds):
 def get_restaurant(restaurant_id):
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)
-    
+
     try:
-        # SQL-Abfrage, um die Informationen des spezifischen Restaurants aus restaurant_basics zu holen
+        # Eine kombinierte SQL-Abfrage, die alle relevanten Daten aus beiden Tabellen holt
         cursor.execute("""
-            SELECT name, address, types
-            FROM restaurant_basics
-            WHERE restaurant_id = %s;
+            SELECT r.name, r.address, r.types,
+                rg.website_uri, rg.opening_hours, 
+                rg.summary_overall, rg.summary_food, rg.summary_service, rg.summary_atmosphere, rg.summary_price,
+                rg.rating_overall, rg.rating_food, rg.rating_service, rg.rating_atmosphere, rg.rating_price, 
+                rg.user_count_overall, rg.user_count_food, rg.user_count_service, rg.user_count_atmosphere, rg.user_count_price
+            FROM restaurant_basics r
+            LEFT JOIN restaurant_general rg ON r.restaurant_id = rg.restaurant_id
+            WHERE r.restaurant_id = %s;
         """, (restaurant_id,))
-        restaurant = cursor.fetchone()
-        
-        if not restaurant:
-            # Falls kein Restaurant gefunden wurde, gebe eine Fehlermeldung zurück
+        restaurant_data = cursor.fetchone()
+
+        if not restaurant_data:
+            # Falls keine Daten gefunden wurden, gebe eine Fehlermeldung zurück
             return jsonify({"error": "Restaurant not found"}), 404
-        
-        # Zusätzliche SQL-Abfrage, um die Website-URI aus restaurant_general zu holen
-        cursor.execute("""
-            SELECT website_uri, opening_hours
-            FROM restaurant_general
-            WHERE restaurant_id = %s;
-        """, (restaurant_id,))
-        website_data = cursor.fetchone()
-        
-        # Falls eine Website gefunden wurde, füge sie den Restaurantinformationen hinzu
-        if website_data and "website_uri" in website_data:
-            restaurant["website_uri"] = website_data["website_uri"]
-        else:
-            restaurant["website_uri"] = None  # Wenn keine Website gefunden wurde, setze den Wert auf None
-        
-        if website_data and "website_uri" in website_data:
-            restaurant["opening_hours"] = website_data["opening_hours"]
-        else:
-            restaurant["opening_hours"] = None  # Wenn keine Website gefunden wurde, setze den Wert auf None
+
+        # Restaurantinformationen
+        restaurant = {
+            "name": restaurant_data["name"],
+            "address": restaurant_data["address"],
+            "types": restaurant_data["types"],
+            "website_uri": restaurant_data["website_uri"] or None,
+            "opening_hours": restaurant_data["opening_hours"] or None,
+            "summary_overall": restaurant_data["summary_overall"] or None,
+            "summary_food": restaurant_data["summary_food"] or None,
+            "summary_service": restaurant_data["summary_service"] or None,
+            "summary_atmosphere": restaurant_data["summary_atmosphere"] or None,
+            "summary_price": restaurant_data["summary_price"] or None,
+            "rating_overall": restaurant_data["rating_overall"] or None,
+            "rating_food": restaurant_data["rating_food"] or None,
+            "rating_service": restaurant_data["rating_service"] or None,
+            "rating_atmosphere": restaurant_data["rating_atmosphere"] or None,
+            "rating_price": restaurant_data["rating_price"] or None,
+            "user_count_overall": restaurant_data["user_count_overall"] or None,
+            "user_count_food": restaurant_data["user_count_food"] or None,
+            "user_count_service": restaurant_data["user_count_service"] or None,
+            "user_count_atmosphere": restaurant_data["user_count_atmosphere"] or None,
+            "user_count_price": restaurant_data["user_count_price"] or None
+        }
+
         # Gebe die Informationen als JSON zurück
         return jsonify(restaurant)
-    
+
     finally:
         # Cursor und Verbindung schließen
         cursor.close()
         connection.close()
+
 
 
 

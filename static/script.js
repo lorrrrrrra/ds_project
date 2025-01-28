@@ -1,3 +1,36 @@
+// global variables
+let reviews_grouped = [];
+let reviews_grouped_month = [] ;
+let reviews_grouped_year = [];
+let reviews_grouped_price = [];
+let activeMarker = null;
+
+let filters = {
+  general: 0,
+  food: 0,
+  service: 0,
+  atmosphere: 0,
+  price_filter: false,
+  price_0_10: false,
+  price_10_20: false,
+  price_20_30: false,
+  price_30_40: false,
+  price_40_50: false,
+  price_50_100: false,
+  type: []
+}
+
+let types = ["bakery", "bar", "breakfast_restaurant", "brunch_restaurant", "buffet_restaurant", "cafe", "fast_food_restaurant", 
+  "fine_dining_restaurant", "meal_delivery", "meal_takeaway","vegan_restaurant", "vegetarian_restaurant", 
+  "african_restaurant", "asian_restaurant", "chinese_restaurant", "indian_restaurant", "italian_restaurant", "seafood_restaurant", 
+  "sushi_restaurant"]
+
+
+
+
+
+
+
 // all things map
 // loading of the map
 const map = L.map('map').setView([48.52, 9.05], 13);
@@ -52,7 +85,10 @@ function update_map() {
 
   let boundsString = `${bound_values.lowLat},${bound_values.highLat},${bound_values.lowLng},${bound_values.highLng}`;
 
-  let currentActiveMarker = activeMarker;
+  if (activeMarker) {
+    let currentActiveMarker = activeMarker;
+  }
+  
   // Fetch-Aufruf to get restaurants
   fetch(`/api/restaurants/${boundsString}`)
     .then(response => response.json())
@@ -65,8 +101,10 @@ function update_map() {
     });
 
     // keeping active Marker
-    activeMarker = currentActiveMarker;
-    currentActiveMarker.setIcon(clickedIcon);
+    if (currentActiveMarker) {
+      activeMarker = currentActiveMarker;
+      currentActiveMarker.setIcon(clickedIcon);
+    }
 }
 
 
@@ -106,31 +144,7 @@ function create_marker(data) {
 
 
 
-let reviews_grouped = [];
-let reviews_grouped_month = [] ;
-let reviews_grouped_year = [];
-let reviews_grouped_price = [];
-let activeMarker = null;
 
-let filters = {
-  general: 0,
-  food: 0,
-  service: 0,
-  atmosphere: 0,
-  price_filter: false,
-  price_0_10: false,
-  price_10_20: false,
-  price_20_30: false,
-  price_30_40: false,
-  price_40_50: false,
-  price_50_100: false,
-  type: []
-}
-
-let types = ["bakery", "bar", "breakfast_restaurant", "brunch_restaurant", "buffet_restaurant", "cafe", "fast_food_restaurant", 
-  "fine_dining_restaurant", "meal_delivery", "meal_takeaway","vegan_restaurant", "vegetarian_restaurant", 
-  "african_restaurant", "asian_restaurant", "chinese_restaurant", "indian_restaurant", "italian_restaurant", "seafood_restaurant", 
-  "sushi_restaurant"]
 
 //initiate filter buttons for types
 display_food_type_buttons(types);

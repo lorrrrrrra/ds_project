@@ -33,29 +33,37 @@ var deactivatedIcon = L.icon({
   popupAnchor: [-3, -76],
 });
 
+map.on('moveend', update_map); // Wenn die Karte verschoben wird
+map.on('zoomend', update_map); // Wenn der Zoom geändert wird
 
-let bounds = map.getBounds();
+// first initial update of map
+update_map();
 
-let bound_values = {
-  lowLat: bounds.getSouth(),
-  highLat: bounds.getNorth(),
-  lowLng: bounds.getWest(),
-  highLng: bounds.getEast()
-};
+function update_map() {
+  // get bound_values
+  let bounds = map.getBounds();
 
-let boundsString = `${bound_values.lowLat},${bound_values.highLat},${bound_values.lowLng},${bound_values.highLng}`;
+  let bound_values = {
+    lowLat: bounds.getSouth(),
+    highLat: bounds.getNorth(),
+    lowLng: bounds.getWest(),
+    highLng: bounds.getEast()
+  };
 
+  let boundsString = `${bound_values.lowLat},${bound_values.highLat},${bound_values.lowLng},${bound_values.highLng}`;
 
-// Fetch-Aufruf to get restaurants
-fetch(`/api/restaurants/${boundsString}`)
-  .then(response => response.json())
-  .then(data => {
-    // console.log("Restaurants:", data); 
-    create_marker(data);
-  })
-  .catch(error => {
-    console.error("Fehler beim Abrufen der Daten:", error);
-  });
+  // Fetch-Aufruf to get restaurants
+  fetch(`/api/restaurants/${boundsString}`)
+    .then(response => response.json())
+    .then(data => {
+      // console.log("Restaurants:", data); 
+      create_marker(data);
+    })
+    .catch(error => {
+      console.error("Fehler beim Abrufen der Daten:", error);
+    });
+}
+
 
 
 

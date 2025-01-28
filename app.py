@@ -35,7 +35,7 @@ def get_restaurants(bounds):
         FROM restaurant_basics
         WHERE lat_value BETWEEN %s AND %s
         AND long_value BETWEEN %s AND %s;
-    """, (south, north, west, east))
+    """, (south + 1, north + 1, west + 1, east + 1))
 
 
     restaurants = cursor.fetchall()

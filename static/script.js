@@ -87,8 +87,9 @@ function update_map() {
 
   let boundsString = `${bound_values.lowLat},${bound_values.highLat},${bound_values.lowLng},${bound_values.highLng}`;
 
+  let currentActiveMarker = null;
   if (activeMarker) {
-    let currentActiveMarker = activeMarker;
+    currentActiveMarker = activeMarker;
   }
   
   // Fetch-Aufruf to get restaurants

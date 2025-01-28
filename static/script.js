@@ -50,7 +50,7 @@ let boundsString = `${bound_values.lowLat},${bound_values.highLat},${bound_value
 fetch(`/api/restaurants/${boundsString}`)
   .then(response => response.json())
   .then(data => {
-    console.log("Restaurants:", data); 
+    // console.log("Restaurants:", data); 
     create_marker(data);
   })
   .catch(error => {

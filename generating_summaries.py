@@ -182,12 +182,15 @@ def summarize_reviews(restaurant_id, reviews_df, category_column_name, summary_p
         str: Final summarized review.
     """
     # Filter and join the reviews for the specified column
-    reviews = reviews_df[reviews_df['restaurant_id'] == restaurant_id][category_column_name].dropna().astype(str).tolist()
+    reviews = reviews_df[reviews_df['restaurant_id'] == restaurant_id][category_column_name].str.strip().replace(["", "nan", "None", "null"], pd.NA).dropna().astype(str).tolist()
     reviews_text = "\n".join(reviews)
+
+    # Getting amount of reviews
+    count_reviews = len(reviews)
     
     try:
         # Attempt to summarize the full chunk
-        return summarize_chunk(summary_prompt, reviews_text)
+        return summarize_chunk(summary_prompt, reviews_text), count_reviews
     
     except Exception as e:
         if "context_length_exceeded" in str(e):
@@ -205,15 +208,15 @@ def summarize_reviews(restaurant_id, reviews_df, category_column_name, summary_p
             if first_summary and second_summary:
                 # Combine summaries
                 try:
-                    return combine_summaries(combine_prompt, first_summary, second_summary)
+                    return combine_summaries(combine_prompt, first_summary, second_summary), count_reviews
                 except Exception as combine_error:
                     print(f"Error combining summaries for restaurant '{restaurant_id}' in column '{category_column_name}': {combine_error}")
-                    return f"{first_summary}"  # Return the first summary if combining fails
+                    return f"{first_summary}", (len(reviews) // 2)  # Return the first summary if combining fails
             else:
-                return f"{first_summary or 'Error in first half'}\n\n{second_summary or 'Error in second half'}"
+                return f"{first_summary or 'Error in first half'}\n\n{second_summary or 'Error in second half'}", (len(reviews) // 2)
         else:
             print(f"Error summarizing reviews for restaurant '{restaurant_id}' in column '{category_column_name}': {e}")
-            return None
+            return None, None
 
 
 
@@ -225,12 +228,19 @@ def update_database(summaries):
             summary_food = %s, 
             summary_service = %s, 
             summary_atmosphere = %s, 
-            summary_price = %s
+            summary_price = %s,
+            user_count_overall = %s, 
+            user_count_food = %s, 
+            user_count_service = %s, 
+            user_count_atmosphere = %s, 
+            user_count_price = %s
         WHERE restaurant_id = %s;
     """
     
     rows_to_update = [
-        (row['summary_overall'], row['summary_food'], row['summary_service'], row['summary_atmosphere'], row['summary_price'], row['restaurant_id'])
+        (row['summary_overall'], row['summary_food'], row['summary_service'], row['summary_atmosphere'], row['summary_price'], 
+        row['user_count_overall'], row['user_count_food'], row['user_count_service'], row['user_count_atmosphere'], row['user_count_price'],
+        row['restaurant_id'])
         for row in summaries
     ]
 
@@ -247,22 +257,33 @@ def update_database(summaries):
 # restaurant basics to get the restaurant_ids
 try:
     query_general = """
-        SELECT restaurant_id
-        FROM restaurant_basics
-        WHERE city_id IN (0, 1, 2);
+        SELECT DISTINCT restaurant_id
+        FROM reviews_subcategories
+        WHERE restaurant_id NOT IN (
+            SELECT restaurant_id
+            FROM restaurant_basics
+            WHERE city_id IN (0, 1, 2)
+        );
         """
 
     cursor.execute(query_general)
     rows = cursor.fetchall()
 
-
-    columns = [desc[0] for desc in cursor.description]
-
-    restaurant_basics = pd.DataFrame(rows, columns=columns)
-    print(f"Got restaurant basics data")
+    # Check, ob überhaupt Daten zurückgekommen sind
+    if rows:
+        columns = [desc[0] for desc in cursor.description]
+        restaurant_basics = pd.DataFrame(rows, columns=columns)
+        print(f"Got {len(restaurant_basics)} restaurant IDs that are NOT in city_id 0, 1, or 2.")
+    else:
+        restaurant_basics = pd.DataFrame()
+        print("No matching restaurant IDs found.")
 
 except Exception as e:
-    print(f"Failed to get the data from the restaurant_general table: {e}")
+    print(f"Failed to get the data: {e}")
+
+
+
+
 
 
 
@@ -313,19 +334,19 @@ for index, row in restaurant_basics.iterrows():
         print(f"Processing restaurant ID: {restaurant_id}")
         
         # Summarize overall reviews
-        overall_summary = summarize_reviews(restaurant_id, reviews_df, 'review_text', OVERALL_SUMMARY_PROMPT, OVERALL_SUMMARY_COMBINE_PROMPT)
+        overall_summary, user_count_overall = summarize_reviews(restaurant_id, reviews_df, 'review_text', OVERALL_SUMMARY_PROMPT, OVERALL_SUMMARY_COMBINE_PROMPT)
         
         # Summarize food reviews
-        food_summary = summarize_reviews(restaurant_id, reviews_df, 'food_sentences', FOOD_SUMMARY_PROMPT, FOOD_COMBINE_PROMPT)
+        food_summary, user_count_food = summarize_reviews(restaurant_id, reviews_df, 'food_sentences', FOOD_SUMMARY_PROMPT, FOOD_COMBINE_PROMPT)
         
         # Summarize service reviews
-        service_summary = summarize_reviews(restaurant_id, reviews_df, 'service_sentences', SERVICE_SUMMARY_PROMPT, SERVICE_COMBINE_PROMPT)
+        service_summary, user_count_service = summarize_reviews(restaurant_id, reviews_df, 'service_sentences', SERVICE_SUMMARY_PROMPT, SERVICE_COMBINE_PROMPT)
         
         # Summarize atmosphere reviews
-        atmosphere_summary = summarize_reviews(restaurant_id, reviews_df, 'atmosphere_sentences', ATMOSPHERE_SUMMARY_PROMPT, ATMOSPHERE_COMBINE_PROMPT)
+        atmosphere_summary, user_count_atmosphere = summarize_reviews(restaurant_id, reviews_df, 'atmosphere_sentences', ATMOSPHERE_SUMMARY_PROMPT, ATMOSPHERE_COMBINE_PROMPT)
         
         # Summarize price reviews
-        price_summary = summarize_reviews(restaurant_id, reviews_df, 'price_sentences', PRICE_SUMMARY_PROMPT, PRICE_COMBINE_PROMPT)
+        price_summary, user_count_price = summarize_reviews(restaurant_id, reviews_df, 'price_sentences', PRICE_SUMMARY_PROMPT, PRICE_COMBINE_PROMPT)
         
         # Append the summaries to the list
         summaries.append({
@@ -335,8 +356,12 @@ for index, row in restaurant_basics.iterrows():
             "summary_service": service_summary,
             "summary_atmosphere": atmosphere_summary,
             "summary_price": price_summary,
+            "user_count_overall": user_count_overall,
+            "user_count_food": user_count_food,
+            "user_count_service": user_count_service,
+            "user_count_atmosphere": user_count_atmosphere,
+            "user_count_price": user_count_price,
         })
-
 
         if (index + 1) % 10 == 0:
             print(f"Updating database for batch {index + 1}...")

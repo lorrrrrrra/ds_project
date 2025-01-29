@@ -48,11 +48,7 @@ def get_restaurants(bounds):
             rb.city_id, 
             rb.lat_value, 
             rb.long_value, 
-            rg.google_rating, 
-            rg.rating_food, 
-            rg.rating_service, 
-            rg.rating_atmosphere, 
-            rg.rating_price
+            rg.google_rating
         FROM restaurant_basics rb
         JOIN restaurant_general rg ON rb.restaurant_id = rg.restaurant_id
         WHERE rb.lat_value BETWEEN %s AND %s

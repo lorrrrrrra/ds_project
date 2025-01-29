@@ -226,7 +226,7 @@ fetch('static/csv files/dining_price_range_group.csv')
 
 
 
-// Funktion zum Schließen des Stripes
+// Function to close the sidebar
 function close_sidebar() {
   const sidebar = document.getElementById("rightSidebar");
   const mapContainer = document.getElementById("map"); // ID des Kartencontainers
@@ -246,7 +246,7 @@ function close_sidebar() {
   }
 }
 
-// Funktion zum Öffnen des Stripes
+// Function to open the sidebar
 function open_sidebar() {
   const sidebar = document.querySelector(".stripe-right");
   const mapContainer = document.getElementById("map");
@@ -340,16 +340,23 @@ function open_sidebar() {
 function get_summaries(data) {
   // Restaurant mit passender ID suchen
   if (data) {
-    const summary_overall = data.summary_overall;
-    const summary_food = data.summary_food;
-    const summary_service = data.summary_service;
-    const summary_atmosphere = data.summary_atmosphere;
-    const summary_price = data.summary_price;
-    const count_overall = parseFloat(data.user_count_overall);
-    const count_food = parseFloat(data.user_count_food);
-    const count_service = parseFloat(data.user_count_service);
-    const count_atmosphere = parseFloat(data.user_count_atmosphere);
-    const count_price = parseFloat(data.user_count_price);
+    const summary_overall = data.summary_overall || "Unfortunately, there were no reviews to base our summary upon.";
+    const summary_food = data.summary_food || "Unfortunately, there were no reviews to base our summary upon.";
+    const summary_service = data.summary_service || "Unfortunately, there were no reviews to base our summary upon.";
+    const summary_atmosphere = data.summary_atmosphere || "Unfortunately, there were no reviews to base our summary upon.";
+    const summary_price = data.summary_price || "Unfortunately, there were no reviews to base our summary upon.";
+    
+    const count_overall = parseFloat(data.user_count_overall) || 0;
+    const count_food = parseFloat(data.user_count_food) || 0;
+    const count_service = parseFloat(data.user_count_service) || 0;
+    const count_atmosphere = parseFloat(data.user_count_atmosphere) || 0;
+    const count_price = parseFloat(data.user_count_price) || 0;
+    
+    const text_count_overall = count_overall > 0 ? `generated with AI - based on ${count_overall} reviews` : "";
+    const text_count_food = count_food > 0 ? `generated with AI - based on ${count_food} reviews` : "";
+    const text_count_service = count_service > 0 ? `generated with AI - based on ${count_service} reviews` : "";
+    const text_count_atmosphere = count_atmosphere > 0 ? `generated with AI - based on ${count_atmosphere} reviews` : "";
+    const text_count_price = count_price > 0 ? `generated with AI - based on ${count_price} reviews` : "";
 
     const html_summary_overall = document.getElementById('summary');
     const html_summary_food = document.getElementById('summary-food');
@@ -369,11 +376,11 @@ function get_summaries(data) {
     html_summary_atmosphere.textContent = summary_atmosphere;
     html_summary_price.textContent = summary_price;
 
-    label_amount_overall.textContent = `generated with AI - based on ${count_overall} reviews`;
-    label_amount_food.textContent = `generated with AI -based on ${count_food} reviews`;
-    label_amount_service.textContent = `generated with AI -based on ${count_service} reviews`;
-    label_amount_atmosphere.textContent = `generated with AI -based on ${count_atmosphere} reviews`;
-    label_amount_price.textContent = `generated with AI -based on ${count_price} reviews`;
+    label_amount_overall.textContent = text_count_overall;
+    label_amount_food.textContent = text_count_food;
+    label_amount_service.textContent = text_count_service;
+    label_amount_atmosphere.textContent = text_count_atmosphere;
+    label_amount_price.textContent = text_count_price;
   }
 }
 

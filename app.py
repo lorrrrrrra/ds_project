@@ -2,6 +2,7 @@ from flask import Flask, jsonify, render_template, request
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from collections import defaultdict
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -66,8 +67,10 @@ def get_restaurants(bounds):
 
     # Filtere Restaurants, so dass es maximal max_per_city pro Stadt gibt
     filtered_restaurants = []
-    for city_id, city_restaurants in cities.items():
+    for _, city_restaurants in cities.items():
         filtered_restaurants.extend(city_restaurants[:max_per_city])
+
+    filtered_restaurants = pd.DataFrame(filtered_restaurants)
 
 
 

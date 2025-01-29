@@ -16,6 +16,9 @@ def get_db_connection():
 	)
     return connection
 
+def check_filtered(row):
+    return 1 if row["food_rating"] >= food_filter and row["overall_rating"] >= overall_filter else 0
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -71,6 +74,11 @@ def get_restaurants(bounds):
         filtered_restaurants.extend(city_restaurants[:max_per_city])
 
     filtered_restaurants = pd.DataFrame(filtered_restaurants)
+
+    def check_filtered(row):
+        return 1 if row["food_rating"] >= food_filter and row["overall_rating"] >= overall_filter else 0
+
+    filtered_restaurants["filtered"] = filtered_restaurants.apply(check_filtered, axis=1)
 
     filtered_restaurants = filtered_restaurants.to_dict(orient="records")
 

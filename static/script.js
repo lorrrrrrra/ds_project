@@ -555,8 +555,8 @@ function update_filter_price_rating(button, range) {
     button.classList.remove("btn-price-filter-inactive");
     button.classList.add("btn-price-filter-active");
 
-    if (!filters.type.includes(range)) {
-      filters.type.push(range);
+    if (!filters.price.includes(range)) {
+      filters.price.push(range);
     }
   }
 }

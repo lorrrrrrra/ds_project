@@ -92,7 +92,7 @@ def get_restaurants(bounds):
             (row["rating_food"] >= filter_data.get("food", 0)) if not np.isnan(row["rating_food"]) else True,
             (row["rating_service"] >= filter_data.get("service", 0)) if not np.isnan(row["rating_service"]) else True,
             (row["rating_atmosphere"] >= filter_data.get("atmosphere", 0)) if not np.isnan(row["rating_atmosphere"]) else True,
-            set(filter_data.get("types", [])) <= set(row.get("types", [])) 
+            set(filter_data.get("atmosphere", [])).issubset(set(row["restaurant_tytypespes"]))
         ]
         return True if all(conditions) else False
 

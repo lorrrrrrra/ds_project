@@ -340,23 +340,19 @@ function open_sidebar() {
 function get_summaries(data) {
   // Restaurant mit passender ID suchen
   if (data) {
-    const count_overall = parseFloat(data.user_count_overall) || 0;
-    const count_food = parseFloat(data.user_count_food) || 0;
-    const count_service = parseFloat(data.user_count_service) || 0;
-    const count_atmosphere = parseFloat(data.user_count_atmosphere) || 0;
-    const count_price = parseFloat(data.user_count_price) || 0;
+    const summary_placeholder = "Unfortunately, there were no written reviews to base our summary upon.";
 
-    const text_count_overall = summary_overall ? `generated with AI - based on ${count_overall} reviews` : "";
-    const text_count_food = summary_food ? `generated with AI - based on ${count_food} reviews` : "";
-    const text_count_service = summary_service ? `generated with AI - based on ${count_service} reviews` : "";
-    const text_count_atmosphere = summary_atmosphere ? `generated with AI - based on ${count_atmosphere} reviews` : "";
-    const text_count_price = summary_price ? `generated with AI - based on ${count_price} reviews` : "";
+    const summary_overall = data.summary_overall || summary_placeholder;
+    const summary_food = data.summary_food || summary_placeholder;
+    const summary_service = data.summary_service || summary_placeholder;
+    const summary_atmosphere = data.summary_atmosphere || summary_placeholder;
+    const summary_price = data.summary_price || summary_placeholder;
 
-    const summary_overall = data.summary_overall || "Unfortunately, there were no written reviews to base our summary upon.";
-    const summary_food = data.summary_food || "Unfortunately, there were no written reviews to base our summary upon.";
-    const summary_service = data.summary_service || "Unfortunately, there were no written reviews to base our summary upon.";
-    const summary_atmosphere = data.summary_atmosphere || "Unfortunately, there were no written reviews to base our summary upon.";
-    const summary_price = data.summary_price || "Unfortunately, there were no written reviews to base our summary upon.";
+    const text_count_overall = data.summary_overall ? `generated with AI - based on ${parseFloat(data.user_count_overall) || 0} reviews` : "";
+    const text_count_food = data.summary_food ? `generated with AI - based on ${parseFloat(data.user_count_food) || 0} reviews` : "";
+    const text_count_service = data.summary_service ? `generated with AI - based on ${parseFloat(data.user_count_service) || 0} reviews` : "";
+    const text_count_atmosphere = data.summary_atmosphere ? `generated with AI - based on ${parseFloat(data.user_count_atmosphere) || 0} reviews` : "";
+    const text_count_price = data.summary_price ? `generated with AI - based on ${parseFloat(data.user_count_price) || 0} reviews` : "";
 
     const html_summary_overall = document.getElementById('summary');
     const html_summary_food = document.getElementById('summary-food');

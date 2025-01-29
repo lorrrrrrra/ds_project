@@ -681,10 +681,14 @@ function delete_all_filters() {
   });
 
 
+  // updating the map to show without filters
+  update_map();
 }
 
 
-
+function filter() {
+  update_map();
+}
 
 
 

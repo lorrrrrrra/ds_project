@@ -546,7 +546,12 @@ function update_filter_price_rating(button, range) {
     document.getElementById(`price-20-30`).getAttribute("data-active"),
     document.getElementById(`price-30-40`).getAttribute("data-active"),
     document.getElementById(`price-40-50`).getAttribute("data-active"),
-    document.getElementById(`price-50-100`).getAttribute("data-active"),
+    document.getElementById(`price-50-60`).getAttribute("data-active"),
+    document.getElementById(`price-60-70`).getAttribute("data-active"),
+    document.getElementById(`price-70-80`).getAttribute("data-active"),
+    document.getElementById(`price-80-90`).getAttribute("data-active"),
+    document.getElementById(`price-90-100`).getAttribute("data-active"),
+    document.getElementById(`price-100+`).getAttribute("data-active"),
   ];
 
   const isActive = button.getAttribute("data-active") === "true";

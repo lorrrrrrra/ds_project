@@ -16,8 +16,6 @@ def get_db_connection():
 	)
     return connection
 
-def check_filtered(row):
-    return 1 if row["food_rating"] >= food_filter and row["overall_rating"] >= overall_filter else 0
 
 @app.route('/')
 def index():
@@ -45,10 +43,20 @@ def get_restaurants(bounds):
 
     # SQL-Abfrage mit den bounds filtern
     cursor.execute("""
-        SELECT restaurant_id, city_id, lat_value, long_value
-        FROM restaurant_basics
-        WHERE lat_value BETWEEN %s AND %s
-        AND long_value BETWEEN %s AND %s;
+        SELECT 
+            rb.restaurant_id, 
+            rb.city_id, 
+            rb.lat_value, 
+            rb.long_value, 
+            rg.google_rating, 
+            rg.rating_food, 
+            rg.rating_service, 
+            rg.rating_atmosphere, 
+            rg.rating_price
+        FROM restaurant_basics rb
+        JOIN restaurant_general rg ON rb.restaurant_id = rg.restaurant_id
+        WHERE rb.lat_value BETWEEN %s AND %s
+        AND rb.long_value BETWEEN %s AND %s;
     """, (south , north, west, east))
 
 
@@ -76,7 +84,7 @@ def get_restaurants(bounds):
     filtered_restaurants = pd.DataFrame(filtered_restaurants)
 
     def check_filtered(row):
-        return 1 if row["food_rating"] >= food_filter and row["overall_rating"] >= overall_filter else 0
+        return 1 if row["rating_food"] >= food_filter and row["google_rating"] >= overall_filter else 0
 
     filtered_restaurants["filtered"] = filtered_restaurants.apply(check_filtered, axis=1)
 

@@ -82,7 +82,7 @@ def get_restaurants(bounds):
 
     # Converting to dataframe and NaN to none
     filtered_restaurants = pd.DataFrame(filtered_restaurants)
-    filtered_restaurants = [{k: (None if isinstance(v, float) and np.isnan(v) else v) for k, v in item.items()} for item in filtered_restaurants]
+    filtered_restaurants = filtered_restaurants.replace({pd.NA: np.nan})
 
 
     def check_filtered(row):
@@ -97,7 +97,7 @@ def get_restaurants(bounds):
     filtered_restaurants["filtered"] = filtered_restaurants.apply(check_filtered, axis=1)
 
     filtered_restaurants = filtered_restaurants.to_dict(orient="records")
-    
+    filtered_restaurants = [{k: (None if isinstance(v, float) and np.isnan(v) else v) for k, v in item.items()} for item in filtered_restaurants]
     
 
 

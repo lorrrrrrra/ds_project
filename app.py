@@ -67,17 +67,10 @@ def get_restaurants(bounds):
     # Filtere Restaurants, so dass es maximal max_per_city pro Stadt gibt
     filtered_restaurants = []
     for city_id, city_restaurants in cities.items():
-        # filtered_restaurants.extend(city_restaurants[:max_per_city])
+        filtered_restaurants.extend(city_restaurants[:max_per_city])
 
-        # Standardwert für "filtered"
-        restaurant["filtered"] = 0  
 
-        # Annahme: Es gibt Spalten "overall_rating" und "food_rating" in der DB
-        if (restaurant.get("overall_rating", 0) >= overall_filter and 
-            restaurant.get("food_rating", 0) >= food_filter):
-            restaurant["filtered"] = 1  
 
-        filtered_restaurants.append(restaurant)
 
     cursor.close()
     connection.close()

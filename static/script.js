@@ -123,12 +123,14 @@ function create_marker(data) {
     long_value = item.long_value;
     filtered = item.filtered;
 
+    let marker; 
+
     if (!isNaN(lat_value) && !isNaN(long_value)) {
       if (filtered) {
-        const marker = L.marker([lat_value, long_value], { id: id, icon: defaultIcon, filtered: filtered})
+        marker = L.marker([lat_value, long_value], { id: id, icon: defaultIcon, filtered: filtered})
         .addTo(markersLayer);
       } else if (!filtered) {
-        const marker = L.marker([lat_value, long_value], { id: id, icon: deactivatedIcon, filtered: filtered})
+        marker = L.marker([lat_value, long_value], { id: id, icon: deactivatedIcon, filtered: filtered})
         .addTo(markersLayer);
       }
       marker.on('click', (e) => {

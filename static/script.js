@@ -55,7 +55,7 @@ var clickedIcon = L.icon({
 });
 
 var deactivatedIcon = L.icon({
-  iconUrl: 'static/marker_grey.svg', // Marker wenn nicht bei filter
+  iconUrl: 'static/marker_grey.png', // Marker wenn nicht bei filter
   iconSize: [37.5, 58],
   iconAnchor: [22, 94],
   shadowAnchor: [4, 62],

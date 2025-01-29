@@ -72,6 +72,8 @@ def get_restaurants(bounds):
 
     filtered_restaurants = pd.DataFrame(filtered_restaurants)
 
+    filtered_restaurants = filtered_restaurants.to_dict(orient="records")
+
 
 
 

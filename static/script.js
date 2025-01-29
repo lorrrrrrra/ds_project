@@ -541,7 +541,7 @@ function update_filter_stars(rating, category) {
 
 function update_filter_price_rating(button, range) {
   const price_buttons = [
-    document.getElementById(`price-0-10`).getAttribute("data-active"),
+    document.getElementById(`price-1-10`).getAttribute("data-active"),
     document.getElementById(`price-10-20`).getAttribute("data-active"),
     document.getElementById(`price-20-30`).getAttribute("data-active"),
     document.getElementById(`price-30-40`).getAttribute("data-active"),

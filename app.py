@@ -90,8 +90,8 @@ def get_restaurant(restaurant_id):
             SELECT r.name, r.address, r.types,
                 rg.website_uri, rg.opening_hours, 
                 rg.summary_overall, rg.summary_food, rg.summary_service, rg.summary_atmosphere, rg.summary_price,
-                rg.rating_overall, rg.rating_food, rg.rating_service, rg.rating_atmosphere, rg.rating_price, 
-                rg.user_count_overall, rg.user_count_food, rg.user_count_service, rg.user_count_atmosphere, rg.user_count_price
+                rg.google_rating, rg.rating_food, rg.rating_service, rg.rating_atmosphere, rg.rating_price, 
+                rg.google_user_rating_count, rg.user_count_food, rg.user_count_service, rg.user_count_atmosphere, rg.user_count_price
             FROM restaurant_basics r
             LEFT JOIN restaurant_general rg ON r.restaurant_id = rg.restaurant_id
             WHERE r.restaurant_id = %s;
@@ -114,12 +114,12 @@ def get_restaurant(restaurant_id):
             "summary_service": restaurant_data["summary_service"] or None,
             "summary_atmosphere": restaurant_data["summary_atmosphere"] or None,
             "summary_price": restaurant_data["summary_price"] or None,
-            "rating_overall": restaurant_data["rating_overall"] or None,
+            "rating_overall": restaurant_data["google_rating"] or None,
             "rating_food": restaurant_data["rating_food"] or None,
             "rating_service": restaurant_data["rating_service"] or None,
             "rating_atmosphere": restaurant_data["rating_atmosphere"] or None,
             "rating_price": restaurant_data["rating_price"] or None,
-            "user_count_overall": restaurant_data["user_count_overall"] or None,
+            "user_count_overall": restaurant_data["google_user_rating_count"] or None,
             "user_count_food": restaurant_data["user_count_food"] or None,
             "user_count_service": restaurant_data["user_count_service"] or None,
             "user_count_atmosphere": restaurant_data["user_count_atmosphere"] or None,

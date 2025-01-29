@@ -87,11 +87,11 @@ def get_restaurants(bounds):
 
     def check_filtered(row):
         conditions = [
-        row["google_rating"] >= filter_data.get("general", 0),
-        row["rating_food"] >= filter_data.get("food", 0),
-        row["rating_service"] >= filter_data.get("service", 0),
-        row["rating_atmosphere"] >= filter_data.get("atmosphere", 0),
-    ]
+            (row["google_rating"] >= filter_data.get("general", 0)) if not np.isnan(row["google_rating"]) else True,
+            (row["rating_food"] >= filter_data.get("food", 0)) if not np.isnan(row["rating_food"]) else True,
+            (row["rating_service"] >= filter_data.get("service", 0)) if not np.isnan(row["rating_service"]) else True,
+            (row["rating_atmosphere"] >= filter_data.get("atmosphere", 0)) if not np.isnan(row["rating_atmosphere"]) else True
+        ]
         return 1 if all(conditions) else 0
 
     filtered_restaurants["filtered"] = filtered_restaurants.apply(check_filtered, axis=1)

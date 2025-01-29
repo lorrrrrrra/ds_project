@@ -278,7 +278,7 @@ function open_sidebar() {
       // Durchschnittliche Bewertungen aktualisieren
     const updateAverageRating = (rating, group) => {
       const avgRatingElement = document.getElementById(`avg-rating${group}`);
-      if (rating != 'NaN') {
+      if (!isNaN(rating)) {
         avgRatingElement.textContent = ` (${rating.toFixed(1)})`;
       } else {
         avgRatingElement.textContent = `No rating available`;

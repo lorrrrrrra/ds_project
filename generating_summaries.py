@@ -1,10 +1,32 @@
 import pandas as pd
 import numpy as np
 from openai import OpenAI
+import psycopg2
+import json
 
 client = OpenAI(
   api_key="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" # Tier 2 key
 )
+
+db_config = {
+    "dbname": "reviews_db",
+    "user": "scraping_user",
+    "password": "Passwort123",
+    "host": "localhost",
+    "port": 5432
+}
+
+try:
+    connection = psycopg2.connect(**db_config)
+    cursor = connection.cursor()
+
+except Exception as e:
+    print(f"Fehler bei der Verbindung zur Datenbank: {str(e)}")
+
+
+
+
+
 
 
 ### Define all prompts
@@ -194,59 +216,135 @@ def summarize_reviews(restaurant_id, reviews_df, category_column_name, summary_p
             return None
 
 
-### load & prepare the data
-restaurant_basics = # put here connection to database
-reviews_general = # put here connection to database
-reviews_subcategories = # put here connection to database
 
-# merge the data such that we have the full review text with the categorized review text
-reviews_df = pd.merge(reviews_general, reviews_subcategories, on='review_id', how='left')
-# keep only the necessary columns
-reviews_df = reviews_df[['restaurant_id_x', 'review_id', 'review_text', 'food_sentences', 'service_sentences', 'atmosphere_sentences', 'price_sentences']]
-# rename column to 'restaurant_id'
-reviews_df = reviews_df.rename(columns={'restaurant_id_x': 'restaurant_id'})
-# preprocess reviews_df
-reviews_df = reviews_df.dropna(subset=['review_text'])
-# remove extra spaces, newlines, and tabs
-reviews_df['review_text'] = reviews_df['review_text'].str.replace(r'\s+', ' ', regex=True).str.strip()
+def update_database(summaries):
+    table_name = "restaurant_general"
+    update_query = f"""
+        UPDATE {table_name} 
+        SET summary_overall = %s, 
+            summary_food = %s, 
+            summary_service = %s, 
+            summary_atmosphere = %s, 
+            summary_price = %s
+        WHERE restaurant_id = %s;
+    """
+    
+    rows_to_update = [
+        (row['summary_overall'], row['summary_food'], row['summary_service'], row['summary_atmosphere'], row['summary_price'], row['restaurant_id'])
+        for row in summaries
+    ]
+
+    try:
+        cursor.executemany(update_query, rows_to_update)
+        connection.commit()
+        print(f"Successfully updated {len(rows_to_update)} rows.")
+    except Exception as e:
+        print(f"Error updating table '{table_name}': {str(e)}")
+        connection.rollback()
+
+
+### load & prepare the data
+# restaurant basics to get the restaurant_ids
+try:
+    query_general = """
+        SELECT restaurant_id
+        FROM restaurant_basics
+        WHERE city_id IN (0, 1, 2);
+        """
+
+    cursor.execute(query_general)
+    rows = cursor.fetchall()
+
+
+    columns = [desc[0] for desc in cursor.description]
+
+    restaurant_basics = pd.DataFrame(rows, columns=columns)
+    print(f"Got restaurant basics data")
+
+except Exception as e:
+    print(f"Failed to get the data from the restaurant_general table: {e}")
+
+
+
 
 
 ### Generate summaries for each restaurant and category
 
-# Initialize an empty list to hold the summaries
+# Initialize an empty list and empty dataframe to hold the summaries
 summaries = []
+summaries_df = pd.DataFrame()
 
 # Generate summaries for each restaurant and category
-for _, row in restaurant_basics.iterrows():
+for index, row in restaurant_basics.iterrows():
     restaurant_id = row['restaurant_id']
-    
-    print(f"Processing restaurant ID: {restaurant_id}")
-    
-    # Summarize overall reviews
-    overall_summary = summarize_reviews(restaurant_id, reviews_df, 'review_text', OVERALL_SUMMARY_PROMPT, OVERALL_SUMMARY_COMBINE_PROMPT)
-    
-    # Summarize food reviews
-    food_summary = summarize_reviews(restaurant_id, reviews_df, 'food_sentences', FOOD_SUMMARY_PROMPT, FOOD_COMBINE_PROMPT)
-    
-    # Summarize service reviews
-    service_summary = summarize_reviews(restaurant_id, reviews_df, 'service_sentences', SERVICE_SUMMARY_PROMPT, SERVICE_COMBINE_PROMPT)
-    
-    # Summarize atmosphere reviews
-    atmosphere_summary = summarize_reviews(restaurant_id, reviews_df, 'atmosphere_sentences', ATMOSPHERE_SUMMARY_PROMPT, ATMOSPHERE_COMBINE_PROMPT)
-    
-    # Summarize price reviews
-    price_summary = summarize_reviews(restaurant_id, reviews_df, 'price_sentences', PRICE_SUMMARY_PROMPT, PRICE_COMBINE_PROMPT)
-    
-    # Append the summaries to the list
-    summaries.append({
-        "restaurant_id": restaurant_id,
-        "overall_summary": overall_summary,
-        "food_summary": food_summary,
-        "service_summary": service_summary,
-        "atmosphere_summary": atmosphere_summary,
-        "price_summary": price_summary,
-    })
 
-# Convert the list of summaries into a DataFrame
-summaries_df = pd.DataFrame(summaries)
+    print(f"Getting data for: {restaurant_id}")
+
+    try:
+        # getting data from the database for each restaurant
+        query_reviews = f"""
+            SELECT r.restaurant_id, r.review_id, r.food_sentences, r.service_sentences, r.atmosphere_sentences, r.price_sentences,
+                   rg.review_text
+            FROM reviews_subcategories r
+            LEFT JOIN reviews_general rg ON r.review_id = rg.review_id
+            WHERE r.restaurant_id = '{restaurant_id}';
+        """
+        
+        cursor.execute(query_reviews)
+        rows = cursor.fetchall()
+
+        # Spaltennamen abrufen
+        columns = [desc[0] for desc in cursor.description]
+
+
+        reviews_df = pd.DataFrame(rows, columns=columns)
+        print(f"Got data for restaurant {restaurant_id}")
+
+    except Exception as e:
+        print(f"Failed to get data for restaurant_id {restaurant_id}: {e}")
+
+    # preprocess reviews_df
+    reviews_df = reviews_df.dropna(subset=['review_text'])
+    # remove extra spaces, newlines, and tabs
+    reviews_df['review_text'] = reviews_df['review_text'].str.replace(r'\s+', ' ', regex=True).str.strip()
+
+
+    if not reviews_df.empty:
+        print(f"Processing restaurant ID: {restaurant_id}")
+        
+        # Summarize overall reviews
+        overall_summary = summarize_reviews(restaurant_id, reviews_df, 'review_text', OVERALL_SUMMARY_PROMPT, OVERALL_SUMMARY_COMBINE_PROMPT)
+        
+        # Summarize food reviews
+        food_summary = summarize_reviews(restaurant_id, reviews_df, 'food_sentences', FOOD_SUMMARY_PROMPT, FOOD_COMBINE_PROMPT)
+        
+        # Summarize service reviews
+        service_summary = summarize_reviews(restaurant_id, reviews_df, 'service_sentences', SERVICE_SUMMARY_PROMPT, SERVICE_COMBINE_PROMPT)
+        
+        # Summarize atmosphere reviews
+        atmosphere_summary = summarize_reviews(restaurant_id, reviews_df, 'atmosphere_sentences', ATMOSPHERE_SUMMARY_PROMPT, ATMOSPHERE_COMBINE_PROMPT)
+        
+        # Summarize price reviews
+        price_summary = summarize_reviews(restaurant_id, reviews_df, 'price_sentences', PRICE_SUMMARY_PROMPT, PRICE_COMBINE_PROMPT)
+        
+        # Append the summaries to the list
+        summaries.append({
+            "restaurant_id": restaurant_id,
+            "summary_overall": overall_summary,
+            "summary_food": food_summary,
+            "summary_service": service_summary,
+            "summary_atmosphere": atmosphere_summary,
+            "summary_price": price_summary,
+        })
+
+
+        if (index + 1) % 10 == 0:
+            print(f"Updating database for batch {index + 1}...")
+            update_database(summaries)
+            summaries.clear()
+
+# Final update for any remaining summaries
+if summaries:
+    print("Updating database for final batch...")
+    update_database(summaries)
 

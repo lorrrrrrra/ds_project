@@ -195,9 +195,9 @@ def summarize_reviews(restaurant_id, reviews_df, category_column_name, summary_p
 
 
 ### load & prepare the data
-restaurant_basics = # load the data
-reviews_general = # load the data
-reviews_subcategories = # load the data
+restaurant_basics = # put here connection to database
+reviews_general = # put here connection to database
+reviews_subcategories = # put here connection to database
 
 # merge the data such that we have the full review text with the categorized review text
 reviews_df = pd.merge(reviews_general, reviews_subcategories, on='review_id', how='left')

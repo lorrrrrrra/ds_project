@@ -97,6 +97,9 @@ def get_restaurants(bounds):
         if isinstance(restaurant_types, str):
             restaurant_types = [restaurant_types]
 
+        print("Set Filter Types:", set(filter_types))
+        print("Set Restaurant Types:", set(restaurant_types))
+
         conditions = [
             (row["google_rating"] >= filter_data.get("general", 0)) if not np.isnan(row["google_rating"]) else True,
             (row["rating_food"] >= filter_data.get("food", 0)) if not np.isnan(row["rating_food"]) else True,

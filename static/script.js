@@ -11,13 +11,6 @@ let filters = {
   service: 0,
   atmosphere: 0,
   price: [],
-  // price_filter: false,
-  // price_0_10: false,
-  // price_10_20: false,
-  // price_20_30: false,
-  // price_30_40: false,
-  // price_40_50: false,
-  // price_50_100: false,
   type: []
 }
 

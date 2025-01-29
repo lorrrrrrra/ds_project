@@ -129,9 +129,11 @@ function create_marker(data) {
       if (filtered) {
         marker = L.marker([lat_value, long_value], { id: id, icon: defaultIcon, filtered: filtered})
         .addTo(markersLayer);
+        marker.setZIndexOffset(1000);
       } else if (!filtered) {
         marker = L.marker([lat_value, long_value], { id: id, icon: deactivatedIcon, filtered: filtered})
         .addTo(markersLayer);
+        marker.setZIndexOffset(500);
       }
       marker.on('click', (e) => {
         if (activeMarker) {

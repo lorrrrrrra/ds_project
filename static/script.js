@@ -10,13 +10,14 @@ let filters = {
   food: 0,
   service: 0,
   atmosphere: 0,
-  price_filter: false,
-  price_0_10: false,
-  price_10_20: false,
-  price_20_30: false,
-  price_30_40: false,
-  price_40_50: false,
-  price_50_100: false,
+  price: [],
+  // price_filter: false,
+  // price_0_10: false,
+  // price_10_20: false,
+  // price_20_30: false,
+  // price_30_40: false,
+  // price_40_50: false,
+  // price_50_100: false,
   type: []
 }
 
@@ -526,7 +527,7 @@ function update_filter_stars(rating, category) {
 }
 
 
-function update_filter_price_rating(button, min, max) {
+function update_filter_price_rating(button, range) {
   const price_buttons = [
     document.getElementById(`price-0-10`).getAttribute("data-active"),
     document.getElementById(`price-10-20`).getAttribute("data-active"),
@@ -542,21 +543,21 @@ function update_filter_price_rating(button, min, max) {
     button.setAttribute("data-active", "false");
     button.classList.remove("btn-price-filter-active");
     button.classList.add("btn-price-filter-inactive");
-    let falseCount = price_buttons.filter(value => value === "false").length;
 
-    let price_category = `price_${min}_${max}`;
-    filters[price_category] = false;
-
-    if (falseCount === 4) {
-      filters["price_filter"] = false;
+    // removing the type of the type list in the filters
+    const index = filters.price.indexOf(range);
+    if (index > -1) {
+      filters.price.splice(index, 1); // Entfernt das Element aus der Liste
     }
+
   } else {
     button.setAttribute("data-active", "true");
     button.classList.remove("btn-price-filter-inactive");
     button.classList.add("btn-price-filter-active");
-    let price_category = `price_${min}_${max}`;
-    filters["price_filter"] = true;
-    filters[price_category] = true;  
+
+    if (!filters.type.includes(range)) {
+      filters.type.push(range);
+    }
   }
 }
 

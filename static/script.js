@@ -136,12 +136,14 @@ function create_marker(data) {
         marker.setZIndexOffset(500);
       }
       marker.on('click', (e) => {
-        if (activeMarker) {
+        if (activeMarker && e.target.options.filtered) {
           activeMarker.setIcon(defaultIcon);
+        } else if (activeMarker && !e.target.options.filtered) {
+          activeMarker.setIcon(deactivatedIcon);
         }
         activeMarker = marker;
         marker.setIcon(clickedIcon);
-        // marker.bringToFront();   // to show in front of the other markers
+        marker.setZIndexOffset(500);   // to show in front of the other markers
         open_sidebar();
         handleMarkerClick(e.target.options.id); // ID des Markers verwenden
       });

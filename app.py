@@ -47,6 +47,7 @@ def get_restaurants(bounds):
             rb.city_id, 
             rb.lat_value, 
             rb.long_value, 
+            rb.types,
             rg.google_rating,
             rg.rating_food,
             rg.rating_service,
@@ -90,7 +91,8 @@ def get_restaurants(bounds):
             (row["google_rating"] >= filter_data.get("general", 0)) if not np.isnan(row["google_rating"]) else True,
             (row["rating_food"] >= filter_data.get("food", 0)) if not np.isnan(row["rating_food"]) else True,
             (row["rating_service"] >= filter_data.get("service", 0)) if not np.isnan(row["rating_service"]) else True,
-            (row["rating_atmosphere"] >= filter_data.get("atmosphere", 0)) if not np.isnan(row["rating_atmosphere"]) else True
+            (row["rating_atmosphere"] >= filter_data.get("atmosphere", 0)) if not np.isnan(row["rating_atmosphere"]) else True,
+            set(filter_data.get("types", [])) <= set(row.get("types", [])) 
         ]
         return True if all(conditions) else False
 

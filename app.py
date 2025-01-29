@@ -84,7 +84,7 @@ def get_restaurants(bounds):
     filtered_restaurants = pd.DataFrame(filtered_restaurants)
 
     def check_filtered(row):
-        return 1 if row["rating_food"] >= food_filter and row["google_rating"] >= overall_filter else 0
+        return 1 if row["google_rating"] >= overall_filter else 0
 
     filtered_restaurants["filtered"] = filtered_restaurants.apply(check_filtered, axis=1)
 

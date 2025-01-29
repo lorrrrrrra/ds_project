@@ -121,11 +121,16 @@ function create_marker(data) {
     id = item.restaurant_id;
     lat_value = item.lat_value;
     long_value = item.long_value;
+    filtered = item.filtered;
 
     if (!isNaN(lat_value) && !isNaN(long_value)) {
-      const marker = L.marker([lat_value, long_value], { id: id, icon: defaultIcon})
-      .addTo(markersLayer);
-  
+      if (filtered) {
+        const marker = L.marker([lat_value, long_value], { id: id, icon: defaultIcon, filtered: filtered})
+        .addTo(markersLayer);
+      } else if (!filtered) {
+        const marker = L.marker([lat_value, long_value], { id: id, icon: deactivatedIcon, filtered: filtered})
+        .addTo(markersLayer);
+      }
       marker.on('click', (e) => {
         if (activeMarker) {
           activeMarker.setIcon(defaultIcon);

@@ -89,7 +89,14 @@ def get_restaurants(bounds):
     def check_filtered(row):
         # Hole die Filter-Typen und Restaurant-Typen
         filter_types = filter_data.get("type", [])
-        restaurant_types = row["types"]
+        restaurant_types_str = row["types"]
+    
+        # Falls der Restaurant-Typ als String mit Listendarstellung vorliegt, in eine echte Liste umwandeln
+        if isinstance(restaurant_types_str, str):
+            # Entferne die eckigen Klammern und teile den String anhand von ', '
+            restaurant_types = restaurant_types_str.strip("[]").replace("'", "").split(", ")
+        else:
+            restaurant_types = restaurant_types_str
         
         # Wenn eine der beiden als String vorliegt, umwandeln in eine Liste
         if isinstance(filter_types, str):

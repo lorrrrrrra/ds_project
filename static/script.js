@@ -87,7 +87,13 @@ function update_map() {
   }
   
   // Fetch-Aufruf to get restaurants
-  fetch(`/api/restaurants/${boundsString}`)
+  fetch(`/api/restaurants/${boundsString}`, {
+      method: 'POST',  // Setze die Methode auf 'POST'
+      headers: {
+          'Content-Type': 'application/json'  
+      },
+      body: JSON.stringify(filters)  
+  })
     .then(response => response.json())
     .then(data => {
       // Marker-Set löschen, bevor neue hinzugefügt werden

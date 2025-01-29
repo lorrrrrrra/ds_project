@@ -19,19 +19,22 @@ def get_db_connection():
 def index():
     return render_template('index.html')
 
-@app.route('/api/restaurants/<bounds>', methods=['GET'])
+@app.route('/api/restaurants/<bounds>', methods=['POST'])
 def get_restaurants(bounds):
     try:
         south, north, west, east = map(float, bounds.split(','))
     except ValueError:
         return jsonify({"error": "Invalid bounds format. Use: south,north,west,east"}), 400
 
-    # Erweitere die Grenzen um 0.1 Grad
     buffer = 0.03
     south -= buffer
     north += buffer
     west -= buffer
     east += buffer
+
+    filter_data = request.get_json()
+    overall_filter = filter_data.get("general", 0)
+    food_filter = filter_data.get("food", 0)
 
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)
@@ -64,17 +67,23 @@ def get_restaurants(bounds):
     # Filtere Restaurants, so dass es maximal max_per_city pro Stadt gibt
     filtered_restaurants = []
     for city_id, city_restaurants in cities.items():
-        filtered_restaurants.extend(city_restaurants[:max_per_city])
+        # filtered_restaurants.extend(city_restaurants[:max_per_city])
 
-    # Die finalen Restaurants
-    final_restaurants = filtered_restaurants
+        # Standardwert für "filtered"
+        restaurant["filtered"] = 0  
 
+        # Annahme: Es gibt Spalten "overall_rating" und "food_rating" in der DB
+        if (restaurant.get("overall_rating", 0) >= overall_filter and 
+            restaurant.get("food_rating", 0) >= food_filter):
+            restaurant["filtered"] = 1  
+
+        filtered_restaurants.append(restaurant)
 
     cursor.close()
     connection.close()
 
     # Ergebnisse als JSON zurückgeben
-    return jsonify(final_restaurants)
+    return jsonify(filtered_restaurants)
 
 
 

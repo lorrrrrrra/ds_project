@@ -3,6 +3,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from collections import defaultdict
 import pandas as pd
+import numpy as np
 
 app = Flask(__name__)
 
@@ -85,6 +86,9 @@ def get_restaurants(bounds):
     filtered_restaurants["filtered"] = filtered_restaurants.apply(check_filtered, axis=1)
 
     filtered_restaurants = filtered_restaurants.to_dict(orient="records")
+    
+    # Converting NaN to none as json cannot handle NaN
+    filtered_restaurants = [{k: (None if isinstance(v, float) and np.isnan(v) else v) for k, v in item.items()} for item in filtered_restaurants]
 
 
 

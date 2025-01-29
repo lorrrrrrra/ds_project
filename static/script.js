@@ -652,13 +652,9 @@ function delete_all_filters() {
     button.classList.add("btn-price-filter-inactive"); 
   });
 
-  filters["price_filter"] = false;
-  filters["price_0_10"] = false; 
-  filters["price_10_20"] = false; 
-  filters["price_20_30"] = false; 
-  filters["price_30_40"] = false; 
-  filters["price_40_50"] = false; 
-  filters["price_50_100"] = false;
+  filters.price = [];
+
+  
 
   // deleting type buttons
   const container = document.getElementById("filter-food-types");  // Container mit den Buttons

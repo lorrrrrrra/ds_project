@@ -10,9 +10,9 @@ app = Flask(__name__)
 # Verbindung zur PostgreSQL-Datenbank
 def get_db_connection():
     connection = psycopg2.connect(
-        dbname='reviews_db',  # Ersetze mit deinem DB-Namen
-        user='scraping_user',    # Ersetze mit deinem DB-Nutzer
-        password='Passwort123', # Ersetze mit deinem DB-Passwort
+        dbname='reviews_db',  
+        user='scraping_user',    
+        password='Passwort123', 
 	host='localhost'
 	)
     return connection
@@ -36,20 +36,21 @@ def get_restaurants(bounds):
     east += buffer
 
     filter_data = request.get_json()
-    overall_filter = filter_data.get("general", 0)
-    food_filter = filter_data.get("food", 0)
 
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)
 
-    # SQL-Abfrage mit den bounds filtern
+    # Getting all restaurants determine by the bounds given in the api call
     cursor.execute("""
         SELECT 
             rb.restaurant_id, 
             rb.city_id, 
             rb.lat_value, 
             rb.long_value, 
-            rg.google_rating
+            rg.google_rating,
+            rg.rating_food,
+            rg.rating_service,
+            rg.rating_atmosphere
         FROM restaurant_basics rb
         JOIN restaurant_general rg ON rb.restaurant_id = rg.restaurant_id
         WHERE rb.lat_value BETWEEN %s AND %s
@@ -78,18 +79,26 @@ def get_restaurants(bounds):
     for _, city_restaurants in cities.items():
         filtered_restaurants.extend(city_restaurants[:max_per_city])
 
+
+    # Converting to dataframe and NaN to none
     filtered_restaurants = pd.DataFrame(filtered_restaurants)
+    filtered_restaurants = [{k: (None if isinstance(v, float) and np.isnan(v) else v) for k, v in item.items()} for item in filtered_restaurants]
+
 
     def check_filtered(row):
-        return 1 if row["google_rating"] >= overall_filter else 0
+        conditions = [
+        row["google_rating"] >= filter_data.get("general", 0),
+        row["rating_food"] >= filter_data.get("food", 0),
+        row["rating_service"] >= filter_data.get("service", 0),
+        row["rating_atmosphere"] >= filter_data.get("atmosphere", 0),
+    ]
+        return 1 if all(conditions) else 0
 
     filtered_restaurants["filtered"] = filtered_restaurants.apply(check_filtered, axis=1)
 
     filtered_restaurants = filtered_restaurants.to_dict(orient="records")
     
-    # Converting NaN to none as json cannot handle NaN
-    filtered_restaurants = [{k: (None if isinstance(v, float) and np.isnan(v) else v) for k, v in item.items()} for item in filtered_restaurants]
-
+    
 
 
 

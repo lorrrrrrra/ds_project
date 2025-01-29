@@ -281,7 +281,7 @@ function open_sidebar() {
       if (!isNaN(rating)) {
         avgRatingElement.textContent = ` (${rating.toFixed(1)})`;
       } else {
-        avgRatingElement.textContent = `No rating available`;
+        avgRatingElement.textContent = `(No rating available)`;
       }
     };
 

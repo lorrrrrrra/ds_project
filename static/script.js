@@ -136,9 +136,9 @@ function create_marker(data) {
         marker.setZIndexOffset(500);
       }
       marker.on('click', (e) => {
-        if (activeMarker && e.target.options.filtered) {
+        if (activeMarker && activeMarker.options.filtered) {
           activeMarker.setIcon(defaultIcon);
-        } else if (activeMarker && !e.target.options.filtered) {
+        } else if (activeMarker && !activeMarker.options.filtered) {
           activeMarker.setIcon(deactivatedIcon);
         }
         activeMarker = marker;

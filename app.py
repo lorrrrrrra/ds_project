@@ -283,6 +283,10 @@ def get_price_data_graph(restaurant_id):
 
 @app.route('/api/avg_<category>/<restaurant_id>', methods=['GET'])
 def get_category_data_graph(restaurant_id, category):
+    # we only have data for the three categories 
+    if category not in ("food", "service", "atmosphere"):
+        return None
+    
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)
 

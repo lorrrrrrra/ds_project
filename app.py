@@ -110,8 +110,10 @@ def get_restaurants(bounds):
         # print(repr(filter_data["price"]))
         # print((row["rating_price"] in filter_data["price"]))
 
+        
 
-        print(row["rating_price"], repr(filter_data["price"]))
+
+        print(type(row["rating_price"]), repr(filter_data["price"]))
         print(row["rating_price"] in (filter_data["price"]))
 
         conditions = [

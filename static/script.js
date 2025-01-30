@@ -717,7 +717,7 @@ function get_graph(data, type, category) {
   function updateGraphSize() {
     // Berechne die Breite und Höhe des SVG-Containers dynamisch
     const containerWidth = svg.node().getBoundingClientRect().width || 400; // Fallback-Breite
-    const containerHeight = svg.node().getBoundingClientRect().height || 300; // Fallback-Höhe
+    const containerHeight = svg.node().getBoundingClientRect().height || 500; // Fallback-Höhe
 
     const width = containerWidth - margin.left - margin.right;
     const height = containerHeight - margin.top - margin.bottom;
@@ -810,7 +810,7 @@ function get_graph_price(data) {
   // Berechne die Breite und Höhe dynamisch
   function updateGraphSize() {
     const containerWidth = svg.node().getBoundingClientRect().width || 400;
-    const containerHeight = svg.node().getBoundingClientRect().height || 300;
+    const containerHeight = svg.node().getBoundingClientRect().height || 250;
 
     // Setze die neuen Dimensionen des SVG-Elements
     svg.attr("width", containerWidth + margin.left + margin.right);

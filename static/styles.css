@@ -178,7 +178,7 @@ html, body {
     cursor: pointer;
     z-index: 9999;
     border-radius: 50px;
-    background-color: #7F7F7F;
+    background-color: #7F7F7F !important;
 }
 
 

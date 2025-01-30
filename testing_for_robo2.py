@@ -152,3 +152,6 @@ for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
 data_1 = preprocess_reviews(data_1)
 if not data_2.empty:
     data_2 = preprocess_reviews(data_2)
+
+data_1 = pd.DataFrame(data_1)
+data_1.to_csv("/mnt/volume/backup_summaries/test.csv")

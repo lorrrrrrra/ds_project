@@ -10,6 +10,7 @@ import psycopg2
 import json
 import time
 import sys
+import os
 
 client = OpenAI(
   api_key="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" # Tier 2 key
@@ -205,21 +206,21 @@ def insert_data_into_table(connection, cursor, table_name, dataframe, columns):
         connection.rollback() 
 
 
-def update_database_overall_summary(summaries):
-    table_name = "restaurant_general"
-    update_query = f"""
-        UPDATE {table_name} 
-        SET summary_overall = %s,
-            user_count_overall = %s,
-        WHERE restaurant_id = %s;
-    """
-    
-    rows_to_update = [
-        (row['summary_overall'], row['user_count_overall'], row['restaurant_id'])
-        for row in summaries
-    ]
-
+def update_database_overall_summary(summaries, idx):
     try:
+        table_name = "restaurant_general"
+        update_query = f"""
+            UPDATE {table_name} 
+            SET summary_overall = %s,
+                user_count_overall = %s
+            WHERE restaurant_id = %s;
+        """
+        
+        rows_to_update = [
+            (row['overall_summary'], row['user_count_overall'], row['restaurant_id'])
+            for row in summaries
+        ]
+
         cursor.executemany(update_query, rows_to_update)
         connection.commit()
         print(f"Successfully updated {len(rows_to_update)} rows.")
@@ -227,37 +228,66 @@ def update_database_overall_summary(summaries):
         print(f"Error updating table '{table_name}': {str(e)}")
         connection.rollback()
 
+        # Backup to save the csv files directly on the server
+        backup_dir = "/mnt/volume/backup_summaries"
+        os.makedirs(backup_dir, exist_ok=True)  # Erstellt das Verzeichnis, falls es nicht existiert
+
+        try:
+            summaries_df = pd.DataFrame(summaries)
+            backup_path = os.path.join(backup_dir, f"overall_summaries_{idx}.csv")
+            summaries_df.to_csv(backup_path, index=False, encoding="utf-8")  # Setze UTF-8 Encoding
+            print(f"Backup saved at {backup_path}")
+
+        except Exception as e:
+            print(f"Failed to backup summaries on the server: {e}, {idx}")
+        
 
 
-def update_database_topic_summary(summaries):
-    table_name = "restaurant_general"
-    update_query = f"""
-        UPDATE {table_name} 
-        SET summary_food = %s, 
-            summary_service = %s, 
-            summary_atmosphere = %s, 
-            summary_price = %s,
-            user_count_food = %s, 
-            user_count_service = %s, 
-            user_count_atmosphere = %s, 
-            user_count_price = %s
-        WHERE restaurant_id = %s;
-    """
-    
-    rows_to_update = [
-        (row['summary_food'], row['summary_service'], row['summary_atmosphere'], row['summary_price'], 
-        row['user_count_food'], row['user_count_service'], row['user_count_atmosphere'], row['user_count_price'],
-        row['restaurant_id'])
-        for row in summaries
-    ]
 
+def update_database_topic_summary(summaries, idx):
     try:
+        table_name = "restaurant_general"
+        update_query = f"""
+            UPDATE {table_name} 
+            SET summary_food = %s, 
+                summary_service = %s, 
+                summary_atmosphere = %s, 
+                summary_price = %s,
+                user_count_food = %s, 
+                user_count_service = %s, 
+                user_count_atmosphere = %s, 
+                user_count_price = %s
+            WHERE restaurant_id = %s;
+        """
+        
+        rows_to_update = [
+            (row['summary_food'], row['summary_service'], row['summary_atmosphere'], row['summary_price'], 
+            row['user_count_food'], row['user_count_service'], row['user_count_atmosphere'], row['user_count_price'],
+            row['restaurant_id'])
+            for row in summaries
+        ]
+
+
         cursor.executemany(update_query, rows_to_update)
         connection.commit()
         print(f"Successfully updated {len(rows_to_update)} rows.")
+
     except Exception as e:
         print(f"Error updating table '{table_name}': {str(e)}")
         connection.rollback()
+
+        # Backup to save the csv files directly on the server
+        backup_dir = "/mnt/volume/backup_summaries"
+        os.makedirs(backup_dir, exist_ok=True)  # Erstellt das Verzeichnis, falls es nicht existiert
+
+        try:
+            summaries_df = pd.DataFrame(summaries)
+            backup_path = os.path.join(backup_dir, f"topic_summaries_{idx}.csv")
+            summaries_df.to_csv(backup_path, index=False, encoding="utf-8")  # Setze UTF-8 Encoding
+            print(f"Backup saved at {backup_path}")
+
+        except Exception as e:
+            print(f"Failed to backup summaries on the server: {e}, {idx}")
 
 
 ############################################################################################################
@@ -790,10 +820,10 @@ for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
             "user_count_overall": user_count_overall
         })
     
-    overall_summaries = pd.DataFrame(overall_summaries)
+    # overall_summaries = pd.DataFrame(overall_summaries)  -> we don't need a dataframe
 
     # Saving the overall summaries into restaurant general table
-    update_database_overall_summary(overall_summaries)
+    update_database_overall_summary(overall_summaries, idx)
     
 
     #### 3. Transition wait until topic extraction is done
@@ -865,10 +895,10 @@ for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
             "user_count_price": user_count_price,
         })
 
-    summaries_categories = pd.DataFrame(summaries_categories)
+    # summaries_categories = pd.DataFrame(summaries_categories)   -> we don't need a dataframe
 
     # Saving the topic summaries into restaurant general table
-    update_database_topic_summary(summaries_categories)
+    update_database_topic_summary(summaries_categories, idx)
     
 
 

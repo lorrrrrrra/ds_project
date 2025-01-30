@@ -190,6 +190,8 @@ html, body {
     cursor: pointer;
     z-index: 9999;
     border-radius: 50px;
+    border-color: #153329 !important;
+    background-color: #153329 !important;
 }
 
 

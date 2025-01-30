@@ -171,7 +171,7 @@ html, body {
     padding-right: 10px;
 }
 
-/* .help-button {
+.btn-help {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -190,11 +190,9 @@ html, body {
     transition: background-color 0.3s ease, transform 0.2s ease;
     cursor: pointer;
     z-index: 9999;
-} */
-
-#about-us-button {
-    background-color: #F49069 !important;
 }
+
+
 
 
 

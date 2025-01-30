@@ -362,7 +362,7 @@ function get_summaries(data) {
     const summary_price = data.summary_price || summary_placeholder;
 
     let formatted_summary_food = summary_food
-      .replace(/\n/g, '<p>')  // Ersetze \n mit <p> für Absätze
+      .replace(/\n/g, '<div>')  // Ersetze \n mit <p> für Absätze
       .replace(/\n-/g, '<ul><li>')  // Ersetze \n- mit <ul><li> für Listenelemente
       .replace(/<\/li><ul>/g, '</li></ul>')  // Korrigiere geschachtelte Tags
       .replace(/\n/g, '</li><ul>') // Korrigiere das Tag vor dem ersten Listenelement

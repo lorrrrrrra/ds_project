@@ -361,6 +361,12 @@ function get_summaries(data) {
     const summary_atmosphere = data.summary_atmosphere || summary_placeholder;
     const summary_price = data.summary_price || summary_placeholder;
 
+    let formatted_summary_food = summary_food
+      .replace(/\n/g, '<p>')  // Ersetze \n mit <p> für Absätze
+      .replace(/\n-/g, '<ul><li>')  // Ersetze \n- mit <ul><li> für Listenelemente
+      .replace(/<\/li><ul>/g, '</li></ul>')  // Korrigiere geschachtelte Tags
+      .replace(/\n/g, '</li><ul>'); // Korrigiere das Tag vor dem ersten Listenelement
+
     const text_count_overall = data.summary_overall ? `generated with AI - based on ${parseFloat(data.user_count_overall) || 0} reviews` : "";
     const text_count_food = data.summary_food ? `generated with AI - based on ${parseFloat(data.user_count_food) || 0} reviews` : "";
     const text_count_service = data.summary_service ? `generated with AI - based on ${parseFloat(data.user_count_service) || 0} reviews` : "";
@@ -380,7 +386,7 @@ function get_summaries(data) {
     const label_amount_price = document.getElementById('label-amount-price');
 
     html_summary_overall.textContent = summary_overall;
-    html_summary_food.innerHTML = summary_food;
+    html_summary_food.innerHTML = formatted_summary_food;
     html_summary_service.textContent = summary_service;
     html_summary_atmosphere.textContent = summary_atmosphere;
     html_summary_price.textContent = summary_price;

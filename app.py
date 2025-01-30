@@ -229,13 +229,14 @@ def get_price_data_graph(restaurant_id):
         """, (restaurant_id,))
         price_range_data = cursor.fetchall()
 
-        print(f"{price_range_data}")
+        
 
         if not price_range_data:
             # Falls keine Daten gefunden wurden, gebe eine Fehlermeldung zurück
             return jsonify({"error": "Restaurant not found"}), 404
 
-        price_range_data = [row['dining_price_range'] for row in price_range_data]
+        price_range_data = [row['dining_price_range'] for row in price_range_data if row['dining_price_range'] is not None]
+        print(f"{price_range_data}")
         price_range_df = pd.DataFrame(price_range_data, columns=["dining_price_range"])
 
         result = count_price_ranges_with_all(price_range_df, all_price_ranges)

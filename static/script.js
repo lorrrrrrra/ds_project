@@ -763,13 +763,8 @@ function get_graph(data, type, category) {
       .style("text-anchor", "end");
 
     let dataField;
-    if (category === 'food') {
-      dataField = type === 'avg' ? 'dining_stars_food_mean' : 'dining_stars_food_count';
-    } else if (category === 'service') {
-      dataField = type === 'avg' ? 'dining_stars_service_mean' : 'dining_stars_service_count';
-    } else if (category === 'atmosphere') {
-      dataField = type === 'avg' ? 'dining_stars_atmosphere_mean' : 'dining_stars_atmosphere_count';
-    }
+    const starType = type === 'avg' ? 'mean' : 'count';
+    dataField = `dining_stars_${starType}`;
 
     const maxCount = d3.max(filteredRows, d => parseFloat(d[dataField]));
     const y = d3.scaleLinear()
@@ -903,15 +898,8 @@ document.querySelector('#nav-food-tab').addEventListener('shown.bs.tab', () => {
           if (data.error) {
             console.error('Fehler:', data.error);
           } else {
-            // checking if there is at least one review with a price range
-            let test = 1;
-
-            // get_graph(data, "avg", category);
-            // get_graph(data, "total", category);
-
-            // const infoTab = document.querySelector('#nav-info-tab');
-            // const bootstrapTab = new bootstrap.Tab(infoTab);
-            // bootstrapTab.show();
+            get_graph(data, "avg", category);
+            get_graph(data, "total", category);
           }
       })
     .catch(error => {
@@ -938,15 +926,8 @@ document.querySelector('#nav-service-tab').addEventListener('shown.bs.tab', () =
           if (data.error) {
             console.error('Fehler:', data.error);
           } else {
-            // checking if there is at least one review with a price range
-            let test = 1;
-
-            // get_graph(data, "avg", category);
-            // get_graph(data, "total", category);
-
-            // const infoTab = document.querySelector('#nav-info-tab');
-            // const bootstrapTab = new bootstrap.Tab(infoTab);
-            // bootstrapTab.show();
+            get_graph(data, "avg", category);
+            get_graph(data, "total", category);
           }
       })
     .catch(error => {
@@ -972,15 +953,8 @@ document.querySelector('#nav-atmosphere-tab').addEventListener('shown.bs.tab', (
           if (data.error) {
             console.error('Fehler:', data.error);
           } else {
-            // checking if there is at least one review with a price range
-            let test = 1;
-
-            // get_graph(data, "avg", category);
-            // get_graph(data, "total", category);
-
-            // const infoTab = document.querySelector('#nav-info-tab');
-            // const bootstrapTab = new bootstrap.Tab(infoTab);
-            // bootstrapTab.show();
+            get_graph(data, "avg", category);
+            get_graph(data, "total", category);
           }
       })
     .catch(error => {

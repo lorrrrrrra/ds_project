@@ -228,7 +228,7 @@ def get_price_data_graph(restaurant_id):
         """, (restaurant_id,))
         price_range_data = cursor.fetchall()
 
-        print(f"price_range_data")
+        print(f"{price_range_data}")
 
         if not price_range_data:
             # Falls keine Daten gefunden wurden, gebe eine Fehlermeldung zurück

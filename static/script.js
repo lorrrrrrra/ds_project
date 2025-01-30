@@ -380,7 +380,7 @@ function get_summaries(data) {
     const label_amount_price = document.getElementById('label-amount-price');
 
     html_summary_overall.textContent = summary_overall;
-    html_summary_food.textContent = summary_food;
+    html_summary_food.innerHTML = summary_food;
     html_summary_service.textContent = summary_service;
     html_summary_atmosphere.textContent = summary_atmosphere;
     html_summary_price.textContent = summary_price;

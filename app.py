@@ -221,7 +221,7 @@ def get_price_data_graph(restaurant_id):
     #     print(f"Couldn't retrieve all price ranges from the database {e}")
 
     all_price_ranges = ['1–10\xa0€', '10–20\xa0€', '20–30\xa0€', '30–40\xa0€', '40–50\xa0€', '50–60\xa0€', '60–70\xa0€', '70–80\xa0€', '80–90\xa0€', '90–100\xa0€', 'Mehr als 100\xa0€', None]
-
+    all_price_ranges = pd.DataFrame(all_price_ranges, columns=["dining_price_range"])
 
     try:
         cursor.execute("""
@@ -239,8 +239,9 @@ def get_price_data_graph(restaurant_id):
 
         price_range_data = [row['dining_price_range'] for row in price_range_data if row['dining_price_range'] is not None]
         print(f"{price_range_data}")
+        price_range_data_df = pd.DataFrame(price_range_data, columns=["dining_price_range"])
 
-        result = count_price_ranges_with_all(price_range_data, all_price_ranges)
+        result = count_price_ranges_with_all(price_range_data_df, all_price_ranges)
 
         
         # Gebe die Informationen als JSON zurück

@@ -106,8 +106,8 @@ def get_restaurants(bounds):
         if isinstance(restaurant_types, str):
             restaurant_types = [restaurant_types]
 
-        print(row["rating_price"])
-        print(filter_data.get("price", []))
+        print(repr(row["rating_price"]))
+        print(repr(filter_data["price"]))
         print((row["rating_price"] in filter_data["price"]))
 
         conditions = [

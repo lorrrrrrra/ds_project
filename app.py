@@ -308,7 +308,7 @@ def get_food_data_graph(restaurant_id):
         # apply the function to the dataframe
         food_data_df["actual_review_date"] = food_data_df.apply(calculate_actual_date, axis=1)
 
-        print(food_data)
+        print(food_data_df.head())
 
         # Gebe die Informationen als JSON zurück
         return jsonify(food_data)

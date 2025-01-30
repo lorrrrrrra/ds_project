@@ -14,12 +14,43 @@ client = OpenAI(
 )
 
 ### Data preparations
-data = pd.read_csv("reviews_general.csv") # as an example
 
-# preprocess the data
-data = data.dropna(subset=['review_text']) # drop rows with missing review_text
-data['review_text'] = data['review_text'].str.replace(r'\s+', ' ', regex=True).str.strip() # remove extra spaces, newlines, and tabs
-data = data[data["review_text"].str.len() > 10] # drop rows where the "review_text" column contains less than 10 characters
+# Define how the data is splitted into batches
+def create_review_batches(data, batch_size=45000):
+    # Sort data by review_id
+    data = data.sort_values(by="review_id").reset_index(drop=True)
+    
+    batches = []
+    start_index = 0
+    while start_index < len(data):
+        start_review_id = data.loc[start_index, "review_id"]
+        # Find the index where batch would exceed 45,000 reviews
+        end_index = min(start_index + batch_size, len(data))
+        # Adjust end_index to ensure we don't exceed batch_size and don't split a restaurant
+        while (
+            end_index < len(data) and 
+            data.loc[end_index, "restaurant_id"] == data.loc[end_index - 1, "restaurant_id"]
+        ):
+            end_index -= 1  # Move back to avoid splitting the restaurant
+        # Ensure at least one review in the batch
+        if end_index <= start_index:
+            end_index = start_index + 1  
+        # Get the last review ID for the batch
+        end_review_id = data.loc[end_index - 1, "review_id"]
+        # Store batch info
+        batches.append({"start_review_id": start_review_id, "end_review_id": end_review_id})
+        # Move to next batch
+        start_index = end_index  # Start from the next review
+
+    return pd.DataFrame(batches)
+
+
+# function to preprocess review text
+def preprocess_reviews(data):
+    data = data.dropna(subset=['review_text'])  # Drop rows with missing review_text
+    data['review_text'] = data['review_text'].str.replace(r'\s+', ' ', regex=True).str.strip()  # Remove extra spaces, newlines, tabs
+    data = data[data["review_text"].str.len() > 10]  # Keep only reviews longer than 10 characters
+    return data
 
 
 ### Functions that will be used throughout different tasks
@@ -31,11 +62,13 @@ def split_into_batches(tasks, batch_size=45000):
     return [tasks[:batch_size], tasks[batch_size:batch_size*2]]
 
 
-## Functions for batch processing:
-# 1. Function to save each batch to a separate .jsonl file
-def save_batches_to_jsonl(batches, prefix):
+## Function for batch processing:
+def batch_processing(batches, prefix):
     batch_file_names = []
-    
+    batch_file_ids = []
+    batch_job_ids = []
+
+    # 1. Save each batch to a separate .jsonl file
     for i, batch in enumerate(batches):
         batch_file_name = f"{prefix}_part{i+1}.jsonl"
         with open(batch_file_name, 'w') as file:
@@ -43,12 +76,7 @@ def save_batches_to_jsonl(batches, prefix):
                 file.write(json.dumps(task) + '\n')
         batch_file_names.append(batch_file_name)
     
-    return batch_file_names  # Return the list of saved file names
-
-# 2. Function to upload batch files to the API
-def upload_batch_files(batch_file_names):
-    batch_file_ids = []
-    
+    # 2. Upload batch files to the API
     for batch_file_name in batch_file_names:
         batch_file = client.files.create(
             file=open(batch_file_name, "rb"),
@@ -57,12 +85,7 @@ def upload_batch_files(batch_file_names):
         print(f"Batch file uploaded: {batch_file.id}")
         batch_file_ids.append(batch_file.id)
     
-    return batch_file_ids  # Return the list of uploaded file IDs
-
-# 3. Function to start batch jobs
-def start_batch_jobs(batch_file_ids):
-    batch_job_ids = []
-    
+    # 3. Start batch jobs
     for file_id in batch_file_ids:
         batch_job = client.batches.create(
             input_file_id=file_id,
@@ -75,6 +98,55 @@ def start_batch_jobs(batch_file_ids):
     return batch_job_ids  # Return the list of batch job IDs
 
 
+# Function to check batch job status, to wait for completion
+def wait_for_batches_to_complete(batch_job_ids, batches_protocol, idx, failed_task):
+    while True:
+        completed_batches = 0
+        failed_batches = 0
+        total_batches = len(batch_job_ids)
+
+        # Track failed batch job IDs
+        failed_batch_ids = []
+
+        for batch_job_id in batch_job_ids:
+            batch_job = client.batches.retrieve(batch_job_id)
+            status = batch_job.status
+            print(f"Batch Job {batch_job_id} Status: {status}")
+
+            if status == "completed":
+                completed_batches += 1
+            elif status in ["failed", "cancelled"]:
+                failed_batches += 1
+                failed_batch_ids.append(batch_job_id)  # Store failed job ID
+
+        # If all batches are completed, proceed
+        if completed_batches == total_batches:
+            print("All batch jobs are completed.")
+            return  # Exit the function
+
+        # If all batches have failed
+        if failed_batches == total_batches:
+            print("All batch jobs have failed. Waiting for 1 hour...")
+            # Store the failed job IDs in the batches_protocol for both jobs
+            batches_protocol.loc[idx, failed_task] = failed_batch_ids
+            time.sleep(3600)  # Wait for 1 hour before continuing to the next batch (to ensure cancellation or failed jobs are processed)
+            return  # After waiting, return so the next batch can be processed
+
+        # Only exit if all batches are either completed or failed
+        if completed_batches + failed_batches == total_batches:
+            print("At least one batch is failed.")
+            # Update batches_protocol with the failed job IDs if any
+            if failed_batches > 0:
+                batches_protocol.loc[idx, failed_task] = failed_batch_ids
+            return  # Exit the function
+
+        # Wait before checking again
+        print(f"Waiting 60 seconds before checking again...")
+        time.sleep(60)
+
+
+
+
 
 # Function to check batch job status, to wait for completion
 def wait_for_batches_to_complete(batch_job_ids):
@@ -85,7 +157,7 @@ def wait_for_batches_to_complete(batch_job_ids):
             status = batch_job.status
             print(f"Batch Job {batch_job_id} Status: {status}")
 
-            if status != 'completed':
+            if status not in ['completed', 'failed', 'canceled']:
                 all_done = False  # Keep waiting if any batch is still running
 
         if all_done:
@@ -113,39 +185,39 @@ Return the results in the following JSON format:
 }
 '''
 
-# Define a function to create tasks for batch processing
-def create_batch_tasks_topic_extraction(data):
-    tasks = []
-    
-    for index, row in data.iterrows():
-        review_text = row['review_text']
-        review_id = row['review_id']  # Access the review_id from the DataFrame
-        
-        task = {
-            "custom_id": f"{review_id}",  # Use review_id in the custom_id
-            "method": "POST",
-            "url": "/v1/chat/completions",
-            "body": {
-                "model": "gpt-4o-mini-2024-07-18",
-                "temperature": 0.1,
-                "response_format": {
-                    "type": "json_object"
-                },
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": topic_extraction_prompt
+def create_batch_tasks_topic_extraction(batch_1, batch_2):
+    def create_tasks(data):
+        tasks = []
+        for index, row in data.iterrows():
+            review_text = row['review_text']
+            review_id = row['review_id']
+            
+            task = {
+                "custom_id": f"{review_id}",
+                "method": "POST",
+                "url": "/v1/chat/completions",
+                "body": {
+                    "model": "gpt-4o-mini-2024-07-18",
+                    "temperature": 0.1,
+                    "response_format": {
+                        "type": "json_object"
                     },
-                    {
-                        "role": "user",
-                        "content": review_text
-                    }
-                ],
+                    "messages": [
+                        {
+                            "role": "system",
+                            "content": topic_extraction_prompt
+                        },
+                        {
+                            "role": "user",
+                            "content": review_text
+                        }
+                    ],
+                }
             }
-        }
-        tasks.append(task)
-    
-    return tasks
+            tasks.append(task)
+        return tasks
+
+    return create_tasks(batch_1), create_tasks(batch_2)
 
 
 ############################################################################################################
@@ -510,135 +582,153 @@ def retrieve_batch_results_subratings(batch_job_ids, category):
 ##### The overall process
 ############################################################################################################
 
-#### 1. Topic extraction
-# Prepare the batch tasks as a list
-tasks_topic_extraction = create_batch_tasks_topic_extraction(data)
-# Split tasks into batches of 4500 each
-batches_topic_extraction = split_into_batches(tasks_topic_extraction, batch_size=45000)
-# Create, upload, and start batch jobs
-batch_file_names_topic_extraction = save_batches_to_jsonl(batches_topic_extraction, prefix="batch_tasks_topic_extraction")
-batch_file_ids_topic_extraction = upload_batch_files(batch_file_names_topic_extraction)
-batch_job_ids_topic_extraction = start_batch_jobs(batch_file_ids_topic_extraction)
+### Create a protocol to keep track of the batches
+# Prepare how the data is splitted into batches
+data = pd.read_csv("reviews_general.csv") # read in data as an example
+data = data[["review_id", "restaurant_id"]] # only keep columns: review_id, restaurant_id
+batches_protocol = create_review_batches(data, batch_size=45000)
+
+# Initialize new columns in batches_protocol DataFrame for job IDs
+batches_protocol['topic_job_ids'] = None
 
 
-#### 2. Overall summaries
-# Extract unique restaurant IDs of the two batches
-unique_restaurant_ids = data['restaurant_id'].dropna().unique()
-
-overall_summaries = []  # List to store summaries
-# Generate summaries for each restaurant
-for restaurant_id in unique_restaurant_ids:
-    # Summarize overall reviews
-    overall_summary, user_count_overall = summarize_reviews(
-        restaurant_id, data, 'review_text', 
-        OVERALL_SUMMARY_PROMPT, OVERALL_SUMMARY_COMBINE_PROMPT
-    )
-    # Append the summaries to the list
-    overall_summaries.append({
-        "restaurant_id": restaurant_id,
-        "overall_summary": overall_summary,
-        "user_count_overall": user_count_overall
-    })
-# Convert the list of summaries into a DataFrame
-overall_summaries = pd.DataFrame(overall_summaries)
-
-
-#### 3. Transition wait until 1. Topic extraction is done
-wait_for_batches_to_complete(batch_job_ids_topic_extraction)
-
-
-#### 4. Retrieve categorized sentences
-# Retrieve and process results
-results_df = retrieve_batch_results_categorized(batch_job_ids_topic_extraction)
-# Apply the extraction to the 'response' column
-category_data = results_df['response'].apply(extract_categorized_sentences)
-# Create a new DataFrame with the extracted category sentences
-category_df = pd.DataFrame(category_data.tolist())
-# Add 'custom_id' as 'review_id'
-category_df['review_id'] = results_df['custom_id'].astype('int64')
-
-
-#### 5. Sentiment analysis
-## 5.1 Food Sentiment
-# Prepare the batch tasks as a list
-food_tasks = create_sentiment_batch(category_df, "food")
-# Split tasks into batches of 45000 each
-batches_food = split_into_batches(food_tasks, batch_size=45000)
-# Create, upload, and start batch jobs
-batch_file_names_food = save_batches_to_jsonl(batches_food, prefix="batch_tasks_food")
-batch_file_ids_food = upload_batch_files(batch_file_names_food)
-batch_job_ids_food = start_batch_jobs(batch_file_ids_food)
-
-## 5.2 Service Sentiment
-# Prepare the batch tasks as a list
-service_tasks = create_sentiment_batch(category_df, "service")
-# Split tasks into batches of 45000 each
-batches_service = split_into_batches(service_tasks, batch_size=45000)
-# Create, upload, and start batch jobs
-batch_file_names_service = save_batches_to_jsonl(batches_service, prefix="batch_tasks_service")
-batch_file_ids_service = upload_batch_files(batch_file_names_service)
-batch_job_ids_service = start_batch_jobs(batch_file_ids_service)
-
-## 5.3 Atmosphere Sentiment
-# Prepare the batch tasks as a list
-atmosphere_tasks = create_sentiment_batch(category_df, "atmosphere")
-# Split tasks into batches of 45000 each
-batches_atmosphere = split_into_batches(atmosphere_tasks, batch_size=45000)
-# Create, upload, and start batch jobs
-batch_file_names_atmosphere = save_batches_to_jsonl(batches_atmosphere, prefix="batch_tasks_atmosphere")
-batch_file_ids_atmosphere = upload_batch_files(batch_file_names_atmosphere)
-batch_job_ids_atmosphere = start_batch_jobs(batch_file_ids_atmosphere)
-
-# Collect all batch job IDs into one list
-batch_job_ids_sentiment = batch_job_ids_food + batch_job_ids_service + batch_job_ids_atmosphere
-
-
-#### 6. Category Summaries
-## Prepare data such that categorized sentences have restaurant_ids
-# merge the categorized sentences with reviews general to get the restaurant_ids
-reviews_df = pd.merge(category_df, data, on='review_id', how='left')
-# keep only the necessary columns
-reviews_df = reviews_df[['review_id', 'restaurant_id', 'food_sentences', 'service_sentences', 'atmosphere_sentences', 'price_sentences']]
-
-# Extract unique restaurant IDs of the two batches
-unique_restaurant_ids = reviews_df['restaurant_id'].dropna().unique()
-
-summaries_categories = []  # List to store summaries
-# Generate summaries for each restaurant
-for restaurant_id in unique_restaurant_ids:
-    # Summarize reviews for each category
-    food_summary, user_count_food = summarize_reviews(restaurant_id, reviews_df, 'food_sentences', FOOD_SUMMARY_PROMPT, FOOD_COMBINE_PROMPT)
-    service_summary, user_count_service = summarize_reviews(restaurant_id, reviews_df, 'service_sentences', SERVICE_SUMMARY_PROMPT, SERVICE_COMBINE_PROMPT)
-    atmosphere_summary, user_count_atmosphere = summarize_reviews(restaurant_id, reviews_df, 'atmosphere_sentences', ATMOSPHERE_SUMMARY_PROMPT, ATMOSPHERE_COMBINE_PROMPT)
-    price_summary, user_count_price = summarize_reviews(restaurant_id, reviews_df, 'price_sentences', PRICE_SUMMARY_PROMPT, PRICE_COMBINE_PROMPT)
+# Iterate over batches_protocol
+for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
+    # Extract the batch data using the batch protocol
+    data_1 = data[
+        (data["review_id"] >= batches_protocol.loc[idx, "start_review_id"]) & 
+        (data["review_id"] <= batches_protocol.loc[idx, "end_review_id"])
+    ]
     
-    # Append the summaries to the list
-    summaries_categories.append({
-        "restaurant_id": restaurant_id,
-        "summary_food": food_summary,
-        "summary_service": service_summary,
-        "summary_atmosphere": atmosphere_summary,
-        "summary_price": price_summary,
-        "user_count_food": user_count_food,
-        "user_count_service": user_count_service,
-        "user_count_atmosphere": user_count_atmosphere,
-        "user_count_price": user_count_price,
-    })
+    # If there's a second batch, extract it too
+    if idx + 1 < len(batches_protocol):
+        data_2 = data[
+            (data["review_id"] >= batches_protocol.loc[idx + 1, "start_review_id"]) & 
+            (data["review_id"] <= batches_protocol.loc[idx + 1, "end_review_id"])
+        ]
+    else:
+        data_2 = pd.DataFrame()  # In case there is no second batch, use an empty DataFrame
+    
+    # Apply preprocessing for both batches
+    data_1 = preprocess_reviews(data_1)
+    data_2 = preprocess_reviews(data_2)
+    
 
-# Convert the list of summaries into a DataFrame
-summaries_categories = pd.DataFrame(summaries_categories)
+    #### 1. Topic extraction
+    # Create batch tasks for both batches
+    tasks_topic_1, tasks_topic_2 = create_batch_tasks_topic_extraction(data_1, data_2)
+    # Save, Upload, and Start batch jobs
+    topic_job_ids = batch_processing(batches=[tasks_topic_1, tasks_topic_2], prefix=f"topic_extraction")
+    
+    # Store topic job IDs in the batches_protocol DataFrame
+    batches_protocol.loc[idx, 'topic_job_ids'] = topic_job_ids[0]  # First batch
+    if idx + 1 < len(batches_protocol):
+        batches_protocol.loc[idx + 1, 'topic_job_ids'] = topic_job_ids[1]  # Second batch
 
 
-#### 7. Transition wait until 5. Sentiment analysis is done
-wait_for_batches_to_complete(batch_job_ids_sentiment)
+    #### 2. Overall summaries
+    # Combine both batches into one dataset
+    combined_data = pd.concat([data_1, data_2])
+    # Extract unique restaurant IDs of the two batches
+    unique_restaurant_ids = combined_data['restaurant_id'].dropna().unique()
+
+    overall_summaries = []  # List to store summaries
+    # Generate summaries for each restaurant
+    for restaurant_id in unique_restaurant_ids:
+        overall_summary, user_count_overall = summarize_reviews(
+            restaurant_id, combined_data, 'review_text', 
+            OVERALL_SUMMARY_PROMPT, OVERALL_SUMMARY_COMBINE_PROMPT
+        )
+        overall_summaries.append({
+            "restaurant_id": restaurant_id,
+            "overall_summary": overall_summary,
+            "user_count_overall": user_count_overall
+        })
+    
+    overall_summaries = pd.DataFrame(overall_summaries)
+
+    # ! speichern einbauen !
+    
+
+    #### 3. Transition wait until topic extraction is done
+    wait_for_batches_to_complete(topic_job_ids, batches_protocol, idx, failed_task="failed_topic_job_ids")
 
 
-#### 8. Retrieve sentiment results (subratings)
-# Retrieve results for each category
-df_food = retrieve_batch_results_subratings(batch_job_ids_food, "food")
-df_service = retrieve_batch_results_subratings(batch_job_ids_service, "service")
-df_atmosphere = retrieve_batch_results_subratings(batch_job_ids_atmosphere, "atmosphere")
+    #### 4. Retrieve categorized sentences
+    try:
+        results_df = retrieve_batch_results_categorized(topic_job_ids)
+        category_data = results_df['response'].apply(extract_categorized_sentences)
+        category_df = pd.DataFrame(category_data.tolist())
+        category_df['review_id'] = results_df['custom_id'].astype('int64')
+    except Exception as e:
+        print(f"Error retrieving categorized sentences for batch {idx}: {e}")
+        continue  # Skip to the next batch iteration
 
-# Merge all results into a single DataFrame
-df_ratings = df_food.merge(df_service, on="review_id", how="outer").merge(df_atmosphere, on="review_id", how="outer")
+
+    #### 5. Sentiment analysis
+    # 5.1 Food Sentiment
+    food_tasks = create_sentiment_batch(category_df, "food")
+    food_batches = split_into_batches(food_tasks, batch_size=45000)
+    food_job_ids = batch_processing(food_batches, prefix=f"food_sentiment")
+
+    # 5.2 Service Sentiment
+    service_tasks = create_sentiment_batch(category_df, "service")
+    service_batches = split_into_batches(service_tasks, batch_size=45000)
+    service_job_ids = batch_processing(service_batches, prefix=f"service_sentiment")
+
+    # 5.3 Atmosphere Sentiment
+    atmosphere_tasks = create_sentiment_batch(category_df, "atmosphere")
+    atmosphere_batches = split_into_batches(atmosphere_tasks, batch_size=45000)
+    atmosphere_job_ids = batch_processing(atmosphere_batches, prefix=f"atmosphere_sentiment")
+    
+    # Collect all sentiment batch job IDs into one list
+    batch_job_ids_sentiment = food_job_ids + service_job_ids + atmosphere_job_ids
+
+    # ! speichern für categorized sentences einbauen !
+
+    #### 6. Category Summaries
+    reviews_df = pd.merge(category_df, combined_data, on='review_id', how='left')
+    reviews_df = reviews_df[['review_id', 'restaurant_id', 'food_sentences', 'service_sentences', 'atmosphere_sentences', 'price_sentences']]
+
+    summaries_categories = []  # List to store summaries
+    for restaurant_id in unique_restaurant_ids:
+        food_summary, user_count_food = summarize_reviews(restaurant_id, reviews_df, 'food_sentences', FOOD_SUMMARY_PROMPT, FOOD_COMBINE_PROMPT)
+        service_summary, user_count_service = summarize_reviews(restaurant_id, reviews_df, 'service_sentences', SERVICE_SUMMARY_PROMPT, SERVICE_COMBINE_PROMPT)
+        atmosphere_summary, user_count_atmosphere = summarize_reviews(restaurant_id, reviews_df, 'atmosphere_sentences', ATMOSPHERE_SUMMARY_PROMPT, ATMOSPHERE_COMBINE_PROMPT)
+        price_summary, user_count_price = summarize_reviews(restaurant_id, reviews_df, 'price_sentences', PRICE_SUMMARY_PROMPT, PRICE_COMBINE_PROMPT)
+        
+        summaries_categories.append({
+            "restaurant_id": restaurant_id,
+            "summary_food": food_summary,
+            "summary_service": service_summary,
+            "summary_atmosphere": atmosphere_summary,
+            "summary_price": price_summary,
+            "user_count_food": user_count_food,
+            "user_count_service": user_count_service,
+            "user_count_atmosphere": user_count_atmosphere,
+            "user_count_price": user_count_price,
+        })
+
+    summaries_categories = pd.DataFrame(summaries_categories)
+
+    # ! speichern einbauen !
+
+    #### 7. Transition wait until sentiment analysis is done
+    wait_for_batches_to_complete(batch_job_ids_sentiment, batches_protocol, idx, failed_task="failed_sentiment_job_ids")
+
+    #### 8. Retrieve sentiment results (subratings)
+    try:
+        df_food = retrieve_batch_results_subratings(food_job_ids, "food")
+        df_service = retrieve_batch_results_subratings(service_job_ids, "service")
+        df_atmosphere = retrieve_batch_results_subratings(atmosphere_job_ids, "atmosphere")
+        
+    except Exception as e:
+        print(f"Error retrieving sentiment results for batch {idx}: {e}")
+        continue  # Skip to the next batch iteration
+
+    df_ratings = df_food.merge(df_service, on="review_id", how="outer").merge(df_atmosphere, on="review_id", how="outer")
+
+
+    # ! speichern einbauen !
+
 

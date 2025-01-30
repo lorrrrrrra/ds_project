@@ -755,7 +755,8 @@ for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
     
     # Apply preprocessing for both batches
     data_1 = preprocess_reviews(data_1)
-    data_2 = preprocess_reviews(data_2)
+    if not data_2.empty:
+        data_2 = preprocess_reviews(data_2)
     
 
     #### 1. Topic extraction

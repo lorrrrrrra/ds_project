@@ -325,7 +325,7 @@ def get_food_data_graph(restaurant_id):
                 .reset_index()
         )
 
-        print(reviews_grouped_month.head())
+        print(reviews_grouped_month)
 
         # Gebe die Informationen als JSON zurück
         return jsonify(food_data)

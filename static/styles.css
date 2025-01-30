@@ -171,13 +171,13 @@ html, body {
     padding-right: 10px;
 }
 
-.help-button {
+/* .help-button {
     position: absolute;
     top: 10px;
     right: 10px;
     width: 50px;
     height: 50px;
-    background-color: #F49069;
+    background-color: #F49069 !important;
     color: white;
     font-size: 24px;
     font-weight: bold;
@@ -190,6 +190,10 @@ html, body {
     transition: background-color 0.3s ease, transform 0.2s ease;
     cursor: pointer;
     z-index: 9999;
+} */
+
+#about-us-button {
+    background-color: #F49069 !important;
 }
 
 

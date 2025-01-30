@@ -771,9 +771,7 @@ function get_graph(data, type, category) {
       .domain([0, maxCount || 1]) // Fallback-Wert
       .range([height, 0]);
 
-    chart.append("g").call(d3.axisLeft(y).ticks(d3.range(0, maxCount, 1)))  // Ticks in 0.5 Schritten
-    .selectAll("text")
-    .style("font-size", "12px");
+    chart.append("g").call(d3.axisLeft(y));
 
     const line = d3.line()
       .x(d => x(d.review_month) + x.bandwidth() / 2)

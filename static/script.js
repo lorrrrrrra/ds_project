@@ -656,12 +656,17 @@ function delete_all_filters() {
 
   // deleting price filters
   const price_buttons = [
-    document.getElementById(`price-0-10`),
+    document.getElementById(`price-1-10`),
     document.getElementById(`price-10-20`),
     document.getElementById(`price-20-30`),
     document.getElementById(`price-30-40`),
     document.getElementById(`price-40-50`),
-    document.getElementById(`price-50-100`),
+    document.getElementById(`price-50-60`),
+    document.getElementById(`price-60-70`),
+    document.getElementById(`price-70-80`),
+    document.getElementById(`price-80-90`),
+    document.getElementById(`price-90-100`),
+    document.getElementById(`price-100+`),
   ];
 
   price_buttons.forEach((button, index) => {

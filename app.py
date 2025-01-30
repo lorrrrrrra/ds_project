@@ -99,16 +99,17 @@ def get_restaurants(bounds):
         else:
             restaurant_types = restaurant_types_str
 
-        
-        # Wenn eine der beiden als String vorliegt, umwandeln in eine Liste
-        if isinstance(filter_types, str):
-            filter_types = [filter_types]
-        if isinstance(restaurant_types, str):
-            restaurant_types = [restaurant_types]
 
-        # print(repr(row["rating_price"]))
-        # print(repr(filter_data["price"]))
-        # print((row["rating_price"] in filter_data["price"]))
+        if isinstance(row["rating_price"], str):
+            cleaned_price = row["rating_price"].replace("-", "")
+        else:
+            cleaned_price = row["rating_price"]
+
+    
+
+        print(cleaned_price)
+        print(repr(filter_data["price"]))
+        print((cleaned_price in filter_data["price"]))
 
 
         print(type(row["rating_price"]), repr(filter_data["price"]))

@@ -271,10 +271,19 @@ def process_batches_for_all_keys(api_keys, subsets, output_dir, csv_file_path, s
         for future in futures:
             future.result()  # Will raise an exception if the thread raised one
 
-api_keys = ["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", 
-            "sk-aCxLYPM7ksEW5hRC0p80hQUs0LGuw5SQGSFgL1URxcT3BlbkFJG7J7YTe0SluXJZtU1ZMEr_y2VmtsZHIbn1nBsapmsA",
-            "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",
-            "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",
-            "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",
-            "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"]
+# Define a list of environment variable names for the API keys
+api_key_env_vars = [
+    "OPENAI_API_KEY_1",
+    "OPENAI_API_KEY_2",
+    "OPENAI_API_KEY_3",
+    "OPENAI_API_KEY_4",
+    "OPENAI_API_KEY_5",
+    "OPENAI_API_KEY_6",
+]
+
+# Retrieve the API keys from environment variables
+api_keys = [os.getenv(var) for var in api_key_env_vars if os.getenv(var) is not None]
+
+
 process_batches_for_all_keys(api_keys, subsets, output_dir, csv_file_path, start_index=26)
+

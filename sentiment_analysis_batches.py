@@ -3,8 +3,13 @@ from openai import OpenAI
 import pandas as pd
 import numpy as np
 import json
+import os
+
+
+# API key for OpenAI
+openai_api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(
-  api_key="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"
+  api_key=openai_api_key
 )
 
 ### load the data

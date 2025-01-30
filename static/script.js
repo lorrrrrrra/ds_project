@@ -839,7 +839,7 @@ function get_graph_price(data) {
       .padding(0.1);
 
     chart.append("g")
-      .attr("transform", `translate(0, ${containerHeight} - 20)`)
+      .attr("transform", `translate(0, ${containerHeight} + 30)`)
       .call(d3.axisBottom(x))
       .selectAll("text")
       .attr("transform", "rotate(-45)")

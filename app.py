@@ -101,15 +101,12 @@ def get_restaurants(bounds):
 
 
         if isinstance(row["rating_price"], str):
-            cleaned_price = row["rating_price"].replace("–", "")
+            cleaned_price = row["rating_price"].replace("–", "").strip()
         else:
-            cleaned_price = row["rating_price"]
+            cleaned_price = row["rating_price"].strip()
 
-    
+        filter_data["price"] = [x.strip() for x in filter_data["price"]]
 
-        # print(cleaned_price)
-        # print(repr(filter_data["price"]))
-        # print((cleaned_price in filter_data["price"]))
 
         condition = cleaned_price in filter_data["price"]
 

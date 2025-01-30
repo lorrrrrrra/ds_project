@@ -21,8 +21,9 @@ This GitHub repository hosts all the code from data acquisition, processing to w
 -------------------------------------
   Contributors
 
-    Theresa Baumstark
-    Laura Gaddum
-    Juliana Tonn
+    Theresa Baumstark theresa.baumstark@student.uni-tuebingen.de
+    Laura Gaddum laura.gaddum@student.uni-tuebingen.de
+    Juliana Tonn juliana.tonn@student.uni-tuebingen.de
 
-    This project is part of the "Data Science Project 2024/25" module at the University of Tuebingen.
+-------------------------------------
+This project is part of the "Data Science Project 2024/25" module at the University of Tuebingen.

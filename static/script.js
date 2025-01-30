@@ -81,10 +81,7 @@ function update_map() {
 
   let boundsString = `${bound_values.lowLat},${bound_values.highLat},${bound_values.lowLng},${bound_values.highLng}`;
 
-  let currentActiveMarker = null;
-  if (activeMarker) {
-    currentActiveMarker = activeMarker;
-  }
+  let currentActiveMarkerId = activeMarker ? activeMarker.options.id : null;
   
   // Fetch-Aufruf to get restaurants
   fetch(`/api/restaurants/${boundsString}`, {
@@ -101,6 +98,14 @@ function update_map() {
 
       // creating new markers
       create_marker(data);
+
+      if (currentActiveMarkerId) {
+        const foundMarker = markersLayer.getLayers().find(m => m.options.id === currentActiveMarkerId);
+        if (foundMarker) {
+          activeMarker = foundMarker;
+          activeMarker.setIcon(clickedIcon);
+        }
+      }
     })
     .catch(error => {
       console.error("Fehler beim Abrufen der Daten:", error);

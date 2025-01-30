@@ -809,7 +809,7 @@ function get_graph_price(data) {
 
   // SVG-Setup: Wählen des SVG-Elements
   const svg = d3.select("#graph-total-price"); // Dein SVG für den Bar Plot
-  const margin = { top: 20, right: 30, bottom: 100, left: 40 };
+  const margin = { top: 20, right: 30, bottom: 200, left: 40 };
 
   // Berechne die Breite und Höhe dynamisch
   function updateGraphSize() {

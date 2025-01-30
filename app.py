@@ -196,6 +196,27 @@ def get_price_data_graph(restaurant_id):
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)
 
+    def count_price_ranges_with_all(df, all_price_ranges):
+        # counting the price ranges and returning a df
+        price_range_counts = df["dining_price_range"].value_counts().reindex(all_price_ranges, fillvalue=0)
+        price_range_counts_df = price_range_counts.reset_index()
+        price_range_counts_df.columns = ["range", "count"]
+        
+        return price_range_counts_df
+    
+    # getting all possible price ranges
+    try:
+        cursor.execute("""
+            SELECT distinct(dining_price_range)
+            FROM reviews_additional;
+        """)
+        all_price_ranges = cursor.fetchall()
+        all_price_ranges = pd.DataFrame(all_price_ranges)
+
+    except Exception as e:
+        print(f"Couldn't retrieve all price ranges from the database {e}")
+
+
     try:
         # Eine kombinierte SQL-Abfrage, die alle relevanten Daten aus beiden Tabellen holt
         cursor.execute("""
@@ -209,9 +230,13 @@ def get_price_data_graph(restaurant_id):
             # Falls keine Daten gefunden wurden, gebe eine Fehlermeldung zurück
             return jsonify({"error": "Restaurant not found"}), 404
 
+        price_range_df = pd.DataFrame(price_range_data)
+
+        result = count_price_ranges_with_all(price_range_df, all_price_ranges)
+
         
         # Gebe die Informationen als JSON zurück
-        return jsonify(price_range_data)
+        return jsonify(result.to_json(orient="records"))
 
     finally:
         # Cursor und Verbindung schließen

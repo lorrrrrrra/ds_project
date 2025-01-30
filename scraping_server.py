@@ -8,35 +8,39 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-from multiprocessing import Pool, cpu_count
-import psycopg2
-import psycopg2.pool
 import pandas as pd
+import psycopg2
 import time
 import json
 import sys
 
+# configuration details for the postgresql database on the ubuntu server
+db_config = {
+    "dbname": "reviews_db",
+    "user": "scraping_user",
+    "password": "Passwort123",
+    "host": "localhost",
+    "port": 5432
+}
 
-# creating a connection pool, ssl disabled as there were some problems
-conn_pool = psycopg2.pool.SimpleConnectionPool(
-    1, 10,  # Min und Max connections
-    dbname="reviews_db", 
-    user="scraping_user", 
-    password="Passwort123", 
-    host="localhost", 
-    port=5432,
-    sslmode='disable'
-)
+# connecting to the database, exiting the file if it does not work
+try:
+    connection = psycopg2.connect(**db_config)
+    cursor = connection.cursor()
+    print("Connection to database was established")
+except Exception as e:
+    print("Connection to database not possible", e)
+    sys.exit(1)
 
 
 
 def generate_google_maps_links(dataframe, column_name):
 
     base_url = "https://www.google.com/maps/place/?q=place_id:"
-    
+
     # Create a new column with the maps link
     dataframe['google_maps_link'] = dataframe[column_name].apply(lambda place_id: f"{base_url}{place_id}")
-    
+
     return dataframe
 
 # function in which the browser is already open and reviews will be fetched
@@ -55,7 +59,7 @@ def scroll_and_fetch_reviews(driver, max_scrolls, batch_size, pause_time):
         except Exception as e:
             print("Error: Reviews panel not found. Skipping this restaurant.")
             return all_reviews_data  # Return empty if no panel is found
-        
+
         # Initialize ActionChains
         actions = ActionChains(driver)
         actions.move_to_element(panel_element).click().perform()
@@ -127,7 +131,7 @@ def scroll_and_fetch_reviews(driver, max_scrolls, batch_size, pause_time):
     except Exception as e:
         print(f"Error while scrolling or fetching reviews: {e}")
         return all_reviews_data
-    
+
 # opening the browser, and fetching the reviews via the scroll and recht reviews function
 def get_restaurant_reviews(url, max_scrolls, batch_size, pause_time):
     # Set up performance logging with headless mode
@@ -167,27 +171,7 @@ def get_restaurant_reviews(url, max_scrolls, batch_size, pause_time):
         print(f"Error: {e}")
         print("Reviews button not found.")
 
-    # Click to sort via date and not relevance
-    try:
-        wait = WebDriverWait(driver, 20)
-        button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[contains(concat( " ", @class, " " ), concat( " ", "ecceSd", " " ))]//*[contains(concat( " ", @class, " " ), concat( " ", "TrU0dc", " " ))]//*[contains(concat( " ", @class, " " ), concat( " ", "DVeyrd", " " ))]')))
-        if button.is_displayed() and button.is_enabled():
-            button.click()
-            print("Clicked to show sorting values.")
-            action_menu = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="action-menu"]/div[2]')))
-            if action_menu.is_displayed() and action_menu.is_enabled():
-                action_menu.click()
-                print("Clicked to sort values by date.")
-            else:
-                print("Couldn't click the action menu... :(")
-            time.sleep(2)
-        else:
-            print("Button is not clickable.")
 
-    except Exception as e:
-        print(f"Error while sorting via date {e}")
-
-   
 
     #scroll and fetch the reviews data
     reviews_data = scroll_and_fetch_reviews(driver, max_scrolls=max_scrolls, batch_size=batch_size, pause_time=pause_time)
@@ -349,95 +333,74 @@ def get_data_from_reviews(reviews_data_frame, restaurant_id):
 
     return reviews_df, reviews_additional_df
 
-# function for scraping one single restaurant, uses functions above
-def scrape_single_restaurant(link, restaurant_id, max_scrolls, batch_size, pause_time):
-    print("Started scraping restaurant", restaurant_id)
-    reviews_data_json = get_restaurant_reviews(url=link, max_scrolls=max_scrolls, batch_size=batch_size, pause_time=pause_time)
-    reviews, reviews_additional = get_data_from_reviews(reviews_data_json, restaurant_id)
-
-    try:
-        connection = conn_pool.getconn()
-        cursor = connection.cursor()
-        
-            # Insert query for the general reviews
-        insert_query_general = """
-            INSERT INTO reviews_general_new (restaurant_id, author, review_date, scraping_date, stars, language, review_text)
-            VALUES (%s, %s, %s, %s, %s, %s, %s);
-        """
-
-        # Insert query for the additional reviews
-        insert_query_additional = """
-            INSERT INTO reviews_additional_new (restaurant_id, author, dining_mode, dining_meal_type, dining_price_range, dining_stars_food, dining_stars_service, dining_stars_atmosphere, dining_dish_recommend, dining_kid_friendliness, dining_recommend_for_vegetarians, dining_dish_recommend_veggie, dining_veggie_tips, dining_parking_space_availability, dining_parking_options, dining_parking_tips, dining_accessibility_tips)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
-        """
-
-        # Convert reviews to list of tuples for insertion
-        rows_to_insert_general = reviews[['restaurant_id', 'author', 'review_date', 'scraping_date', 'stars', 'language', 'review_text']].values.tolist()
-        rows_to_insert_additional = reviews_additional[['restaurant_id', 'author', 'dining_mode', 'dining_meal_type', 'dining_price_range', 'dining_stars_food', 'dining_stars_service', 'dining_stars_atmosphere', 'dining_dish_recommend', 'dining_kid_friendliness', 'dining_recommend_for_vegetarians', 'dining_dish_recommend_veggie', 'dining_veggie_tips', 'dining_parking_space_availability', 'dining_parking_options', 'dining_parking_tips', 'dining_accessibility_tips']].values.tolist()
-
-        try:
-            # Execute insert queries
-            cursor.executemany(insert_query_general, rows_to_insert_general)
-            connection.commit()
-            print("General data was successfully submitted into the database", restaurant_id)
-        except Exception as e:
-            print(f"Problem with writing data to database (general): {e}")
-            connection.rollback()
-
-        try:
-            cursor.executemany(insert_query_additional, rows_to_insert_additional)
-            connection.commit()
-            print("Additional data was successfully submitted into the database", restaurant_id)
-        except Exception as e:
-            print(f"Problem with writing data to database (Additional): {e}")
-            connection.rollback()  # Rollback in case of an error during insert
-
-    finally:
-        conn_pool.putconn(connection)
-        # print("Connection was closed")
 
 
 # getting the data from the database with the restaurant_id's
 try:
-    connection = conn_pool.getconn()
-    cursor = connection.cursor()
     cursor.execute("SELECT restaurant_id, google_user_rating_count FROM restaurant_general;")
     rows = cursor.fetchall()
 
     columns = ['restaurant_id', 'google_user_rating_count']
 
     df_restaurant_ids = pd.DataFrame(rows, columns=columns)
-    
+
     print("Dataframe with restaurant id's was constructed")
 except Exception as e:
     print("Fehler beim Abrufen der Daten:", e)
     sys.exit(1)
-finally:
-    conn_pool.putconn(connection)
- 
+
 
 
  # creating the google maps links
 df_restaurant_ids = generate_google_maps_links(df_restaurant_ids, 'restaurant_id')
 
-# changing values to int in order for the function to work
-df_restaurant_ids["google_user_rating_count"].fillna(0, inplace=True)
-df_restaurant_ids["google_user_rating_count"] = df_restaurant_ids["google_user_rating_count"].astype(int)
+
+# Scraping and saving data to the database
+for _, row in df_restaurant_ids.iterrows():
+    url = row['google_maps_link']
+    count_ratings = int(row['google_user_rating_count']) if not pd.isna(row['google_user_rating_count']) else 100000
+    restaurant_id = row['restaurant_id']
+
+    reviews_data_json = get_restaurant_reviews(url=url, max_scrolls=count_ratings, batch_size=5, pause_time=0.3)
+    reviews, reviews_additional = get_data_from_reviews(reviews_data_json, restaurant_id)
+
+    # Insert query for the general reviews
+    insert_query_general = """
+        INSERT INTO reviews_general (restaurant_id, author, review_date, scraping_date, stars, language, review_text)
+        VALUES (%s, %s, %s, %s, %s, %s, %s);
+    """
+
+    # Insert query for the additional reviews
+    insert_query_additional = """
+        INSERT INTO reviews_additional (restaurant_id, author, dining_mode, dining_meal_type, dining_price_range, dining_stars_food, dining_stars_service, dining_stars_atmosphere, dining_dish_recommend, dining_kid_friendliness, dining_recommend_for_vegetarians, dining_dish_recommend_veggie, dining_veggie_tips, dining_parking_space_availability, dining_parking_options, dining_parking_tips, dining_accessibility_tips)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+    """
+
+    # Convert reviews to list of tuples for insertion
+    rows_to_insert_general = reviews[['restaurant_id', 'author', 'review_date', 'scraping_date', 'stars', 'language', 'review_text']].values.tolist()
+    rows_to_insert_additional = reviews_additional[['restaurant_id', 'author', 'dining_mode', 'dining_meal_type', 'dining_price_range', 'dining_stars_food', 'dining_stars_service', 'dining_stars_atmosphere', 'dining_dish_recommend', 'dining_kid_friendliness', 'dining_recommend_for_vegetarians', 'dining_dish_recommend_veggie', 'dining_veggie_tips', 'dining_parking_space_availability', 'dining_parking_options', 'dining_parking_tips', 'dining_accessibility_tips']].values.tolist()
+
+    try:
+        # Execute insert queries
+        cursor.executemany(insert_query_general, rows_to_insert_general)
+        connection.commit()
+        print("General data was successfully submitted into the database")
+    except Exception as e:
+        print(f"Problem with writing data to database (general): {e}")
+        connection.rollback()
+
+    try:
+        cursor.executemany(insert_query_additional, rows_to_insert_additional)
+        connection.commit()
+        print("Additional data was successfully submitted into the database")
+    except Exception as e:
+        print(f"Problem with writing data to database (Additional): {e}")
+        connection.rollback()  # Rollback in case of an error during insert
 
 
-
-
-if __name__ == "__main__":
-    # Define parallel scraping with as many processes as needed
-    with Pool(processes=3) as pool:
-        # Arguments for each task
-        max_scrolls = 100000
-        batch_size = 5
-        pause_time = 0.2
-        tasks = [
-            (row.google_maps_link, row.restaurant_id, max_scrolls, batch_size, pause_time)
-             for row in df_restaurant_ids.to_records(index=False)
-        ]
-
-        # Start the parallel processes using starmap
-        pool.starmap(scrape_single_restaurant, tasks)
+#Closing the connection properly
+if cursor:
+    cursor.close()
+if connection:
+    connection.close()
+    print("Database connection closed.")

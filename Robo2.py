@@ -6,12 +6,31 @@
 import pandas as pd
 import numpy as np
 from openai import OpenAI
+import psycopg2
 import json
 import time
+import sys
 
 client = OpenAI(
   api_key="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" # Tier 2 key
 )
+
+### Creating connection to the database
+db_config = {
+    "dbname": "reviews_db",
+    "user": "scraping_user",
+    "password": "Passwort123",
+    "host": "localhost",
+    "port": 5432
+}
+
+try:
+    connection = psycopg2.connect(**db_config)
+    cursor = connection.cursor()
+
+except Exception as e:
+    print(f"Fehler bei der Verbindung zur Datenbank: {str(e)}")
+    sys.exit(1)
 
 ### Data preparations
 
@@ -584,8 +603,26 @@ def retrieve_batch_results_subratings(batch_job_ids, category):
 
 ### Create a protocol to keep track of the batches
 # Prepare how the data is splitted into batches
-data = pd.read_csv("reviews_general.csv") # read in data as an example
-data = data[["review_id", "restaurant_id"]] # only keep columns: review_id, restaurant_id
+# Getting relevant data from the database
+try:
+    query_general = """
+        SELECT review_id, restaurant_id
+        FROM reviews_general;
+        """
+
+    cursor.execute(query_general)
+    rows = cursor.fetchall()
+
+    columns = [desc[0] for desc in cursor.description]
+
+    data = pd.DataFrame(rows, columns=columns)
+
+except Exception as e:
+    print(f"Failed to retrieve general information from the database {e}")
+    sys.exit(1)     # exiting the file if data can't be retrieved
+
+
+
 batches_protocol = create_review_batches(data, batch_size=45000)
 
 # Initialize new columns in batches_protocol DataFrame for job IDs

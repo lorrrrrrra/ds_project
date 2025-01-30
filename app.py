@@ -341,6 +341,9 @@ def get_category_data_graph(restaurant_id, category):
                   "08/2024", "09/2024", "10/2024", "11/2024", "12/2024"]
         reviews_grouped_month = reviews_grouped_month[reviews_grouped_month['review_month'].isin(months)]
 
+        # deleting rows where count is 0
+        reviews_grouped_month = reviews_grouped_month[reviews_grouped_month['count'] > 0]
+
         # Return the data as JSON
         return jsonify(reviews_grouped_month.to_json(orient="records"))
 

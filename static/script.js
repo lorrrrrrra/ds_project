@@ -712,7 +712,7 @@ function get_graph(data, type, category) {
   const filteredRows = JSON.parse(data);
 
   const svg = d3.select(`#graph-${type}-${category}`);
-  const margin = { top: 10, right: 10, bottom: 70, left: 30 };
+  const margin = { top: 20, right: 10, bottom: 70, left: 30 };
 
   function updateGraphSize() {
     // Berechne die Breite und Höhe des SVG-Containers dynamisch

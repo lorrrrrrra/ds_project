@@ -241,7 +241,33 @@ def get_price_data_graph(restaurant_id):
 
 
 
+@app.route('/api/avg_food/<restaurant_id>', methods=['GET'])
+def get_food_data_graph(restaurant_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(cursor_factory=RealDictCursor)
+    
+    try:
+        cursor.execute("""
+            SELECT s.review_id, s.rating_food, g.review_date, g.scraping_date
+            FROM reviews_subcategories s
+            LEFT JOIN reviews_general g ON g.review_id = s.review_id
+            WHERE s.restaurant_id = %s;
+        """, (restaurant_id,))
+        food_data = cursor.fetchall()
 
+        
+
+        if not food_data:
+            # Falls keine Daten gefunden wurden, gebe eine Fehlermeldung zurück
+            return jsonify({"error": "Restaurant not found"}), 404
+
+        # Gebe die Informationen als JSON zurück
+        return jsonify(food_data)
+
+    finally:
+        # Cursor und Verbindung schließen
+        cursor.close()
+        connection.close()
 
 
 

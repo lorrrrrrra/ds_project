@@ -202,6 +202,7 @@ def get_price_data_graph(restaurant_id):
         price_range_counts = price_range_counts.reindex(all_price_ranges["dining_price_range"]).fillna(0)
         price_range_counts_df = price_range_counts.reset_index()
         price_range_counts_df.columns = ["dining_price_range", "dining_price_range_count"]
+        price_range_counts_df["dining_price_range"] = price_range_counts_df["dining_price_range"].replace("Mehr als 100\xa0€", "More than 100\xa0€")
         
         return price_range_counts_df
     

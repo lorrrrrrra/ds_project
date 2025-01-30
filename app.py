@@ -198,7 +198,7 @@ def get_price_data_graph(restaurant_id):
 
     def count_price_ranges_with_all(df, all_price_ranges):
         # counting the price ranges and returning a df
-        price_range_counts = df["dining_price_range"].value_counts().reindex(all_price_ranges, fillvalue=0)
+        price_range_counts = df["dining_price_range"].value_counts().reindex(all_price_ranges).fillna(0)
         price_range_counts_df = price_range_counts.reset_index()
         price_range_counts_df.columns = ["range", "count"]
         

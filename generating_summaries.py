@@ -3,9 +3,12 @@ import numpy as np
 from openai import OpenAI
 import psycopg2
 import json
+import os
 
+# API key for OpenAI
+openai_api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(
-  api_key="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" # Tier 2 key
+  api_key=openai_api_key
 )
 
 db_config = {

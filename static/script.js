@@ -782,7 +782,6 @@ function get_graph(data, type, category) {
     const maxCount = d3.max(filteredRows, d => parseFloat(d[dataField]));
     const y = d3.scaleLinear()
       .domain([0, maxCount || 1]) // Fallback-Wert
-      .nice()
       .range([height, 0]);
 
     chart.append("g").call(d3.axisLeft(y));

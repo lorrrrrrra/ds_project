@@ -192,7 +192,7 @@ def get_restaurant(restaurant_id):
 
 
 @app.route('/api/avg_price/<restaurant_id>', methods=['GET'])
-def get_restaurant(restaurant_id):
+def get_price_data_graph(restaurant_id):
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)
 

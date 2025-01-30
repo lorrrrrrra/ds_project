@@ -809,7 +809,7 @@ function get_graph_price(data) {
 
   // SVG-Setup: Wählen des SVG-Elements
   const svg = d3.select("#graph-total-price"); // Dein SVG für den Bar Plot
-  const margin = { top: 20, right: 30, bottom: 70, left: 40 };
+  const margin = { top: 20, right: 30, bottom: 100, left: 40 };
 
   // Berechne die Breite und Höhe dynamisch
   function updateGraphSize() {
@@ -839,7 +839,8 @@ function get_graph_price(data) {
       .call(d3.axisBottom(x))
       .selectAll("text")
       .attr("transform", "rotate(-45)")
-      .style("text-anchor", "end");
+      .style("text-anchor", "end")
+      .style("font-size", "12px");
 
     // Y-Achse (Anzahl der Bewertungen)
     const maxCount = d3.max(filteredRows, d => parseFloat(d.dining_price_range_count));

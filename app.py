@@ -299,7 +299,8 @@ def get_food_data_graph(restaurant_id):
         
 
         food_data = [tuple(row.values()) for row in food_data]
-        food_data_df = pd.DataFrame(food_data)
+        column_names = ['review_id', 'rating_food', 'review_date', 'scraping_date']
+        food_data_df = pd.DataFrame(food_data, columns=column_names)
 
         # convert scraping_date to datetime
         food_data_df["scraping_date"] = pd.to_datetime(food_data_df["scraping_date"])

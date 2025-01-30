@@ -365,7 +365,8 @@ function get_summaries(data) {
       .replace(/\n/g, '<p>')  // Ersetze \n mit <p> für Absätze
       .replace(/\n-/g, '<ul><li>')  // Ersetze \n- mit <ul><li> für Listenelemente
       .replace(/<\/li><ul>/g, '</li></ul>')  // Korrigiere geschachtelte Tags
-      .replace(/\n/g, '</li><ul>'); // Korrigiere das Tag vor dem ersten Listenelement
+      .replace(/\n/g, '</li><ul>') // Korrigiere das Tag vor dem ersten Listenelement
+      .replace(/\*/g, '');
 
     const text_count_overall = data.summary_overall ? `generated with AI - based on ${parseFloat(data.user_count_overall) || 0} reviews` : "";
     const text_count_food = data.summary_food ? `generated with AI - based on ${parseFloat(data.user_count_food) || 0} reviews` : "";

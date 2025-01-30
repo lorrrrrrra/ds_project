@@ -20,6 +20,42 @@ def get_db_connection():
     return connection
 
 
+# function to calculate the actual date
+def calculate_actual_date(row):
+    review_text = row["review_date"]
+    scraping_date = row["scraping_date"]
+
+    # check if review date is a string
+    if not isinstance(review_text, str) or pd.isna(review_text):
+        return None
+
+    # months
+    if "Monat" in review_text:
+        months = int(review_text.split()[1]) if "einem" not in review_text else 1
+        return scraping_date - relativedelta(months=months)
+
+    # years
+    elif "Jahr" in review_text:
+        years = int(review_text.split()[1]) if "einem" not in review_text else 1
+        return scraping_date - relativedelta(years=years)
+
+    # weeks
+    elif "Woche" in review_text:
+        weeks = int(review_text.split()[1]) if "einer" not in review_text else 1
+        return scraping_date - pd.to_timedelta(weeks * 7, unit="days")
+
+    # days
+    elif "Tag" in review_text:
+        days = int(review_text.split()[1]) if "einem" not in review_text else 1
+        return scraping_date - pd.to_timedelta(days, unit="days")
+
+    # default if nothing is found
+    return None
+
+
+
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -247,38 +283,6 @@ def get_price_data_graph(restaurant_id):
 
 @app.route('/api/avg_food/<restaurant_id>', methods=['GET'])
 def get_food_data_graph(restaurant_id):
-    # function to calculate the actual date
-    def calculate_actual_date(row):
-        review_text = row["review_date"]
-        scraping_date = row["scraping_date"]
-
-        # check if review date is a string
-        if not isinstance(review_text, str) or pd.isna(review_text):
-            return None
-
-        # months
-        if "Monat" in review_text:
-            months = int(review_text.split()[1]) if "einem" not in review_text else 1
-            return scraping_date - relativedelta(months=months)
-
-        # years
-        elif "Jahr" in review_text:
-            years = int(review_text.split()[1]) if "einem" not in review_text else 1
-            return scraping_date - relativedelta(years=years)
-
-        # weeks
-        elif "Woche" in review_text:
-            weeks = int(review_text.split()[1]) if "einer" not in review_text else 1
-            return scraping_date - pd.to_timedelta(weeks * 7, unit="days")
-
-        # days
-        elif "Tag" in review_text:
-            days = int(review_text.split()[1]) if "einem" not in review_text else 1
-            return scraping_date - pd.to_timedelta(days, unit="days")
-
-        # default if nothing is found
-        return None
-
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)
     
@@ -298,17 +302,30 @@ def get_food_data_graph(restaurant_id):
             return jsonify({"error": "Restaurant not found"}), 404
         
 
+        ### Processing of the food data
+        # Creating a dataframe
         food_data = [tuple(row.values()) for row in food_data]
         column_names = ['review_id', 'rating_food', 'review_date', 'scraping_date']
         food_data_df = pd.DataFrame(food_data, columns=column_names)
 
-        # convert scraping_date to datetime
+        # Convert scraping_date to datetime
         food_data_df["scraping_date"] = pd.to_datetime(food_data_df["scraping_date"])
 
-        # apply the function to the dataframe
+        # Apply the function to the dataframe
         food_data_df["actual_review_date"] = food_data_df.apply(calculate_actual_date, axis=1)
 
-        print(food_data_df.head())
+        food_data_df["review_month"] = food_data_df["actual_review_date"].dt.strftime("%m/%Y")
+
+        reviews_grouped_month = (
+            food_data_df.groupby(["review_month"])
+            .agg(
+                dining_stars_food_mean=("rating_food", "mean"),
+                dining_stars_food_count=("rating_food", "count"),
+                )
+                .reset_index()
+        )
+
+        print(reviews_grouped_month.head())
 
         # Gebe die Informationen als JSON zurück
         return jsonify(food_data)

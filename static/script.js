@@ -845,7 +845,7 @@ function get_graph_price(data) {
       .attr("transform", "rotate(-45)")
       .style("text-anchor", "end")
       .style("font-size", "12px")
-      .style("fill", "white");;
+      .style("fill", "white");
 
     // Y-Achse (Anzahl der Bewertungen)
     const maxCount = d3.max(filteredRows, d => parseFloat(d.dining_price_range_count));

@@ -5,7 +5,7 @@ MapYourRestaurants is a data science project that retrieves and processes restau
 
 ## Approach
 1. Restaurant Data Collection: Using Google APIs the Geocoding API and the Google Places (new) API gathered information about routhly 8,000 restaurants in South Germany (München, Stuttgart, Nürnberg, Mannheim, Karlsruhe, Augsburg, Freiburg, Heidelberg, Regensburg, Tübingen)
-2. Review Data Collection: Web scraping of restaurant reviews from Google Maps.
+2. Review Data Collection: Web scraping of restaurant reviews from Google Maps
 3. Natural Language Processing: (using GPT-4o mini)
   -  Structured topic extraction (for food, service, price, atmosphere)
   -  Sentiment analysis (subratings for the categories from 1 (very bad) to 5 (very good))

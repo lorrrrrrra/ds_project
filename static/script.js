@@ -867,6 +867,14 @@ function get_graph_price(data) {
       .attr("height", d => containerHeight - y(d.dining_price_range_count))
       .attr("fill", "#F49069");
 
+      chart.append("line")
+      .attr("x1", 0)
+      .attr("y1", containerHeight - 50)
+      .attr("x2", containerWidth)
+      .attr("y2", containerHeight - 50)
+      .attr("stroke", "red")
+      .attr("stroke-width", 2);
+
     // Füge Überschrift hinzu
     const heading = "Price Range Distribution"; // Beispiel Überschrift
     svg.append("text")

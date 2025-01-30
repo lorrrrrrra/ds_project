@@ -63,7 +63,7 @@ if connection:
 unique_values = unique_price_ranges["dining_price_range"].dropna().unique()  # NaN entfernen
 price_mapping = {val: idx for idx, val in enumerate(unique_values)}
 
-reverse_price_mapping = {v: k for k, v in price_mapping.items()}
+reverse_price_mapping = {v: k.replace(" ", "").replace("€", "").replace("-", "") for k, v in price_mapping.items()}
 
 def map_avg_price_to_category(avg_price):
     closest_price = min(price_mapping.values(), key=lambda x: abs(x - avg_price))

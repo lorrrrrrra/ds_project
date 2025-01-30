@@ -203,7 +203,7 @@ def get_price_data_graph(restaurant_id):
             FROM reviews_additional
             WHERE restaurant_id = %s;
         """, (restaurant_id,))
-        price_range_data = cursor.fetchone()
+        price_range_data = cursor.fetchall()
 
         if not price_range_data:
             # Falls keine Daten gefunden wurden, gebe eine Fehlermeldung zurück

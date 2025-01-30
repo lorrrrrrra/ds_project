@@ -725,7 +725,7 @@ function get_graph(data, type, category) {
   function updateGraphSize() {
     // Berechne die Breite und Höhe des SVG-Containers dynamisch
     const containerWidth = svg.node().getBoundingClientRect().width || 400; // Fallback-Breite
-    const containerHeight = svg.node().getBoundingClientRect().height || 500; // Fallback-Höhe
+    const containerHeight = svg.node().getBoundingClientRect().height || 300; // Fallback-Höhe
 
     const width = containerWidth - margin.left - margin.right;
     const height = containerHeight - margin.top - margin.bottom;

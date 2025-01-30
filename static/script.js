@@ -287,24 +287,32 @@ function open_sidebar() {
       const star_rating_food = parseFloat(data.rating_food);
       const star_rating_service = parseFloat(data.rating_service);
       const star_rating_atmosphere = parseFloat(data.rating_atmosphere);
+      const user_count_overall_google = parseFloat(data.user_count_overall_google);
+      const user_count_food = parseFloat(data.user_count_food);
+      const user_count_service = parseFloat(data.user_count_service);
+      const user_count_atmosphere = parseFloat(data.user_count_atmosphere);
+
   
       // Durchschnittliche Bewertungen aktualisieren
-    const updateAverageRating = (rating, group) => {
+    const updateAverageRating = (rating, group, user_count) => {
       const avgRatingElement = document.getElementById(`avg-rating${group}`);
+      const avgCountElement = document.getElementById(`count-rating${group}`);
       if (!isNaN(rating)) {
         avgRatingElement.textContent = ` (${rating.toFixed(1)})`;
+        avgCountElement.textContent = ` (based on ${user_count} reviews)`;
       } else {
         avgRatingElement.textContent = `(No rating available)`;
+        avgCountElement.textContent = ` `;
       }
     };
 
-    updateAverageRating(star_rating, ''); // Allgemeine Bewertung
+    updateAverageRating(star_rating, '', user_count_overall_google); // Allgemeine Bewertung
     // updateAverageRating(star_rating_food, '-food-detail'); // Food-Bewertung
     // updateAverageRating(star_rating_service, '-service-detail'); // Service-Bewertung
     // updateAverageRating(star_rating_atmosphere, '-atmosphere-detail'); // Atmosphere-Bewertung
-    updateAverageRating(star_rating_food, '-food'); // Food-Bewertung
-    updateAverageRating(star_rating_service, '-service'); // Service-Bewertung
-    updateAverageRating(star_rating_atmosphere, '-atmosphere'); // Atmosphere-Bewertung
+    updateAverageRating(star_rating_food, '-food', user_count_food); // Food-Bewertung
+    updateAverageRating(star_rating_service, '-service', user_count_service); // Service-Bewertung
+    updateAverageRating(star_rating_atmosphere, '-atmosphere', user_count_atmosphere); // Atmosphere-Bewertung
   
       // Helper-Funktion zum Aktualisieren der Sterne
       const updateStars = (rating, group) => {

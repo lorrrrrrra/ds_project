@@ -51,7 +51,8 @@ def get_restaurants(bounds):
             rg.google_rating,
             rg.rating_food,
             rg.rating_service,
-            rg.rating_atmosphere
+            rg.rating_atmosphere,
+            rg.rating_price
         FROM restaurant_basics rb
         JOIN restaurant_general rg ON rb.restaurant_id = rg.restaurant_id
         WHERE rb.lat_value BETWEEN %s AND %s
@@ -105,11 +106,12 @@ def get_restaurants(bounds):
             restaurant_types = [restaurant_types]
 
         conditions = [
-            (row["google_rating"] >= filter_data.get("general", 0)) if not np.isnan(row["google_rating"]) else True,
+            (row["google_rating"] >= filter_data.get("general", 0)) if not np.isnan(row["google_rating"]) else True,                # general rating 
             (row["rating_food"] >= filter_data.get("food", 0)) if not np.isnan(row["rating_food"]) else True,
             (row["rating_service"] >= filter_data.get("service", 0)) if not np.isnan(row["rating_service"]) else True,
             (row["rating_atmosphere"] >= filter_data.get("atmosphere", 0)) if not np.isnan(row["rating_atmosphere"]) else True,
-            set(filter_types).issubset(set(restaurant_types))
+            set(filter_types).issubset(set(restaurant_types)),          # checking if all the types we filter on are in the types list from the restaurant
+            (row["rating_price"] in filter_data["price"]) if filter_data.get("price") else True     # checking whether the price range is in one of the price ranges in the filter
         ]
         return True if all(conditions) else False
 

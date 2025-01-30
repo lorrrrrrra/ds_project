@@ -6,12 +6,32 @@
 import pandas as pd
 import numpy as np
 from openai import OpenAI
+import psycopg2
 import json
 import time
+import sys
+import os
 
 client = OpenAI(
   api_key="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" # Tier 2 key
 )
+
+### Creating connection to the database
+db_config = {
+    "dbname": "reviews_db",
+    "user": "scraping_user",
+    "password": "Passwort123",
+    "host": "localhost",
+    "port": 5432
+}
+
+try:
+    connection = psycopg2.connect(**db_config)
+    cursor = connection.cursor()
+
+except Exception as e:
+    print(f"Failed to connect to database: {str(e)}")
+    sys.exit(1)
 
 ### Data preparations
 
@@ -166,6 +186,108 @@ def wait_for_batches_to_complete(batch_job_ids):
         
         print(f"Waiting 60 seconds before checking again...")
         time.sleep(60)  # Wait before checking again
+
+
+
+def insert_data_into_table(connection, cursor, table_name, dataframe, columns):
+    try:
+        insert_query = f"""
+            INSERT INTO {table_name} ({', '.join(columns)})
+            VALUES ({', '.join(['%s'] * len(columns))});
+        """
+        
+        rows_to_insert = dataframe[columns].values.tolist()
+        
+        cursor.executemany(insert_query, rows_to_insert)
+        connection.commit() 
+    
+    except Exception as e:
+        print(f"Error loading the data into '{table_name}': {str(e)}")
+        connection.rollback() 
+
+
+def update_database_overall_summary(summaries, idx):
+    try:
+        table_name = "restaurant_general"
+        update_query = f"""
+            UPDATE {table_name} 
+            SET summary_overall = %s,
+                user_count_overall = %s
+            WHERE restaurant_id = %s;
+        """
+        
+        rows_to_update = [
+            (row['overall_summary'], row['user_count_overall'], row['restaurant_id'])
+            for row in summaries
+        ]
+
+        cursor.executemany(update_query, rows_to_update)
+        connection.commit()
+        print(f"Successfully updated {len(rows_to_update)} rows.")
+    except Exception as e:
+        print(f"Error updating table '{table_name}': {str(e)}")
+        connection.rollback()
+
+        # Backup to save the csv files directly on the server
+        backup_dir = "/mnt/volume/backup_summaries"
+        os.makedirs(backup_dir, exist_ok=True)  # Create dir if it doesn't exist
+
+        try:
+            summaries_df = pd.DataFrame(summaries)
+            backup_path = os.path.join(backup_dir, f"overall_summaries_{idx}.csv")
+            summaries_df.to_csv(backup_path, index=False, encoding="utf-8")
+            print(f"Backup saved at {backup_path}")
+
+        except Exception as e:
+            print(f"Failed to backup summaries on the server: {e}, {idx}")
+        
+
+
+
+def update_database_topic_summary(summaries, idx):
+    try:
+        table_name = "restaurant_general"
+        update_query = f"""
+            UPDATE {table_name} 
+            SET summary_food = %s, 
+                summary_service = %s, 
+                summary_atmosphere = %s, 
+                summary_price = %s,
+                user_count_food = %s, 
+                user_count_service = %s, 
+                user_count_atmosphere = %s, 
+                user_count_price = %s
+            WHERE restaurant_id = %s;
+        """
+        
+        rows_to_update = [
+            (row['summary_food'], row['summary_service'], row['summary_atmosphere'], row['summary_price'], 
+            row['user_count_food'], row['user_count_service'], row['user_count_atmosphere'], row['user_count_price'],
+            row['restaurant_id'])
+            for row in summaries
+        ]
+
+
+        cursor.executemany(update_query, rows_to_update)
+        connection.commit()
+        print(f"Successfully updated {len(rows_to_update)} rows.")
+
+    except Exception as e:
+        print(f"Error updating table '{table_name}': {str(e)}")
+        connection.rollback()
+
+        # Backup to save the csv files directly on the server
+        backup_dir = "/mnt/volume/backup_summaries"
+        os.makedirs(backup_dir, exist_ok=True) 
+
+        try:
+            summaries_df = pd.DataFrame(summaries)
+            backup_path = os.path.join(backup_dir, f"topic_summaries_{idx}.csv")
+            summaries_df.to_csv(backup_path, index=False, encoding="utf-8")
+            print(f"Backup saved at {backup_path}")
+
+        except Exception as e:
+            print(f"Failed to backup summaries on the server: {e}, {idx}")
 
 
 ############################################################################################################
@@ -584,8 +706,26 @@ def retrieve_batch_results_subratings(batch_job_ids, category):
 
 ### Create a protocol to keep track of the batches
 # Prepare how the data is splitted into batches
-data = pd.read_csv("reviews_general.csv") # read in data as an example
-data = data[["review_id", "restaurant_id"]] # only keep columns: review_id, restaurant_id
+# Getting relevant data from the database
+try:
+    query_general = """
+        SELECT review_id, restaurant_id
+        FROM reviews_general
+        WHERE review_id >= 1348159;
+        """
+
+    cursor.execute(query_general)
+    rows = cursor.fetchall()
+
+    columns = [desc[0] for desc in cursor.description]
+
+    data = pd.DataFrame(rows, columns=columns)
+
+except Exception as e:
+    print(f"Failed to retrieve general information from the database {e}")
+    sys.exit(1)     # exiting the file if data can't be retrieved
+
+
 batches_protocol = create_review_batches(data, batch_size=45000)
 
 # Initialize new columns in batches_protocol DataFrame for job IDs
@@ -595,23 +735,58 @@ batches_protocol['topic_job_ids'] = None
 # Iterate over batches_protocol
 for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
     # Extract the batch data using the batch protocol
-    data_1 = data[
-        (data["review_id"] >= batches_protocol.loc[idx, "start_review_id"]) & 
-        (data["review_id"] <= batches_protocol.loc[idx, "end_review_id"])
-    ]
-    
-    # If there's a second batch, extract it too
+    min_review_id_1 = batches_protocol.loc[idx, "start_review_id"]
+    max_review_id_1 = batches_protocol.loc[idx, "end_review_id"]
+
+    try:
+        query_general = f"""
+            SELECT review_id, restaurant_id, review_text
+            FROM reviews_general
+            WHERE review_id between {min_review_id_1} AND {max_review_id_1};
+            """
+
+        cursor.execute(query_general)
+        rows = cursor.fetchall()
+
+        columns = [desc[0] for desc in cursor.description]
+
+        data_1 = pd.DataFrame(rows, columns=columns)
+
+    except Exception as e:
+        print(f"Failed to retrieve data for batch 1 from the database, index {idx} {e}")
+        sys.exit(1)     # exiting the file if data can't be retrieved
+
+
+
+    # Data for batch 2
     if idx + 1 < len(batches_protocol):
-        data_2 = data[
-            (data["review_id"] >= batches_protocol.loc[idx + 1, "start_review_id"]) & 
-            (data["review_id"] <= batches_protocol.loc[idx + 1, "end_review_id"])
-        ]
+        min_review_id_2 = batches_protocol.loc[idx + 1, "start_review_id"]
+        max_review_id_2 = batches_protocol.loc[idx + 1, "end_review_id"]
+
+        try:
+            query_general = f"""
+                SELECT review_id, restaurant_id, review_text
+                FROM reviews_general
+                WHERE review_id between {min_review_id_2} AND {max_review_id_2};
+                """
+
+            cursor.execute(query_general)
+            rows = cursor.fetchall()
+
+            columns = [desc[0] for desc in cursor.description]
+
+            data_2 = pd.DataFrame(rows, columns=columns)
+
+        except Exception as e:
+            print(f"Failed to retrieve data for batch 2 from the database, index {idx} {e}")
+            sys.exit(1)     # exiting the file if data can't be retrieved
     else:
         data_2 = pd.DataFrame()  # In case there is no second batch, use an empty DataFrame
     
     # Apply preprocessing for both batches
     data_1 = preprocess_reviews(data_1)
-    data_2 = preprocess_reviews(data_2)
+    if not data_2.empty:
+        data_2 = preprocess_reviews(data_2)
     
 
     #### 1. Topic extraction
@@ -645,9 +820,10 @@ for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
             "user_count_overall": user_count_overall
         })
     
-    overall_summaries = pd.DataFrame(overall_summaries)
+    # overall_summaries = pd.DataFrame(overall_summaries)  -> we don't need a dataframe
 
-    # ! speichern einbauen !
+    # Saving the overall summaries into restaurant general table
+    update_database_overall_summary(overall_summaries, idx)
     
 
     #### 3. Transition wait until topic extraction is done
@@ -684,7 +860,17 @@ for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
     # Collect all sentiment batch job IDs into one list
     batch_job_ids_sentiment = food_job_ids + service_job_ids + atmosphere_job_ids
 
-    # ! speichern für categorized sentences einbauen !
+
+    # Saving the collected sentences
+    try:
+        table = "reviews_subcategories"
+        columns = ["review_id", "food_sentences", "service_sentences", "atmosphere_sentences", "price_sentences"]
+        insert_data_into_table(connection, cursor, table, category_df, columns)
+
+    except Exception as e:
+        print(f"Failed to save to extracted topic sentences into the database{e}")
+
+
 
     #### 6. Category Summaries
     reviews_df = pd.merge(category_df, combined_data, on='review_id', how='left')
@@ -709,9 +895,13 @@ for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
             "user_count_price": user_count_price,
         })
 
-    summaries_categories = pd.DataFrame(summaries_categories)
+    # summaries_categories = pd.DataFrame(summaries_categories)   -> we don't need a dataframe
 
-    # ! speichern einbauen !
+    # Saving the topic summaries into restaurant general table
+    update_database_topic_summary(summaries_categories, idx)
+    
+
+
 
     #### 7. Transition wait until sentiment analysis is done
     wait_for_batches_to_complete(batch_job_ids_sentiment, batches_protocol, idx, failed_task="failed_sentiment_job_ids")
@@ -729,6 +919,13 @@ for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
     df_ratings = df_food.merge(df_service, on="review_id", how="outer").merge(df_atmosphere, on="review_id", how="outer")
 
 
-    # ! speichern einbauen !
+    # Saving the collected subratings
+    try:
+        table = "reviews_subcategories"
+        columns = ["review_id", "rating_food", "rating_service", "rating_atmosphere"]
+        insert_data_into_table(connection, cursor, table, df_ratings, columns)
+
+    except Exception as e:
+        print(f"Failed to save to extracted topic sentences into the database{e}")
 
 

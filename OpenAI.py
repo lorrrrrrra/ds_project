@@ -12,20 +12,11 @@ import os
 import json
 import csv
 
-# # Juliana
-# client = OpenAI(
-#   api_key="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"
-# )
-
-#Laura
+# API key for OpenAI
+openai_api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(
-  api_key= "sk-aCxLYPM7ksEW5hRC0p80hQUs0LGuw5SQGSFgL1URxcT3BlbkFJG7J7YTe0SluXJZtU1ZMEr_y2VmtsZHIbn1nBsapmsA"
+  api_key=openai_api_key
 )
-
-# # Theresa
-# client = OpenAI(
-#   api_key="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"
-# )
 
 # configuration details for the postgresql database on the ubuntu server
 db_config = {

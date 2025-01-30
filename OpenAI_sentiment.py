@@ -13,9 +13,10 @@ import json
 import csv
 import time
 
-# Theresa 3
+# API key for OpenAI
+openai_api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(
-  api_key="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"
+  api_key=openai_api_key
 )
 
 # configuration details for the postgresql database on the ubuntu server

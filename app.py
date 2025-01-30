@@ -211,7 +211,9 @@ def get_price_data_graph(restaurant_id):
             FROM reviews_additional;
         """)
         all_price_ranges = cursor.fetchall()
+        print(f"{all_price_ranges}")
         all_price_ranges = pd.DataFrame(all_price_ranges)
+        
 
     except Exception as e:
         print(f"Couldn't retrieve all price ranges from the database {e}")
@@ -225,6 +227,8 @@ def get_price_data_graph(restaurant_id):
             WHERE restaurant_id = %s;
         """, (restaurant_id,))
         price_range_data = cursor.fetchall()
+
+        print(f"price_range_data")
 
         if not price_range_data:
             # Falls keine Daten gefunden wurden, gebe eine Fehlermeldung zurück

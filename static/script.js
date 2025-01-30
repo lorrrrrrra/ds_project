@@ -485,26 +485,6 @@ function handleMarkerClick(markerId) {
   .catch(error => {
       console.error('Fehler beim Abrufen der Restaurant-Daten:', error);
     });
-
-  //   // Restaurant mit passender ID suchen
-  // const restaurant = restaurants.find((r) => r.restaurant_id === markerId);
-  
-  // if (restaurant) {
-  //   get_star_rating(markerId);
-  //   get_summaries(markerId);
-  
-  //   if (sidebarName && sidebarAddress) {
-  //     // sidebarName.textContent = name;
-  //     // sidebarAddress.textContent = address;
-
-  //     const infoTab = document.querySelector('#nav-info-tab');
-  //     const bootstrapTab = new bootstrap.Tab(infoTab);
-  //     bootstrapTab.show();
-
-  //   }
-  // } else {
-  //   console.error(`Kein Restaurant mit der ID ${markerId} gefunden.`);
-  // }
 }
 
 
@@ -960,9 +940,9 @@ document.querySelector('#nav-price-tab').addEventListener('shown.bs.tab', () => 
           } else {
             get_graph_price(data);
 
-            const infoTab = document.querySelector('#nav-info-tab');
-            const bootstrapTab = new bootstrap.Tab(infoTab);
-            bootstrapTab.show();
+            // const infoTab = document.querySelector('#nav-info-tab');
+            // const bootstrapTab = new bootstrap.Tab(infoTab);
+            // bootstrapTab.show();
           }
       })
   .catch(error => {

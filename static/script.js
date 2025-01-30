@@ -939,7 +939,15 @@ document.querySelector('#nav-price-tab').addEventListener('shown.bs.tab', () => 
           if (data.error) {
             console.error('Fehler:', data.error);
           } else {
-            get_graph_price(data);
+            // checking if there is at least one review with a price range
+            const parsedData = JSON.parse(data);
+            const hasNonZeroCount = parsedData.some(item => item.dining_price_range_count > 0);
+
+            if (hasNonZeroCount) {
+              get_graph_price(data);
+            } else {
+              console.log("No review included a price range.");
+            }
 
             // const infoTab = document.querySelector('#nav-info-tab');
             // const bootstrapTab = new bootstrap.Tab(infoTab);

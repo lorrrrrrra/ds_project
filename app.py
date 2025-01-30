@@ -328,13 +328,11 @@ def get_food_data_graph(restaurant_id):
         # only keeping values in 2024
         months = ["02/2024", "03/2024", "04/2024", "05/2024", "06/2024", "07/2024", 
                             "08/2024", "09/2024", "10/2024", "11/2024", "12/2024"]
-
         reviews_grouped_month = reviews_grouped_month[reviews_grouped_month['review_month'].isin(months)]
 
-        print(reviews_grouped_month)
 
         # Gebe die Informationen als JSON zurück
-        return jsonify(food_data)
+        return jsonify(reviews_grouped_month.to_json(orient="records"))
 
     finally:
         # Cursor und Verbindung schließen

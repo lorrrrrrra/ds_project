@@ -178,8 +178,8 @@ html, body {
     cursor: pointer;
     z-index: 9999;
     border-radius: 50px;
-    border-color: #7F7F7F !important;
-    background-color: #7F7F7F !important;
+    border-color: #153329 !important;
+    background-color: #153329 !important;
 }
 
 .btn-help:hover,
@@ -190,8 +190,6 @@ html, body {
     cursor: pointer;
     z-index: 9999;
     border-radius: 50px;
-    border-color: #7F7F7F !important;
-    background-color: #7F7F7F !important;
 }
 
 

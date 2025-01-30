@@ -260,6 +260,8 @@ def get_food_data_graph(restaurant_id):
         if not food_data:
             # Falls keine Daten gefunden wurden, gebe eine Fehlermeldung zurück
             return jsonify({"error": "Restaurant not found"}), 404
+        
+        print(food_data)
 
         # Gebe die Informationen als JSON zurück
         return jsonify(food_data)

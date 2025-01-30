@@ -801,6 +801,7 @@ function get_graph(data, type, category) {
 
 function get_graph_price(data) {
   const filteredRows = JSON.parse(data);
+  filteredRows.sort((a, b) => d3.ascending(a.review_month, b.review_month));
 
   // SVG-Setup: Wählen des SVG-Elements
   const svg = d3.select("#graph-total-price"); // Dein SVG für den Bar Plot

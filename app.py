@@ -98,12 +98,16 @@ def get_restaurants(bounds):
             restaurant_types = restaurant_types_str.strip("[]").replace("'", "").split(", ")
         else:
             restaurant_types = restaurant_types_str
+
         
         # Wenn eine der beiden als String vorliegt, umwandeln in eine Liste
         if isinstance(filter_types, str):
             filter_types = [filter_types]
         if isinstance(restaurant_types, str):
             restaurant_types = [restaurant_types]
+
+        print(row["rating_price"])
+        print(filter_data.get("price", []))
 
         conditions = [
             (row["google_rating"] >= filter_data.get("general", 0)) if not np.isnan(row["google_rating"]) else True,                # general rating 

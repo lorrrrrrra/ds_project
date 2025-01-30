@@ -114,9 +114,7 @@ def get_restaurants(bounds):
         condition = cleaned_price in filter_data["price"]
 
 
-        print(f"row: {cleaned_price}, {row["rating_price"]}, {type(row["rating_price"])}")
-        print(f"filter: {filter_data["price"]}")
-        print(f"condition: {condition}")
+        print(f"row: {cleaned_price}, filter: {filter_data["price"]}, condition: {condition}")
 
         conditions = [
             (row["google_rating"] >= filter_data.get("general", 0)) if not np.isnan(row["google_rating"]) else True,                # general rating 

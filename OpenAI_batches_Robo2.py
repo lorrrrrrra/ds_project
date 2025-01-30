@@ -135,7 +135,7 @@ def wait_for_batches_to_complete(batch_job_ids, batches_protocol, idx, failed_ta
 
             if status == "completed":
                 completed_batches += 1
-            elif status in ["failed", "cancelled"]:
+            elif status in ["failed", "cancelled", "expired"]:
                 failed_batches += 1
                 failed_batch_ids.append(batch_job_id)  # Store failed job ID
 
@@ -163,29 +163,6 @@ def wait_for_batches_to_complete(batch_job_ids, batches_protocol, idx, failed_ta
         # Wait before checking again
         print(f"Waiting 60 seconds before checking again...")
         time.sleep(60)
-
-
-
-
-
-# Function to check batch job status, to wait for completion
-def wait_for_batches_to_complete(batch_job_ids):
-    while True:
-        all_done = True
-        for batch_job_id in batch_job_ids:
-            batch_job = client.batches.retrieve(batch_job_id)
-            status = batch_job.status
-            print(f"Batch Job {batch_job_id} Status: {status}")
-
-            if status not in ['completed', 'failed', 'canceled']:
-                all_done = False  # Keep waiting if any batch is still running
-
-        if all_done:
-            print("All batch jobs are completed.")
-            break  # Exit loop when all batches are done
-        
-        print(f"Waiting 60 seconds before checking again...")
-        time.sleep(60)  # Wait before checking again
 
 
 
@@ -726,10 +703,12 @@ except Exception as e:
     sys.exit(1)     # exiting the file if data can't be retrieved
 
 
+# Create batches
 batches_protocol = create_review_batches(data, batch_size=45000)
 
-# Initialize new columns in batches_protocol DataFrame for job IDs
-batches_protocol['topic_job_ids'] = None
+batches_protocol['failed_topic_job_ids'] = None  # Initialize column for failed topic extraction jobs
+batches_protocol['failed_sentiment_job_ids'] = None  # Initialize column for failed sentiment analysis jobs
+
 
 
 # Iterate over batches_protocol
@@ -795,11 +774,6 @@ for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
     # Save, Upload, and Start batch jobs
     topic_job_ids = batch_processing(batches=[tasks_topic_1, tasks_topic_2], prefix=f"topic_extraction")
     
-    # Store topic job IDs in the batches_protocol DataFrame
-    batches_protocol.loc[idx, 'topic_job_ids'] = topic_job_ids[0]  # First batch
-    if idx + 1 < len(batches_protocol):
-        batches_protocol.loc[idx + 1, 'topic_job_ids'] = topic_job_ids[1]  # Second batch
-
 
     #### 2. Overall summaries
     # Combine both batches into one dataset
@@ -828,7 +802,7 @@ for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
 
     #### 3. Transition wait until topic extraction is done
     wait_for_batches_to_complete(topic_job_ids, batches_protocol, idx, failed_task="failed_topic_job_ids")
-
+    batches_protocol.to_csv("/home/ubuntu/robo2/batches_protocol.csv") # save
 
     #### 4. Retrieve categorized sentences
     try:
@@ -905,6 +879,7 @@ for idx in range(0, len(batches_protocol), 2):  # Process two batches at a time
 
     #### 7. Transition wait until sentiment analysis is done
     wait_for_batches_to_complete(batch_job_ids_sentiment, batches_protocol, idx, failed_task="failed_sentiment_job_ids")
+    batches_protocol.to_csv("/home/ubuntu/robo2/batches_protocol.csv") # save
 
     #### 8. Retrieve sentiment results (subratings)
     try:

@@ -281,61 +281,66 @@ def get_price_data_graph(restaurant_id):
 
 
 
-@app.route('/api/avg_food/<restaurant_id>', methods=['GET'])
-def get_food_data_graph(restaurant_id):
+@app.route('/api/avg_<category>/<restaurant_id>', methods=['GET'])
+def get_category_data_graph(restaurant_id, category):
     connection = get_db_connection()
     cursor = connection.cursor(cursor_factory=RealDictCursor)
+
+    # Mapping der Kategorien zu den richtigen Spaltennamen
+    category_column_mapping = {
+        'food': 'rating_food',
+        'service': 'rating_service',
+        'atmosphere': 'rating_atmosphere'
+    }
+
+    if category not in category_column_mapping:
+        return jsonify({"error": "Invalid category"}), 400
+
+    category_column = category_column_mapping[category]
     
     try:
-        cursor.execute("""
-            SELECT s.review_id, s.rating_food, g.review_date, g.scraping_date
+        cursor.execute(f"""
+            SELECT s.review_id, s.{category_column}, g.review_date, g.scraping_date
             FROM reviews_subcategories s
             LEFT JOIN reviews_general g ON g.review_id = s.review_id
             WHERE s.restaurant_id = %s;
         """, (restaurant_id,))
-        food_data = cursor.fetchall()
+        category_data = cursor.fetchall()
 
-        
+        if not category_data:
+            return jsonify({"error": f"{category.capitalize()} data not found"}), 404
 
-        if not food_data:
-            # Falls keine Daten gefunden wurden, gebe eine Fehlermeldung zurück
-            return jsonify({"error": "Restaurant not found"}), 404
-        
-
-        ### Processing of the food data
-        # Creating a dataframe
-        food_data = [tuple(row.values()) for row in food_data]
-        column_names = ['review_id', 'rating_food', 'review_date', 'scraping_date']
-        food_data_df = pd.DataFrame(food_data, columns=column_names)
+        # Processing the category data
+        category_data = [tuple(row.values()) for row in category_data]
+        column_names = ['review_id', category_column, 'review_date', 'scraping_date']
+        category_data_df = pd.DataFrame(category_data, columns=column_names)
 
         # Convert scraping_date to datetime
-        food_data_df["scraping_date"] = pd.to_datetime(food_data_df["scraping_date"])
+        category_data_df["scraping_date"] = pd.to_datetime(category_data_df["scraping_date"])
 
-        # Apply the function to the dataframe
-        food_data_df["actual_review_date"] = food_data_df.apply(calculate_actual_date, axis=1)
+        # Apply the function to calculate the actual review date
+        category_data_df["actual_review_date"] = category_data_df.apply(calculate_actual_date, axis=1)
 
-        food_data_df["review_month"] = food_data_df["actual_review_date"].dt.strftime("%m/%Y")
+        category_data_df["review_month"] = category_data_df["actual_review_date"].dt.strftime("%m/%Y")
 
         reviews_grouped_month = (
-            food_data_df.groupby(["review_month"])
+            category_data_df.groupby(["review_month"])
             .agg(
-                dining_stars_food_mean=("rating_food", "mean"),
-                dining_stars_food_count=("rating_food", "count"),
-                )
-                .reset_index()
+                dining_stars_mean=(category_column, "mean"),
+                dining_stars_count=(category_column, "count"),
+            )
+            .reset_index()
         )
 
-        # only keeping values in 2024
-        months = ["02/2024", "03/2024", "04/2024", "05/2024", "06/2024", "07/2024", 
-                            "08/2024", "09/2024", "10/2024", "11/2024", "12/2024"]
+        # Filter data for 2024
+        months = ["02/2024", "03/2024", "04/2024", "05/2024", "06/2024", "07/2024",
+                  "08/2024", "09/2024", "10/2024", "11/2024", "12/2024"]
         reviews_grouped_month = reviews_grouped_month[reviews_grouped_month['review_month'].isin(months)]
 
-
-        # Gebe die Informationen als JSON zurück
+        # Return the data as JSON
         return jsonify(reviews_grouped_month.to_json(orient="records"))
 
     finally:
-        # Cursor und Verbindung schließen
         cursor.close()
         connection.close()
 

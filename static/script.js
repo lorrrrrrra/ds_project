@@ -299,7 +299,7 @@ function open_sidebar() {
       const avgCountElement = document.getElementById(`count-rating${group}`);
       if (!isNaN(rating)) {
         avgRatingElement.textContent = ` (${rating.toFixed(1)})`;
-        avgCountElement.textContent = ` (based on ${user_count} reviews)`;
+        avgCountElement.textContent = ` based on ${user_count} reviews`;
       } else {
         avgRatingElement.textContent = `(No rating available)`;
         avgCountElement.textContent = ` `;

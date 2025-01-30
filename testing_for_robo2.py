@@ -5,6 +5,7 @@ import psycopg2
 import json
 import time
 import sys
+import os
 
 client = OpenAI(
   api_key="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" # Tier 2 key
@@ -155,3 +156,17 @@ if not data_2.empty:
 
 data_1 = pd.DataFrame(data_1)
 data_1.to_csv("/mnt/volume/backup_summaries/test.csv")
+
+
+backup_dir = "/mnt/volume/backup_summaries"
+os.makedirs(backup_dir, exist_ok=True)  # Erstellt das Verzeichnis, falls es nicht existiert
+idx = 1
+
+try:
+    summaries_df = pd.DataFrame(data_1)
+    backup_path = os.path.join(backup_dir, f"overall_summaries_{idx}.csv")
+    summaries_df.to_csv(backup_path, index=False, encoding="utf-8")  # Setze UTF-8 Encoding
+    print(f"Backup saved at {backup_path}")
+
+except Exception as e:
+    print(f"Failed to backup summaries on the server: {e}, {idx}")

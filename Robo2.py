@@ -230,12 +230,12 @@ def update_database_overall_summary(summaries, idx):
 
         # Backup to save the csv files directly on the server
         backup_dir = "/mnt/volume/backup_summaries"
-        os.makedirs(backup_dir, exist_ok=True)  # Erstellt das Verzeichnis, falls es nicht existiert
+        os.makedirs(backup_dir, exist_ok=True)  # Create dir if it doesn't exist
 
         try:
             summaries_df = pd.DataFrame(summaries)
             backup_path = os.path.join(backup_dir, f"overall_summaries_{idx}.csv")
-            summaries_df.to_csv(backup_path, index=False, encoding="utf-8")  # Setze UTF-8 Encoding
+            summaries_df.to_csv(backup_path, index=False, encoding="utf-8")
             print(f"Backup saved at {backup_path}")
 
         except Exception as e:
@@ -278,12 +278,12 @@ def update_database_topic_summary(summaries, idx):
 
         # Backup to save the csv files directly on the server
         backup_dir = "/mnt/volume/backup_summaries"
-        os.makedirs(backup_dir, exist_ok=True)  # Erstellt das Verzeichnis, falls es nicht existiert
+        os.makedirs(backup_dir, exist_ok=True) 
 
         try:
             summaries_df = pd.DataFrame(summaries)
             backup_path = os.path.join(backup_dir, f"topic_summaries_{idx}.csv")
-            summaries_df.to_csv(backup_path, index=False, encoding="utf-8")  # Setze UTF-8 Encoding
+            summaries_df.to_csv(backup_path, index=False, encoding="utf-8")
             print(f"Backup saved at {backup_path}")
 
         except Exception as e:

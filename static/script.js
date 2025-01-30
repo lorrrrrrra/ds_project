@@ -950,6 +950,26 @@ document.querySelector('#nav-price-tab').addEventListener('shown.bs.tab', () => 
   if (typeof activeMarker !== 'undefined' && activeMarker !== null) {
     const markerId = activeMarker.options.id; // Zugriff auf die Marker-ID
 
+  //   // getting price range distribution data from the database
+  //   const apiUrl = `/api/avg_price/${markerId}`; // Korrekte URL mit markerId
+  //     fetch(apiUrl)
+  //       .then(response => response.json())
+  //       .then(data => {
+  //         if (data.error) {
+  //           console.error('Fehler:', data.error);
+  //         } else {
+  //           get_details(data);
+  //           get_star_rating(data);
+  //           get_summaries(data); 
+
+  //           const infoTab = document.querySelector('#nav-info-tab');
+  //           const bootstrapTab = new bootstrap.Tab(infoTab);
+  //           bootstrapTab.show();
+  //         }
+  //     })
+  // .catch(error => {
+  //     console.error('Fehler beim Abrufen der Restaurant-Daten:', error);
+  //   });
     get_graph_price(markerId);
   } else {
     console.error('Kein aktiver Marker gefunden!');

@@ -191,6 +191,35 @@ def get_restaurant(restaurant_id):
         connection.close()
 
 
+@app.route('/api/avg_price/<restaurant_id>', methods=['GET'])
+def get_restaurant(restaurant_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(cursor_factory=RealDictCursor)
+
+    try:
+        # Eine kombinierte SQL-Abfrage, die alle relevanten Daten aus beiden Tabellen holt
+        cursor.execute("""
+            SELECT dining_price_range
+            FROM reviews_additional
+            WHERE restaurant_id = %s;
+        """, (restaurant_id,))
+        price_range_data = cursor.fetchone()
+
+        if not price_range_data:
+            # Falls keine Daten gefunden wurden, gebe eine Fehlermeldung zurück
+            return jsonify({"error": "Restaurant not found"}), 404
+
+        
+        # Gebe die Informationen als JSON zurück
+        return jsonify(price_range_data)
+
+    finally:
+        # Cursor und Verbindung schließen
+        cursor.close()
+        connection.close()
+
+
+
 
 
 

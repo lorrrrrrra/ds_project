@@ -362,6 +362,11 @@ html, body {
     font-weight: 400;
 }
 
+.counts-text {
+    font-weight: 350;
+    font-style: italic;
+}
+
 
 #hr-right-side{
     width:100%;

@@ -839,12 +839,13 @@ function get_graph_price(data) {
       .padding(0.1);
 
     chart.append("g")
-      .attr("transform", `translate(0, ${containerHeight})`)
+      .attr("transform", `translate(0, ${containerHeight} - 20)`)
       .call(d3.axisBottom(x))
       .selectAll("text")
       .attr("transform", "rotate(-45)")
       .style("text-anchor", "end")
-      .style("font-size", "12px");
+      .style("font-size", "12px")
+      .style("fill", "white");;
 
     // Y-Achse (Anzahl der Bewertungen)
     const maxCount = d3.max(filteredRows, d => parseFloat(d.dining_price_range_count));
@@ -867,13 +868,6 @@ function get_graph_price(data) {
       .attr("height", d => containerHeight - y(d.dining_price_range_count))
       .attr("fill", "#F49069");
 
-      chart.append("line")
-      .attr("x1", 0)
-      .attr("y1", containerHeight - 50)
-      .attr("x2", containerWidth)
-      .attr("y2", containerHeight - 50)
-      .attr("stroke", "red")
-      .attr("stroke-width", 2);
 
     // Füge Überschrift hinzu
     const heading = "Price Range Distribution"; // Beispiel Überschrift

@@ -261,12 +261,7 @@ def update_database(summaries):
 try:
     query_general = """
         SELECT DISTINCT restaurant_id
-        FROM reviews_subcategories
-        WHERE restaurant_id NOT IN (
-            SELECT restaurant_id
-            FROM restaurant_basics
-            WHERE city_id IN (0, 1, 2)
-        );
+        FROM reviews_subcategories;
         """
 
     cursor.execute(query_general)

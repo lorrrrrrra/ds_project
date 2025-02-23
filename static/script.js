@@ -159,12 +159,6 @@ function create_marker(data) {
 
 
 
-
-
-
-
-
-
 //initiate filter buttons for types
 display_food_type_buttons(types);
 
@@ -172,69 +166,6 @@ display_food_type_buttons(types);
 
 
 
-
-
-
-
-
-fetch('static/csv files/reviews_grouped.csv')
-.then((response) => response.text())
-.then((csvData) => {
-  // CSV parsen
-  Papa.parse(csvData, {
-    header: true, // Erste Zeile als Header interpretieren
-    complete: (results) => {
-      reviews_grouped = results.data; // Speichern der geparsten Restaurants
-    },
-    error: (error) => console.error('Fehler beim Parsen der CSV:', error),
-  });
-})
-.catch((error) => console.error('Fehler beim Laden der CSV:', error));
-
-
-fetch('static/csv files/reviews_grouped_month.csv')
-.then((response) => response.text())
-.then((csvData) => {
-  // CSV parsen
-  Papa.parse(csvData, {
-    header: true, // Erste Zeile als Header interpretieren
-    complete: (results) => {
-      reviews_grouped_month = results.data; // Speichern der geparsten Restaurants
-    },
-    error: (error) => console.error('Fehler beim Parsen der CSV:', error),
-  });
-})
-.catch((error) => console.error('Fehler beim Laden der CSV:', error));
-
-
-fetch('static/csv files/reviews_grouped_year.csv')
-.then((response) => response.text())
-.then((csvData) => {
-  // CSV parsen
-  Papa.parse(csvData, {
-    header: true, // Erste Zeile als Header interpretieren
-    complete: (results) => {
-      reviews_grouped_year = results.data; // Speichern der geparsten Restaurants
-    },
-    error: (error) => console.error('Fehler beim Parsen der CSV:', error),
-  });
-})
-.catch((error) => console.error('Fehler beim Laden der CSV:', error));
-
-
-fetch('static/csv files/dining_price_range_group.csv')
-.then((response) => response.text())
-.then((csvData) => {
-  // CSV parsen
-  Papa.parse(csvData, {
-    header: true, // Erste Zeile als Header interpretieren
-    complete: (results) => {
-      reviews_grouped_price = results.data; // Speichern der geparsten Restaurants
-    },
-    error: (error) => console.error('Fehler beim Parsen der CSV:', error),
-  });
-})
-.catch((error) => console.error('Fehler beim Laden der CSV:', error));
 
 
 

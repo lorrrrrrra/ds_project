@@ -1,6 +1,0 @@
-,Unnamed: 0.1,Unnamed: 0,restaurant_id,city_id,name,primary_type,types,business_status,pure_service_area,address,lat_value,long_value
-99,99,99,ChIJm7waYdT6mUcRxPFyE982gE0,0,Veggie,restaurant,"['restaurant', 'food', 'point_of_interest', 'establishment']",OPERATIONAL,,"Kornhausstraße 1, 72070 Tübingen, Germany",48.521084300000005,9.0537154
-100,100,100,ChIJbxg5UNT6mUcRY_RPFW_mgjg,0,Restaurant Krumme Brücke,restaurant,"['restaurant', 'food', 'point_of_interest', 'establishment']",OPERATIONAL,,"Kornhausstraße 17, 72070 Tübingen, Germany",48.5210055,9.0523946
-114,114,114,ChIJ5bNxBdP6mUcRoihNgmDzZl4,0,Esszimmer,restaurant,"['restaurant', 'meal_takeaway', 'food', 'point_of_interest', 'establishment']",OPERATIONAL,,"Am Lustnauer Tor 4, 72074 Tübingen, Germany",48.5213157,9.0577105
-119,119,119,ChIJ8dHXli3lmUcRbSsbGrUNotc,0,Saints & Scholars Tübingen,restaurant,"['restaurant', 'cafe', 'food', 'bar', 'point_of_interest', 'establishment']",OPERATIONAL,,"Wilhelmstraße 44, 72074 Tübingen, Germany",48.5265322,9.062554
-121,121,121,ChIJYR6MeNP6mUcRX0PfqXYXqks,0,Kichererbse,vegetarian_restaurant,"['vegetarian_restaurant', 'vegan_restaurant', 'mediterranean_restaurant', 'fast_food_restaurant', 'restaurant', 'food', 'point_of_interest', 'establishment']",OPERATIONAL,,"Metzgergasse 2, 72070 Tübingen, Germany",48.521364,9.0556098

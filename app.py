@@ -67,11 +67,11 @@ def get_restaurants(bounds):
     except ValueError:
         return jsonify({"error": "Invalid bounds format. Use: south,north,west,east"}), 400
 
-    buffer = 0.03
-    south -= buffer
-    north += buffer
-    west -= buffer
-    east += buffer
+    # buffer = 0.03
+    south -= south*0.0001
+    north += north*0.0001
+    west -= west*0.0001
+    east += east*0.0001
 
     print(south, north, west, east)
 

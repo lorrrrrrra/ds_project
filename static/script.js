@@ -156,6 +156,40 @@ function create_marker(data) {
 }
 
 
+function search_location() {
+  const searchInput = document.getElementById("search-input");
+  const searchValue = searchInput.value;
+
+  if (searchValue) {
+    fetch(`/api/search/${searchValue}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          console.error('Fehler:', data.error);
+        } else {
+          // Marker-Set löschen, bevor neue hinzugefügt werden
+          markersLayer.clearLayers();
+          create_marker(data);
+
+          // Zoom auf die erste Position
+          if (data.length > 0) {
+            map.setView([data[0].lat_value, data[0].long_value], 15);
+          }
+        }
+    })
+    .catch(error => {
+        console.error('Fehler beim Abrufen der Restaurant-Daten:', error);
+      });
+  } else {
+    console.error('Kein Suchbegriff eingegeben!');
+  }
+}
+
+
+
+
+
+
 
 
 

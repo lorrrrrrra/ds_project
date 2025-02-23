@@ -73,6 +73,8 @@ def get_restaurants(bounds):
     west -= buffer
     east += buffer
 
+    print(south, north, west, east)
+
     filter_data = request.get_json()
 
     connection = get_db_connection()

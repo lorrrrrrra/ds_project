@@ -231,6 +231,46 @@ def get_restaurant(restaurant_id):
         connection.close()
 
 
+
+
+
+# @app.route('/api/search/<restaurant_name>', methods=['GET'])
+# def get_category_data_graph(restaurant_name):
+#     connection = get_db_connection()
+#     cursor = connection.cursor(cursor_factory=RealDictCursor)
+
+#     try:
+#         cursor.execute(f"""
+#             SELECT r.restaurant_id, r.name, r.address, r.types, g.google_rating, g.rating_food, g.rating_service, g.rating_atmosphere, g.rating_price
+#             FROM restaurant_basics r
+#             LEFT JOIN restaurant_general g ON r.restaurant_id = g.restaurant_id
+#             WHERE r.name ILIKE %s;
+#         """, (f"%{restaurant_name}%",))
+#         search_results = cursor.fetchall()
+
+#         if not search_results:
+#             return jsonify({"error": "Restaurant not found"}), 404
+
+#         # Gebe die Informationen als JSON zurück
+#         return jsonify(search_results)
+
+#     finally:
+#         cursor.close()
+#         connection.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/api/avg_price/<restaurant_id>', methods=['GET'])
 def get_price_data_graph(restaurant_id):
     connection = get_db_connection()
